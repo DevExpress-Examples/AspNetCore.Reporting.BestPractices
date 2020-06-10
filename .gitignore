@@ -1,0 +1,6 @@
+.vs/
+AspNetCore.Reporting.BestPractices/bin/
+AspNetCore.Reporting.BestPractices/node_modules/
+AspNetCore.Reporting.BestPractices/obj/
+AspNetCore.Reporting.BestPractices/wwwroot/
+**/*.user

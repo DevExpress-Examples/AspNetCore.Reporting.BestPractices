@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - AspNetCoreReportingApp</title>
+    <link rel="stylesheet" href="~/css/thirdparty.bundle.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <script src="~/js/site.js"></script>
+    <script src="~/js/thirdparty.bundle.js"></script>
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand text-white">ASP.NET Core Reporting Demo Application</a>
+                @{
+                    if(Context.User.Identity.IsAuthenticated) {
+                        <div class="collapse navbar-collapse">
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link" id="home-link" asp-controller="Home" asp-action="Index">
+                                        Home
+                                    </a>
+                                </li>
+                                <li class="nav-item"><span class="navbar-text">Hello @Context.User.Identity.Name</span></li>
+                            </ul>
+                        </div>
+                    }
+                }
+            </div>
+            @{
+                if(Context.User.Identity.IsAuthenticated) {
+                    <form method="post" class="form-inline float-right">
+                        <button type="submit" asp-controller="Account" asp-action="Logout" class="btn btn-primary float-right  mr-2">
+                            Log out
+                        </button>
+                    </form>
+                }
+            }
+        </nav>
+    </header>
+    <div class="container-fluid">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            <p>&copy; @DateTime.Now.Year - ASP.NET Core Reporting Demo Application</p>
+        </div>
+    </footer>
+</body>
+</html>

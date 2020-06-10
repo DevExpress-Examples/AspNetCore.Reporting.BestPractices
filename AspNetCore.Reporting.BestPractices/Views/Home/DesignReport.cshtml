@@ -1,0 +1,50 @@
+@model AspNetCoreReportingApp.Models.ReportingControlModel
+@using DevExpress.AspNetCore
+@using DevExpress.XtraReports.UI
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@functions{
+    public string GetAntiXsrfRequestToken() {
+        return Xsrf.GetAndStoreTokens(this.Context).RequestToken;
+    }
+}
+<link href="~/css/viewer.part.bundle.css" rel="stylesheet" />
+<link href="~/css/designer.part.bundle.css" rel="stylesheet" />
+<script src="~/js/viewer.part.bundle.js"></script>
+<script src="~/js/designer.part.bundle.js"></script>
+<script>
+    function DesignerInit(args) {
+        var designer = args.designerModel;
+        SetupJwt('@Model.BearerToken', @GetAntiXsrfRequestToken());
+        $(window).on('beforeunload', function(e) {
+            if(designer.isDirty()) {
+                designer.navigateByReports.closeAll().done(function() {
+                    return;
+                });
+                return "Designer have changes";
+            }
+        });
+    }
+
+    function Exit() {
+        window.location = "/";
+    }
+</script>
+<input type="hidden" id="RequestVerificationToken" name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
+@{
+    ViewData["Title"] = Model.Title;
+    var designer = Html.DevExpress().ReportDesigner("ReportDesigner")
+        .Height("800px")
+        .ClientSideEvents(events => {
+            events.BeforeRender("Init");
+            events.ExitDesigner("Exit");
+        });
+    if(string.IsNullOrEmpty(Model.Id)) {
+        designer.Bind(new XtraReport());
+    } else {
+        designer.Bind(Model.Id);
+    }
+}
+@designer
+
+

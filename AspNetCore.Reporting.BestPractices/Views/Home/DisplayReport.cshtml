@@ -1,0 +1,24 @@
+@model AspNetCoreReportingApp.Models.ReportingControlModel
+@using DevExpress.AspNetCore
+
+<link rel="stylesheet" href="~/css/viewer.part.bundle.css" />
+
+<script src="~/js/viewer.part.bundle.js"></script>
+<script>
+    function WebDocumentViewer_BeforeRender(s, e) {
+        SetupJwt('@Model.BearerToken');
+        $(window).on('beforeunload', function(e) {
+            s.Close();
+        });
+    }  
+</script>
+@{
+    ViewData["Title"] = Model.Title;
+
+}
+@(Html.DevExpress().WebDocumentViewer("DocumentViewer")
+        .ClientSideEvents(x=> {
+            x.BeforeRender("WebDocumentViewer_BeforeRender");
+        })
+    .Height("900px")
+    .Bind(Model.Id))

@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XtraReportsLayoutSerializer SerializerVersion="19.2.0.0" Ref="1" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v19.2, Version=19.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" Name="NewReport" Margins="100, 100, 135, 100" PageWidth="850" PageHeight="1100" Version="19.2" RequestParameters="false" DataSource="#Ref-0" Font="Arial, 9.75pt">
+  <Parameters>
+    <Item1 Ref="3" Description="Show Timestamp" ValueInfo="False" Name="rpShowTimestamp" Type="#Ref-2" />
+  </Parameters>
+  <Bands>
+    <Item1 Ref="4" ControlType="TopMarginBand" Name="TopMargin" HeightF="135.416672">
+      <Controls>
+        <Item1 Ref="5" ControlType="XRLabel" Name="label1" Multiline="true" Text="Enrollments Report" SizeF="630,49.0416565" LocationFloat="10.0000067, 76.37501" Font="Segoe UI Semibold, 20.25pt, style=Bold, charSet=0" Padding="2,2,0,0,100">
+          <StylePriority Ref="6" UseFont="false" />
+        </Item1>
+      </Controls>
+    </Item1>
+    <Item2 Ref="7" ControlType="BottomMarginBand" Name="BottomMargin">
+      <Controls>
+        <Item1 Ref="8" ControlType="XRPageInfo" Name="pageInfo1" PageInfo="DateTime" SizeF="650,23" LocationFloat="0, 10.0000067" Padding="2,2,0,0,100">
+          <ExpressionBindings>
+            <Item1 Ref="9" EventName="BeforePrint" PropertyName="Visible" Expression="?rpShowTimestamp" />
+          </ExpressionBindings>
+        </Item1>
+      </Controls>
+    </Item2>
+    <Item3 Ref="10" ControlType="DetailBand" Name="Detail" Expanded="false" HeightF="114.583336">
+      <Controls>
+        <Item1 Ref="11" ControlType="XRLabel" Name="label9" TextFormatString="{0:d}" Multiline="true" Text="label9" SizeF="336.458344,23" LocationFloat="261.458344, 79.00003" Padding="2,2,0,0,100">
+          <ExpressionBindings>
+            <Item1 Ref="12" EventName="BeforePrint" PropertyName="Text" Expression="[EnrollmentDate]" />
+          </ExpressionBindings>
+        </Item1>
+        <Item2 Ref="13" ControlType="XRLabel" Name="label8" Multiline="true" Text="Enrollment Date:" SizeF="238.541641,23" LocationFloat="10.0000067, 79.00003" Padding="2,2,0,0,100" />
+        <Item3 Ref="14" ControlType="XRLabel" Name="label7" Multiline="true" Text="label7" SizeF="336.458344,23.0000038" LocationFloat="261.458344, 56.00001" Padding="2,2,0,0,100">
+          <ExpressionBindings>
+            <Item1 Ref="15" EventName="BeforePrint" PropertyName="Text" Expression="[LastName]" />
+          </ExpressionBindings>
+        </Item3>
+        <Item4 Ref="16" ControlType="XRLabel" Name="label6" Multiline="true" Text="Last Name:" SizeF="238.541641,23.0000038" LocationFloat="10.0000067, 56.00001" Padding="2,2,0,0,100" />
+        <Item5 Ref="17" ControlType="XRLabel" Name="label5" Multiline="true" Text="label5" SizeF="336.4584,23.0000038" LocationFloat="261.458344, 32.9999924" Padding="2,2,0,0,100">
+          <ExpressionBindings>
+            <Item1 Ref="18" EventName="BeforePrint" PropertyName="Text" Expression="[FirstMidName]" />
+          </ExpressionBindings>
+        </Item5>
+        <Item6 Ref="19" ControlType="XRLabel" Name="label4" Multiline="true" Text="Name:" SizeF="238.541641,23.0000038" LocationFloat="10.0000067, 32.9999924" Padding="2,2,0,0,100" />
+        <Item7 Ref="20" ControlType="XRLabel" Name="label3" Multiline="true" Text="label3" TextAlignment="TopLeft" SizeF="336.458344,23" LocationFloat="261.458344, 10.0000067" Padding="2,2,0,0,100">
+          <ExpressionBindings>
+            <Item1 Ref="21" EventName="BeforePrint" PropertyName="Text" Expression="[StudentID]" />
+          </ExpressionBindings>
+          <StylePriority Ref="22" UseTextAlignment="false" />
+        </Item7>
+        <Item8 Ref="23" ControlType="XRLabel" Name="label2" Multiline="true" Text="ID:" SizeF="238.541641,23" LocationFloat="10.0000067, 10.0000067" Padding="2,2,0,0,100" />
+      </Controls>
+    </Item3>
+    <Item4 Ref="25" ControlType="DetailReportBand" Name="DetailReport" Level="0" DataSource="#Ref-24">
+      <Bands>
+        <Item1 Ref="26" ControlType="DetailBand" Name="Detail1" HeightF="35.0000076">
+          <Controls>
+            <Item1 Ref="27" ControlType="XRTable" Name="table1" SizeF="650,25" LocationFloat="0, 10.0000067" Padding="2,2,0,0,96">
+              <Rows>
+                <Item1 Ref="28" ControlType="XRTableRow" Name="tableRow1" Weight="11.5">
+                  <Cells>
+                    <Item1 Ref="29" ControlType="XRTableCell" Name="tableCell1" Weight="0.13324174818101819" Multiline="true" Text="tableCell1" TextAlignment="TopRight">
+                      <ExpressionBindings>
+                        <Item1 Ref="30" EventName="BeforePrint" PropertyName="Text" Expression="[EnrollmentID]" />
+                      </ExpressionBindings>
+                    </Item1>
+                    <Item2 Ref="31" ControlType="XRTableCell" Name="tableCell2" Weight="0.4381868232475532" Multiline="true" Text="tableCell2">
+                      <ExpressionBindings>
+                        <Item1 Ref="32" EventName="BeforePrint" PropertyName="Text" Expression="[CourseTitle]" />
+                      </ExpressionBindings>
+                    </Item2>
+                    <Item3 Ref="33" ControlType="XRTableCell" Name="tableCell3" Weight="0.2857142857142857" Multiline="true" Text="tableCell3">
+                      <ExpressionBindings>
+                        <Item1 Ref="34" EventName="BeforePrint" PropertyName="Text" Expression="[Grade]" />
+                      </ExpressionBindings>
+                    </Item3>
+                  </Cells>
+                </Item1>
+              </Rows>
+            </Item1>
+          </Controls>
+        </Item1>
+      </Bands>
+    </Item4>
+  </Bands>
+  <ComponentStorage>
+    <Item1 Ref="0" ObjectType="DevExpress.DataAccess.ObjectBinding.ObjectDataSource,DevExpress.DataAccess.v19.2" Name="odsStudentDetails" Base64="PE9iamVjdERhdGFTb3VyY2UgTmFtZT0ib2RzU3R1ZGVudERldGFpbHMiPjxEYXRhU291cmNlIFR5cGU9InhyZWZjb3JlZGVtby5TZXJ2aWNlcy5NeUVucm9sbG1lbnRzUmVwb3J0UmVwb3NpdG9yeSwgeHJlZmNvcmVkZW1vLCBWZXJzaW9uPTEuMC4wLjAsIEN1bHR1cmU9bmV1dHJhbCwgUHVibGljS2V5VG9rZW49bnVsbCIgLz48RGF0YU1lbWJlcj5HZXRTdHVkZW50RGV0YWlsczwvRGF0YU1lbWJlcj48L09iamVjdERhdGFTb3VyY2U+" />
+    <Item2 Ref="24" ObjectType="DevExpress.DataAccess.ObjectBinding.ObjectDataSource,DevExpress.DataAccess.v19.2" Name="odsEnrollments" Base64="PE9iamVjdERhdGFTb3VyY2UgTmFtZT0ib2RzRW5yb2xsbWVudHMiPjxEYXRhU291cmNlIFR5cGU9InhyZWZjb3JlZGVtby5TZXJ2aWNlcy5NeUVucm9sbG1lbnRzUmVwb3J0UmVwb3NpdG9yeSwgeHJlZmNvcmVkZW1vLCBWZXJzaW9uPTEuMC4wLjAsIEN1bHR1cmU9bmV1dHJhbCwgUHVibGljS2V5VG9rZW49bnVsbCIgLz48RGF0YU1lbWJlcj5HZXRFbnJvbGxtZW50czwvRGF0YU1lbWJlcj48L09iamVjdERhdGFTb3VyY2U+" />
+  </ComponentStorage>
+  <ObjectStorage>
+    <Item1 ObjectType="DevExpress.XtraReports.Serialization.ObjectStorageInfo, DevExpress.XtraReports.v19.2" Ref="2" Content="System.Boolean" Type="System.Type" />
+  </ObjectStorage>
+</XtraReportsLayoutSerializer>
