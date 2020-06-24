@@ -6,12 +6,12 @@ using DevExpress.XtraReports.Web.Extensions;
 using AspNetCoreReportingApp.Data;
 using AspNetCoreReportingApp.Models;
 
-namespace AspNetCoreReportingApp.Services {
+namespace AspNetCoreReportingApp.Services.Reporting {
     public class EFCoreReportStorageWebExtension : ReportStorageWebExtension {
-        private readonly IUserService userService;
+        private readonly IAuthenticatiedUserService userService;
         private readonly SchoolContext dBContext;
 
-        public EFCoreReportStorageWebExtension(IUserService userService, SchoolContext dBContext) {
+        public EFCoreReportStorageWebExtension(IAuthenticatiedUserService userService, SchoolContext dBContext) {
             this.userService = userService;
             this.dBContext = dBContext;
         }

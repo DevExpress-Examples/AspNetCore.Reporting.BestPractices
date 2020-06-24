@@ -3,17 +3,16 @@ using System.Linq;
 using System.Security;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AspNetCoreReportingApp.Data;
+using AspNetCoreReportingApp.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AspNetCoreReportingApp.Data;
-using AspNetCoreReportingApp.Models;
 
 namespace AspNetCoreReportingApp.Controllers {
     public class AccountController : Controller {
-
         [HttpGet]
         public async Task<IActionResult> Login([FromServices]SchoolContext dbContext) {
             return View(await GetLoginScreenModelAsync(dbContext));
@@ -24,7 +23,7 @@ namespace AspNetCoreReportingApp.Controllers {
         public async Task<IActionResult> Login([FromServices]SchoolContext dbContext, int userId, string returnUrl) {
             var student = await dbContext.Students.FindAsync(userId);
             if(student != null) {
-                await SignIn(student);
+                await SignInAsync(student);
 
                 if(Url.IsLocalUrl(returnUrl)) {
                     return Redirect(returnUrl);
@@ -37,11 +36,11 @@ namespace AspNetCoreReportingApp.Controllers {
 
         [HttpPost]
         public async Task<IActionResult> Logout() {
-            await HttpContext.SignOutAsync();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction(nameof(Login));
         }
 
-        async Task SignIn(Student user) {
+        async Task SignInAsync(Student user) {
             string userName = $"{user.FirstMidName} {user.LastName}";
 
             var claims = new[] {
@@ -54,7 +53,7 @@ namespace AspNetCoreReportingApp.Controllers {
             identity.AddClaims(claims);
 
             var principal = new ClaimsPrincipal(identity);
-            await HttpContext.SignInAsync(principal, new AuthenticationProperties { IsPersistent = true });
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties { IsPersistent = true });
         }
 
         async Task<LoginScreenModel> GetLoginScreenModelAsync(SchoolContext dBContext) {
@@ -67,6 +66,5 @@ namespace AspNetCoreReportingApp.Controllers {
                 .ToListAsync();
             return model;
         }
-
     }
 }

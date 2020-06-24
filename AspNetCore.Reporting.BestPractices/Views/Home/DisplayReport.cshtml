@@ -1,24 +1,51 @@
-@model AspNetCoreReportingApp.Models.ReportingControlModel
 @using DevExpress.AspNetCore
 
-<link rel="stylesheet" href="~/css/viewer.part.bundle.css" />
-
-<script src="~/js/viewer.part.bundle.js"></script>
+@model AspNetCoreReportingApp.Models.ReportingControlModel
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@functions{
+    public string GetAntiXsrfRequestToken() {
+        return Xsrf.GetAndStoreTokens(this.Context).RequestToken;
+    }
+}
 <script>
     function WebDocumentViewer_BeforeRender(s, e) {
-        SetupJwt('@Model.BearerToken');
+        SetupJwt('bearer token can be passed here', "@GetAntiXsrfRequestToken()");
         $(window).on('beforeunload', function(e) {
             s.Close();
         });
-    }  
+    }
+
+    function CustomizeLocalization(s, e) {
+        e.LoadMessages($.get("/localization/reporting/dx-analytics-core.de.json"));
+        e.LoadMessages($.get("/localization/reporting/dx-reporting.de.json"));
+        e.LoadMessages($.get("/localization/devextreme/de.json").done(function(messages) { DevExpress.localization.loadMessages(messages); }));
+        e.SetAvailableCultures(["de"]);
+    }
 </script>
+<input type="hidden" id="RequestVerificationToken" name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
 @{
     ViewData["Title"] = Model.Title;
-
-}
-@(Html.DevExpress().WebDocumentViewer("DocumentViewer")
-        .ClientSideEvents(x=> {
+    var viewerRender = Html.DevExpress().WebDocumentViewer("DocumentViewer")
+        .ClientSideEvents(x => {
+            x.CustomizeLocalization("CustomizeLocalization");
             x.BeforeRender("WebDocumentViewer_BeforeRender");
         })
     .Height("900px")
-    .Bind(Model.Id))
+    .HandlerUri("/DXXRDVMVC")
+    .AutoBind(false)
+    .Bind(Model.Id);
+    @:@viewerRender.Build("viewerModel")
+}
+
+@section Scripts {
+    <link href="~/css/dx-reporting-skeleton-screen.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/viewer.part.bundle.css" />
+    <script src="~/js/reporting.thirdparty.bundle.js"></script>
+    <script src="~/js/viewer.part.bundle.js"></script>
+
+    <script type="text/javascript">
+        (function() {
+            ko.applyBindings({ viewerModel: @viewerRender });
+        })()
+    </script>
+}

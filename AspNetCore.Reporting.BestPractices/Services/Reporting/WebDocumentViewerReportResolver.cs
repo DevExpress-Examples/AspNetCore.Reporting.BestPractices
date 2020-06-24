@@ -4,7 +4,7 @@ using DevExpress.XtraReports.UI;
 using DevExpress.XtraReports.Web.Extensions;
 using DevExpress.XtraReports.Web.WebDocumentViewer;
 
-namespace AspNetCoreReportingApp.Services {
+namespace AspNetCoreReportingApp.Services.Reporting {
     class WebDocumentViewerReportResolver : IWebDocumentViewerReportResolver {
         IObjectDataSourceInjector DataSourceInjector { get; }
         ReportStorageWebExtension ReportStorageWebExtension { get; }

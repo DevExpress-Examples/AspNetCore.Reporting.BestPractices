@@ -14,7 +14,7 @@ namespace AspNetCoreReportingApp.Services {
             throw new NotSupportedException();
         }
 
-        public MyEnrollmentsReportRepository(IScopedDbContextProvider<SchoolContext> scopedDbContextProvider, IUserService userService) {
+        public MyEnrollmentsReportRepository(IScopedDbContextProvider<SchoolContext> scopedDbContextProvider, IAuthenticatiedUserService userService) {
             this.scopedDbContextProvider = scopedDbContextProvider ?? throw new ArgumentNullException(nameof(scopedDbContextProvider));
 
             // NOTE: the repository ctor is invoked in the context of http request. At this point of execution we have access to context-dependent data, like currentUserId.

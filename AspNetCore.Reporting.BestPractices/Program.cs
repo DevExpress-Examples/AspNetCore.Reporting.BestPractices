@@ -11,7 +11,6 @@ namespace AspNetCoreReportingApp {
             var host = CreateWebHostBuilder(args).Build();
             InitializeDb(host);
             host.Run();
-
         }
 
         static void InitializeDb(IWebHost host) {

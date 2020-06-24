@@ -4,8 +4,8 @@ using System.Linq;
 using System.Reflection;
 using DevExpress.DataAccess.Web;
 
-namespace AspNetCoreReportingApp.Services {
-    public class ObjectDataSourceWizardTypeProvider : IObjectDataSourceWizardTypeProvider {
+namespace AspNetCoreReportingApp.Services.Reporting {
+    public class CustomObjectDataSourceWizardTypeProvider : IObjectDataSourceWizardTypeProvider {
         public IEnumerable<Type> GetAvailableTypes(string context) {
             return new[] {
                 typeof(CourseListReportRepository),
@@ -14,10 +14,10 @@ namespace AspNetCoreReportingApp.Services {
         }
     }
 
-    public class ObjectDataSourceConstructorFilterService : IObjectDataSourceConstructorFilterService {
+    public class CustomObjectDataSourceConstructorFilterService : IObjectDataSourceConstructorFilterService {
         readonly IObjectDataSourceWizardTypeProvider wizardTypeProvider;
 
-        public ObjectDataSourceConstructorFilterService(IObjectDataSourceWizardTypeProvider wizardTypeProvider) {
+        public CustomObjectDataSourceConstructorFilterService(IObjectDataSourceWizardTypeProvider wizardTypeProvider) {
             this.wizardTypeProvider = wizardTypeProvider ?? throw new ArgumentNullException(nameof(wizardTypeProvider));
         }
 

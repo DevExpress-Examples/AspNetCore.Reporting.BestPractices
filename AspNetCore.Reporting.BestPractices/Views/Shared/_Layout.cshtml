@@ -4,10 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - AspNetCoreReportingApp</title>
-    <link rel="stylesheet" href="~/css/thirdparty.bundle.css" />
+    <link rel="stylesheet" href="~/css/site.thirdparty.bundle.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <script src="~/js/site.js"></script>
-    <script src="~/js/thirdparty.bundle.js"></script>
+    <script src="~/js/site.thirdparty.bundle.js"></script>
 
 </head>
 <body>
@@ -52,5 +52,8 @@
             <p>&copy; @DateTime.Now.Year - ASP.NET Core Reporting Demo Application</p>
         </div>
     </footer>
+    <script src="~/js/site.thirdparty.bundle.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", false)
 </body>
 </html>

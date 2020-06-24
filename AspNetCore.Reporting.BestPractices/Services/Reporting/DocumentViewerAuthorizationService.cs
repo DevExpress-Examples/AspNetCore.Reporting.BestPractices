@@ -3,14 +3,14 @@ using System.Collections.Concurrent;
 using DevExpress.XtraReports.UI;
 using DevExpress.XtraReports.Web.WebDocumentViewer;
 
-namespace AspNetCoreReportingApp.Services {
+namespace AspNetCoreReportingApp.Services.Reporting {
     class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWebDocumentViewerAuthorizationService {
         static ConcurrentDictionary<string, int> DocumentIdOwnerMap { get; } = new ConcurrentDictionary<string, int>();
         static ConcurrentDictionary<string, int> ReportIdOwnerMap { get; } = new ConcurrentDictionary<string, int>();
 
-        IUserService UserService { get; }
+        IAuthenticatiedUserService UserService { get; }
 
-        public DocumentViewerAuthorizationService(IUserService userService) {
+        public DocumentViewerAuthorizationService(IAuthenticatiedUserService userService) {
             UserService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
 

@@ -1,0 +1,42 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "module": "esnext",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "baseUrl": "./",
+    "experimentalDecorators": true,
+    "paths": {
+     "@app/*": ["src/app/*"],
+     "@environments/*": ["src/environments/*"],
+     "globalize": [
+        "../node_modules/globalize/dist/globalize"
+      ],
+     "globalize/*": [
+        "../node_modules/globalize/dist/globalize/*"
+      ],
+     "cldr": [
+        "../node_modules/cldrjs/dist/cldr"
+      ],
+     "cldr/*": [
+        "../node_modules/cldrjs/dist/cldr/*"
+      ]
+    },
+    "target": "es2015",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2017",
+      "dom"
+    ]
+  },
+  "angularCompilerOptions": {
+        "fullTemplateTypeCheck": true,
+        "strictInjectionParameters": true
+    }
+}
