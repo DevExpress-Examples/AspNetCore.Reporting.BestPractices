@@ -41,6 +41,9 @@
         .QueryBuilderHandlerUri("/DXXQBMVC")
         .ReportDesignerHandlerUri("/DXXRDMVC")
         .ReportPreviewHandlerUri("/DXXRDVMVC")
+        .ClientSideModelSettings(clientSide => {
+            clientSide.IncludeLocalization = false;
+        })
         .ClientSideEvents(events => {
             events.CustomizeLocalization("CustomizeLocalization");
             events.BeforeRender("DesignerBeforeRender");

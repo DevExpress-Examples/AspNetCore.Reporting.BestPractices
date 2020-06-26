@@ -15,9 +15,14 @@
 
   <ItemGroup>
     <Compile Remove="node_modules\**" />
+    <Compile Remove="ViewerStorages\**" />
     <Content Remove="node_modules\**" />
+    <Content Remove="ViewerStorages\**" />
     <EmbeddedResource Remove="node_modules\**" />
+    <EmbeddedResource Remove="ViewerStorages\**" />
+    <EntityDeploy Remove="ViewerStorages\**" />
     <None Remove="node_modules\**" />
+    <None Remove="ViewerStorages\**" />
     <None Remove="Reports\CourseListReport.repx" />
     <None Remove="Reports\MyEnrollmentsReport.repx" />
   </ItemGroup>

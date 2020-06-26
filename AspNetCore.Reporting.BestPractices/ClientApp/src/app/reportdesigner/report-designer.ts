@@ -17,7 +17,7 @@ import { Component, Inject, ViewEncapsulation } from '@angular/core';
 })
 
 export class ReportDesignerComponent {
-  getDesignerModelAction = "api/ReportDesigner/GetReportDesignerModel";
+  getDesignerModelAction = "api/ReportDesignerSetup/GetReportDesignerModel";
   reportUrl = "TestReport";
 
   constructor(@Inject('BASE_URL') public hostUrl: string) { }

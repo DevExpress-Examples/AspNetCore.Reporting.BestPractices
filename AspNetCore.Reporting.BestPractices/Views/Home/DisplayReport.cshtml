@@ -30,6 +30,9 @@
             x.CustomizeLocalization("CustomizeLocalization");
             x.BeforeRender("WebDocumentViewer_BeforeRender");
         })
+        .ClientSideModelSettings(clientSide => {
+            clientSide.IncludeLocalization = false;
+        })
     .Height("900px")
     .HandlerUri("/DXXRDVMVC")
     .AutoBind(false)
