@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using DevExpress.Data.Entity;
 using DevExpress.DataAccess.ConnectionParameters;
+using DevExpress.DataAccess.Native;
 using DevExpress.DataAccess.Sql;
 using DevExpress.DataAccess.Web;
 using DevExpress.DataAccess.Wizard.Services;
@@ -18,49 +20,35 @@ namespace AspNetCoreReportingApp.Services.Reporting {
     }
 
     public class CustomConnectionProviderService : IConnectionProviderService {
-        readonly IConfiguration configurationRoot;
-        public CustomConnectionProviderService(IConfiguration configurationRoot) {
-            this.configurationRoot = configurationRoot;
-        }
-        public SqlDataConnection LoadConnection(string connectionName) {
-            var connections = configurationRoot.GetSection("ReportingDataConnectionStrings");
-            var connectionString = connections.GetValue<string>(connectionName);
-            if(string.IsNullOrEmpty(connectionString))
-                throw new ArgumentException("There is no connection with name: " + connectionName);
-            return new SqlDataConnection { 
-                Name = connectionName, 
-                ConnectionString = connectionString, 
-                StoreConnectionNameOnly = true, 
-                ConnectionStringSerializable = connectionString, 
-                ProviderKey = "SQLite" 
-            };
+        readonly IConfiguration configuration;
+        public CustomConnectionProviderService(IConfiguration configuration) {
+            this.configuration = configuration;
         }
 
-        public SqlDataConnection LoadConnection2(string connectionName) {
-            var connections = configurationRoot.GetSection("ReportingDataConnectionStrings");
-            var connectionString = connections.GetValue<string>(connectionName);
+        public SqlDataConnection LoadConnection(string connectionName) {
+            var connectionStringSection = configuration.GetSection("ReportingDataConnectionStrings");
+            var connectionString = connectionStringSection?.GetValue<string>(connectionName);
+            var connectionStringInfo = new ConnectionStringInfo { RunTimeConnectionString = connectionString, ProviderName = "SQLite" };
             DataConnectionParametersBase connectionParameters;
-            if(string.IsNullOrEmpty(connectionString) || !DevExpress.DataAccess.Native.AppConfigHelper.TryCreateSqlConnectionParameters(new DevExpress.Data.Entity.ConnectionStringInfo() { RunTimeConnectionString = connectionString, ProviderName = "SQLite" }, out connectionParameters)) {
+            if(string.IsNullOrEmpty(connectionString)
+                || !AppConfigHelper.TryCreateSqlConnectionParameters(connectionStringInfo, out connectionParameters)
+                || connectionParameters == null) {
                 throw new KeyNotFoundException($"Connection string '{connectionName}' not found.");
             }
-            if(connectionParameters != null) {
-                return new SqlDataConnection(connectionName, connectionParameters);
-            }
-            throw new ArgumentException("There is no connection with name: " + connectionName);
-            //return new SqlDataConnection { Name = connectionName, ConnectionString = connectionString, StoreConnectionNameOnly = true };
+            return new SqlDataConnection(connectionName, connectionParameters);
+        }
 
-            
-            //DataConnectionParametersBase connectionParameters;
-            //if(string.IsNullOrEmpty(connectionString) || !AppConfigHelper.TryCreateSqlConnectionParameters(new ConnectionStringInfo() { RunTimeConnectionString = connectionString, ProviderName = "SQLite" }, out connectionParameters)) {
-            //    throw new KeyNotFoundException($"Connection string '{name}' not found.");
-            //}
-            //return connectionParameters;
-
-
-            //var parameters = DevExpress.DataAccess.Native.Web.DataSourceSerializationService.TryToGetDataConnectionParameters(wizardConnectionProvider, connectionName);
-            //if(parameters != null) {
-            //    return new SqlDataConnection(connectionName, parameters);
-            //}
+        public SqlDataConnection WrongLoadConnection(string connectionName) {
+            var connectionString = configuration.GetSection("ReportingDataConnectionStrings")?.GetValue<string>(connectionName);
+            if(string.IsNullOrEmpty(connectionString))
+                throw new ArgumentException("There is no connection with name: " + connectionName);
+            return new SqlDataConnection {
+                Name = connectionName,
+                ConnectionString = connectionString,
+                StoreConnectionNameOnly = true,
+                ConnectionStringSerializable = connectionString,
+                ProviderKey = "SQLite"
+            };
         }
     }
 }

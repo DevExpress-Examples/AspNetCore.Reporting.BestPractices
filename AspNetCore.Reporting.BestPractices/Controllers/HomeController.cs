@@ -25,6 +25,7 @@ namespace AspNetCoreReportingApp.Controllers {
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveReport([FromServices] IAuthenticatiedUserService userService, [FromServices] SchoolContext dBContext, int reportId) {
             var userIdentity = userService.GetCurrentUserId();
             var reportData = await dBContext.Reports.Where(a => a.ID == reportId && a.Student.ID == userIdentity).FirstOrDefaultAsync();

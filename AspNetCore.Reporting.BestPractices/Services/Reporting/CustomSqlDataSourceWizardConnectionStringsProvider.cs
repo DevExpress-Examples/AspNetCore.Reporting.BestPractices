@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DevExpress.Data.Entity;
 using DevExpress.DataAccess.ConnectionParameters;
-using DevExpress.DataAccess.Native;
 using DevExpress.DataAccess.Web;
 using Microsoft.Extensions.Configuration;
 
@@ -19,15 +17,7 @@ namespace AspNetCoreReportingApp.Services.Reporting {
         }
 
         public DataConnectionParametersBase GetDataConnectionParameters(string name) {
-            if(name != null)
-                return null;//To prevent serialization connection parameters to the client
-            //Skip lines below
-            var connectionString = Configuration.GetSection("ReportingDataConnectionStrings").GetValue<string>(name);
-            DataConnectionParametersBase connectionParameters;
-            if(string.IsNullOrEmpty(connectionString) || !AppConfigHelper.TryCreateSqlConnectionParameters(new ConnectionStringInfo() { RunTimeConnectionString = connectionString, ProviderName= "SQLite" }, out connectionParameters)) {
-                throw new KeyNotFoundException($"Connection string '{name}' not found.");
-            }
-            return connectionParameters;
+            return null;//to prevent serialization of encrypted connection parameters
         }
     }
 }

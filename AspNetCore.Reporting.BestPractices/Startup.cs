@@ -9,6 +9,7 @@ using DevExpress.AspNetCore;
 using DevExpress.AspNetCore.Reporting;
 using DevExpress.DataAccess.Web;
 using DevExpress.DataAccess.Wizard.Services;
+using DevExpress.XtraReports.Web.ClientControls;
 using DevExpress.XtraReports.Web.Extensions;
 using DevExpress.XtraReports.Web.QueryBuilder.Services;
 using DevExpress.XtraReports.Web.ReportDesigner.Services;
@@ -135,11 +136,7 @@ namespace AspNetCoreReportingApp {
                 app.UseHsts();
             }
 
-            var reportingLogger = loggerFactory.CreateLogger("DXReporting");
-            DevExpress.XtraReports.Web.ClientControls.LoggerService.Initialize((exception, message) => {
-                var logMessage = $"[{DateTime.Now}]: Exception occurred. Message: '{message}'. Exception Details:\r\n{exception}";
-                reportingLogger.LogError(logMessage);
-            });
+            LoggerService.Initialize(new ReportingLoggerService(loggerFactory.CreateLogger("DXReporting")));
 
             app.UseDevExpressControls();
             app.UseStatusCodePages(async context => {
