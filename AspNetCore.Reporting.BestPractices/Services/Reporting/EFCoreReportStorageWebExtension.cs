@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DevExpress.XtraReports.UI;
-using DevExpress.XtraReports.Web.Extensions;
 using AspNetCoreReportingApp.Data;
 using AspNetCoreReportingApp.Models;
+using DevExpress.XtraReports.UI;
+using DevExpress.XtraReports.Web.Extensions;
 
 namespace AspNetCoreReportingApp.Services.Reporting {
     public class EFCoreReportStorageWebExtension : ReportStorageWebExtension {
@@ -15,7 +15,6 @@ namespace AspNetCoreReportingApp.Services.Reporting {
             this.userService = userService;
             this.dBContext = dBContext;
         }
-
 
         public override bool CanSetData(string url) {
             return true;
