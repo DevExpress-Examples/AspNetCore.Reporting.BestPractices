@@ -17,8 +17,8 @@ namespace AspNetCoreReportingApp {
             using(var scope = host.Services.CreateScope()) {
                 var services = scope.ServiceProvider;
                 try {
-                    var context = services.GetRequiredService<SchoolContext>();
-                    DbInitializer.Initialize(context, new Reports.ReportsFactory());
+                    var context = services.GetRequiredService<SchoolDbContext>();
+                    //DbInitializer.Initialize(context, new Reports.ReportsFactory());
                 } catch(Exception exception) {
                     var logger = services.GetRequiredService<ILogger<Program>>();
                     logger.LogError(exception, "An error occurred while seeding the database.");

@@ -9,11 +9,13 @@ using DevExpress.AspNetCore;
 using DevExpress.AspNetCore.Reporting;
 using DevExpress.DataAccess.Web;
 using DevExpress.DataAccess.Wizard.Services;
+using DevExpress.XtraReports.Templates;
 using DevExpress.XtraReports.Web.ClientControls;
 using DevExpress.XtraReports.Web.Extensions;
 using DevExpress.XtraReports.Web.QueryBuilder.Services;
 using DevExpress.XtraReports.Web.ReportDesigner.Services;
 using DevExpress.XtraReports.Web.WebDocumentViewer;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -40,10 +42,21 @@ namespace AspNetCoreReportingApp {
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
+            services.AddDbContext<SchoolDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDefaultIdentity<StudentIdentity>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<SchoolDbContext>();
+
+            services.AddIdentityServer()
+                .AddApiAuthorization<StudentIdentity, SchoolDbContext>();
+
             services
                 .AddAuthentication(options => {
-
                 })
+                .AddIdentityServerJwt(
+                )
                 .AddCookie(options => {
                 })
                 .AddJwtBearer(options => {
@@ -65,11 +78,10 @@ namespace AspNetCoreReportingApp {
                 options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
             });
             services.AddDevExpressControls();
-            services.AddDbContext<SchoolContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
 
             var builder = services
-                .AddMvc()
+                .AddControllersWithViews()
                 .RemoveDefaultReportingControllers()    // NOTE: make sure the default document viewer controller is not registered
                 .AddNewtonsoftJson()
                 .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0);
@@ -78,6 +90,8 @@ namespace AspNetCoreReportingApp {
                 builder.AddRazorRuntimeCompilation();
             }
 #endif
+            services.AddRazorPages();
+
             var cacheCleanerSettings = new CacheCleanerSettings(TimeSpan.FromMinutes(1), TimeSpan.FromSeconds(30), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2));
             services.AddSingleton<CacheCleanerSettings>(cacheCleanerSettings);
 
@@ -106,7 +120,7 @@ namespace AspNetCoreReportingApp {
             services.AddScoped<IWebDocumentViewerAuthorizationService, DocumentViewerAuthorizationService>();
             services.AddScoped<WebDocumentViewerOperationLogger, DocumentViewerAuthorizationService>();
 
-            services.AddSingleton<IScopedDbContextProvider<SchoolContext>, ScopedDbContextProvider<SchoolContext>>();
+            services.AddSingleton<IScopedDbContextProvider<SchoolDbContext>, ScopedDbContextProvider<SchoolDbContext>>();
 
             services.AddScoped<IAuthenticatiedUserService, UserService>();
             services.AddScoped<IWebDocumentViewerReportResolver, WebDocumentViewerReportResolver>();
@@ -130,29 +144,33 @@ namespace AspNetCoreReportingApp {
             System.Net.ServicePointManager.SecurityProtocol |= System.Net.SecurityProtocolType.Tls12;
             if(env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
             } else {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
+                app.UseSpaStaticFiles();
             }
 
             LoggerService.Initialize(new ReportingLoggerService(loggerFactory.CreateLogger("DXReporting")));
 
             app.UseDevExpressControls();
-            app.UseStatusCodePages(async context => {
-                var request = context.HttpContext.Request;
-                var response = context.HttpContext.Response;
+            //app.UseStatusCodePages(async context => {
+                
+            //    var request = context.HttpContext.Request;
+            //    var response = context.HttpContext.Response;
 
-                if(response.StatusCode == (int)HttpStatusCode.Unauthorized) {
-                    // you may also check requests path to do this only for specific methods       
-                    // && request.Path.Value.StartsWith("/specificPath")
-                    response.Redirect("/Account/Login");
-                }
-                await Task.CompletedTask;
-            });
+            //    if(response.StatusCode == (int)HttpStatusCode.Unauthorized) {
+            //        // you may also check requests path to do this only for specific methods       
+            //        // && request.Path.Value.StartsWith("/specificPath")
+            //        response.Redirect("/Account/Login");
+            //    }
+            //    await Task.CompletedTask;
+            //});
             app.UseRouting();
 
             app.UseAuthentication();
+            app.UseIdentityServer();
             app.UseAuthorization();
 
             app.UseHttpsRedirection();
@@ -162,6 +180,14 @@ namespace AspNetCoreReportingApp {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
+
+                //endpoints.MapControllerRoute(
+                //    name: "default",
+                //    pattern: "{*url}",
+                //    defaults: new { controller = "Reports", action = "Index" });
+                //MapSpaFallbackRoute("angular-fallback",
+                //    new { controller = "Home", action = "Index" });
             });
 
 
@@ -171,7 +197,7 @@ namespace AspNetCoreReportingApp {
 
                 spa.Options.SourcePath = "ClientApp";
 
-                if (env.IsDevelopment()) {
+                if(env.IsDevelopment()) {
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });

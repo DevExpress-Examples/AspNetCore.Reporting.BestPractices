@@ -14,15 +14,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ClientApp\src\app\utils\**" />
     <Compile Remove="node_modules\**" />
     <Compile Remove="ViewerStorages\**" />
+    <Compile Remove="Views\Account\**" />
+    <Content Remove="ClientApp\src\app\utils\**" />
     <Content Remove="node_modules\**" />
     <Content Remove="ViewerStorages\**" />
+    <Content Remove="Views\Account\**" />
+    <EmbeddedResource Remove="ClientApp\src\app\utils\**" />
     <EmbeddedResource Remove="node_modules\**" />
     <EmbeddedResource Remove="ViewerStorages\**" />
+    <EmbeddedResource Remove="Views\Account\**" />
+    <EntityDeploy Remove="ClientApp\src\app\utils\**" />
     <EntityDeploy Remove="ViewerStorages\**" />
+    <EntityDeploy Remove="Views\Account\**" />
+    <None Remove="ClientApp\src\app\utils\**" />
     <None Remove="node_modules\**" />
     <None Remove="ViewerStorages\**" />
+    <None Remove="Views\Account\**" />
     <None Remove="Reports\CourseListReport.repx" />
     <None Remove="Reports\MyEnrollmentsReport.repx" />
   </ItemGroup>
@@ -36,15 +46,77 @@
     <EmbeddedResource Include="Reports\CourseListReport.repx" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BuildBundlerMinifier" Version="3.2.435" />
-    <PackageReference Include="DevExpress.AspNetCore.Reporting" Version="20.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.5" />
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.0.0" Condition="'$(Configuration)' == 'Debug'" />
+    <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
+    <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="3.1.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <!--<PackageReference Include="DevExpress.AspNetCore.Reporting" Version="20.1.*" />-->
+    <Reference Include="DevExpress.AspNetCore.Common.v20.1">
+      <HintPath>..\..\..\..\2020.1\Bin\NetCore\DevExpress.AspNetCore.Common.v20.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.AspNetCore.Core.v20.1">
+      <HintPath>..\..\..\..\2020.1\Bin\NetCore\DevExpress.AspNetCore.Core.v20.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.AspNetCore.Reporting.v20.1">
+      <HintPath>..\..\..\..\2020.1\Bin\NetCore\DevExpress.AspNetCore.Reporting.v20.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.AspNetCore.Resources.v20.1">
+      <HintPath>..\..\..\..\2020.1\Bin\NetCore\DevExpress.AspNetCore.Resources.v20.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Charts.v20.1.Core">
+      <HintPath>..\..\..\..\2020.1\Bin\NetCore\DevExpress.Charts.v20.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Data.v20.1">
+      <HintPath>..\..\..\..\2020.1\Bin\NetCore\DevExpress.Data.v20.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.DataAccess.v20.1">
+      <HintPath>..\..\..\..\2020.1\Bin\NetCore\DevExpress.DataAccess.v20.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Office.v20.1.Core">
+      <HintPath>..\..\..\..\2020.1\Bin\NetCore\DevExpress.Office.v20.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Pdf.v20.1.Core">
+      <HintPath>..\..\..\..\2020.1\Bin\NetCore\DevExpress.Pdf.v20.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Pdf.v20.1.Drawing">
+      <HintPath>..\..\..\..\2020.1\Bin\NetCore\DevExpress.Pdf.v20.1.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.PivotGrid.v20.1.Core">
+      <HintPath>..\..\..\..\2020.1\Bin\NetCore\DevExpress.PivotGrid.v20.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Printing.v20.1.Core">
+      <HintPath>..\..\..\..\2020.1\Bin\NetCore\DevExpress.Printing.v20.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.RichEdit.v20.1.Core">
+      <HintPath>..\..\..\..\2020.1\Bin\NetCore\DevExpress.RichEdit.v20.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.RichEdit.v20.1.Export">
+      <HintPath>..\..\..\..\2020.1\Bin\NetCore\DevExpress.RichEdit.v20.1.Export.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Xpo.v20.1">
+      <HintPath>..\..\..\..\2020.1\Bin\NetCore\DevExpress.Xpo.v20.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraCharts.v20.1">
+      <HintPath>..\..\..\..\2020.1\Bin\NetCore\DevExpress.XtraCharts.v20.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraReports.v20.1">
+      <HintPath>..\..\..\..\2020.1\Bin\NetCore\DevExpress.XtraReports.v20.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraReports.v20.1.Web">
+      <HintPath>..\..\..\..\2020.1\Bin\NetCore\DevExpress.XtraReports.v20.1.Web.dll</HintPath>
+    </Reference>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.7" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.7" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.7" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.7" Condition="'$(Configuration)' == 'Debug'" />
     <PackageReference Include="System.CodeDom" Version="4.7.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.113.1" />
   </ItemGroup>
@@ -63,7 +135,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ClientApp\src\app\utils\" />
     <Folder Include="wwwroot\localization\devextreme\" />
   </ItemGroup>   
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

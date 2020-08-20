@@ -1,5 +1,3 @@
-@model IEnumerable<AspNetCoreReportingApp.Models.ReportingControlModel>
-
 @{
     ViewData["Title"] = "Reporting";
 }
@@ -8,29 +6,19 @@
 <form method="post">
     <div class="d-flex justify-content-between align-items-center" style="margin: 10px;">
         <h4>Reporting</h4>
-        <button type="submit" asp-controller="Home" asp-action="DesignReport" class="btn btn-primary btn-xs float-right">
-            Add new
-        </button>
     </div>
     <ul class="list-group">
-        @foreach(var item in Model) {
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                @item.Title
-                <div class="float-right action-buttons">
-                    <div class="btn-group float-right">
-                        <button type="submit" asp-controller="Home" asp-action="DisplayReport" asp-route-id=@item.Id asp-route-title=@item.Title class="btn btn-primary btn-xs">
-                            Show
-                        </button>
-                        <button type="submit" asp-controller="Home" asp-action="DesignReport" asp-route-id=@item.Id asp-route-title=@item.Title class="btn btn-primary btn-xs">
-                            Edit
-                        </button>
-                        <button type="submit" asp-controller="Home" asp-action="RemoveReport" class="btn btn-primary btn-xs">
-                            Remove
-                        </button>
-                        <input type="hidden" name="reportId" value="@item.Id" />
-                    </div>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div class="float-right action-buttons">
+                <div class="btn-group float-right">
+                    <button type="submit" asp-controller="Reports" asp-action="Index" class="btn btn-primary btn-xs">
+                        ASP.NET Core MVC
+                    </button>
+                    <button type="submit" asp-controller="Home" asp-action="Angular" class="btn btn-primary btn-xs">
+                        Angular
+                    </button>
                 </div>
-            </li>
-        }
+            </div>
+        </li>
     </ul>
 </form>

@@ -12,16 +12,16 @@ using Microsoft.EntityFrameworkCore;
 namespace AspNetCoreReportingApp.Services {
     public class UserService : IAuthenticatiedUserService {
         readonly IHttpContextAccessor contextAccessor;
-        readonly SchoolContext dbContext;
+        readonly SchoolDbContext dbContext;
 
-        public UserService(IHttpContextAccessor contextAccessor, SchoolContext dbContext) {
+        public UserService(IHttpContextAccessor contextAccessor, SchoolDbContext dbContext) {
             this.contextAccessor = contextAccessor ?? throw new ArgumentNullException(nameof(contextAccessor));
             this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public int GetCurrentUserId() {
+        public string GetCurrentUserId() {
             var sidStr = contextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid);        
-            return Convert.ToInt32(sidStr.Value, CultureInfo.InvariantCulture);
+            return sidStr?.Value;
         }
 
         public IEnumerable<Claim> GetCurrentUserClaims() {
@@ -33,7 +33,7 @@ namespace AspNetCoreReportingApp.Services {
         }
 
         public async Task<StudentDetailsModel> AuthenticateAsync(LoginRequest loginRequest) {
-            var student = await dbContext.Students.FirstOrDefaultAsync(x => x.ID == loginRequest.UserID);
+            var student = await dbContext.Students.FirstOrDefaultAsync(x => x.Id == loginRequest.UserID);
             if(student == null)
                 return null;
             return GetStudentModel(student);
@@ -43,9 +43,9 @@ namespace AspNetCoreReportingApp.Services {
             return dbContext.Students.Select(GetStudentModel);
         }
 
-        StudentDetailsModel GetStudentModel(Student student) {
+        StudentDetailsModel GetStudentModel(StudentIdentity student) {
             return new StudentDetailsModel {
-                StudentID = student.ID,
+                StudentID = student.Id,
                 FirstMidName = student.FirstMidName,
                 LastName = student.LastName,
                 EnrollmentDate = student.EnrollmentDate

@@ -6,15 +6,15 @@ using AspNetCoreReportingApp.Models;
 
 namespace AspNetCoreReportingApp.Services {
     public class MyEnrollmentsReportRepository {
-        readonly int studentId;
-        readonly IScopedDbContextProvider<SchoolContext> scopedDbContextProvider;
+        readonly string studentId;
+        readonly IScopedDbContextProvider<SchoolDbContext> scopedDbContextProvider;
 
         public MyEnrollmentsReportRepository() {
             // We use this parameterless constructor in the Data Source Wizard only, and not for the actual instantiation of the repository object.
             throw new NotSupportedException();
         }
 
-        public MyEnrollmentsReportRepository(IScopedDbContextProvider<SchoolContext> scopedDbContextProvider, IAuthenticatiedUserService userService) {
+        public MyEnrollmentsReportRepository(IScopedDbContextProvider<SchoolDbContext> scopedDbContextProvider, IAuthenticatiedUserService userService) {
             this.scopedDbContextProvider = scopedDbContextProvider ?? throw new ArgumentNullException(nameof(scopedDbContextProvider));
 
             // NOTE: the repository ctor is invoked in the context of http request. At this point of execution we have access to context-dependent data, like currentUserId.
@@ -28,7 +28,7 @@ namespace AspNetCoreReportingApp.Services {
                 var student = dbContext.Students.Find(studentId);
 
                 var model = new StudentDetailsModel {
-                    StudentID = student.ID,
+                    StudentID = student.Id,
                     FirstMidName = student.FirstMidName,
                     LastName = student.LastName,
                     EnrollmentDate = student.EnrollmentDate

@@ -6,14 +6,14 @@ using AspNetCoreReportingApp.Models;
 
 namespace AspNetCoreReportingApp.Services {
     public class CourseListReportRepository {
-        readonly IScopedDbContextProvider<SchoolContext> scopedDbContextProvider;
+        readonly IScopedDbContextProvider<SchoolDbContext> scopedDbContextProvider;
 
         public CourseListReportRepository() {
             // We use this parameterless constructor in the Data Source Wizard only, and not for the actual instantiation of the repository object.
             throw new NotSupportedException();
         }
 
-        public CourseListReportRepository(IScopedDbContextProvider<SchoolContext> scopedDbContextProvider) {
+        public CourseListReportRepository(IScopedDbContextProvider<SchoolDbContext> scopedDbContextProvider) {
             this.scopedDbContextProvider = scopedDbContextProvider ?? throw new ArgumentNullException(nameof(scopedDbContextProvider));
         }
 
