@@ -8,6 +8,6 @@ namespace AspNetCoreReportingApp.Data {
         public int ID { get; set; }
         public byte[] ReportLayout { get; set; }
         public string DisplayName { get; set; }
-        public Student Student { get; set; }
+        public StudentIdentity Student { get; set; }
     }
 }

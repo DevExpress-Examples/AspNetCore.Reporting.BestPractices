@@ -14,13 +14,13 @@ using Microsoft.EntityFrameworkCore;
 namespace AspNetCoreReportingApp.Controllers {
     public class AccountController : Controller {
         [HttpGet]
-        public async Task<IActionResult> Login([FromServices]SchoolContext dbContext) {
+        public async Task<IActionResult> Login([FromServices]SchoolDbContext dbContext) {
             return View(await GetLoginScreenModelAsync(dbContext));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login([FromServices]SchoolContext dbContext, int userId, string returnUrl) {
+        public async Task<IActionResult> Login([FromServices]SchoolDbContext dbContext, int userId, string returnUrl) {
             var student = await dbContext.Students.FindAsync(userId);
             if(student != null) {
                 await SignInAsync(student);
@@ -40,13 +40,13 @@ namespace AspNetCoreReportingApp.Controllers {
             return RedirectToAction(nameof(Login));
         }
 
-        async Task SignInAsync(Student user) {
+        async Task SignInAsync(StudentIdentity user) {
             string userName = $"{user.FirstMidName} {user.LastName}";
 
             var claims = new[] {
                 new Claim(ClaimTypes.Name, userName),
                 new Claim(ClaimTypes.NameIdentifier, userName),
-                new Claim(ClaimTypes.Sid, user.ID.ToString(CultureInfo.InvariantCulture))
+                new Claim(ClaimTypes.Sid, user.Id)
             };
 
             var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -56,11 +56,12 @@ namespace AspNetCoreReportingApp.Controllers {
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties { IsPersistent = true });
         }
 
-        async Task<LoginScreenModel> GetLoginScreenModelAsync(SchoolContext dBContext) {
+        async Task<LoginScreenModel> GetLoginScreenModelAsync(SchoolDbContext dBContext) {
             var model = new LoginScreenModel();
+
             model.Users = await dBContext.Students
                 .Select(x => new SelectListItem {
-                    Value = x.ID.ToString(CultureInfo.InvariantCulture),
+                    Value = x.Id,
                     Text = $"{x.FirstMidName} {x.LastName}"
                 })
                 .ToListAsync();

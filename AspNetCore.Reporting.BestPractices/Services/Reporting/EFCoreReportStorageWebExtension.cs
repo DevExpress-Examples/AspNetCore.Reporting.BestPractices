@@ -9,9 +9,9 @@ using DevExpress.XtraReports.Web.Extensions;
 namespace AspNetCoreReportingApp.Services.Reporting {
     public class EFCoreReportStorageWebExtension : ReportStorageWebExtension {
         private readonly IAuthenticatiedUserService userService;
-        private readonly SchoolContext dBContext;
+        private readonly SchoolDbContext dBContext;
 
-        public EFCoreReportStorageWebExtension(IAuthenticatiedUserService userService, SchoolContext dBContext) {
+        public EFCoreReportStorageWebExtension(IAuthenticatiedUserService userService, SchoolDbContext dBContext) {
             this.userService = userService;
             this.dBContext = dBContext;
         }
@@ -26,7 +26,7 @@ namespace AspNetCoreReportingApp.Services.Reporting {
 
         public override byte[] GetData(string url) {
             var userIdentity = userService.GetCurrentUserId();
-            var reportData = dBContext.Reports.Where(a => a.ID == int.Parse(url) && a.Student.ID == userIdentity).FirstOrDefault();
+            var reportData = dBContext.Reports.Where(a => a.ID == int.Parse(url) && a.Student.Id == userIdentity).FirstOrDefault();
             if(reportData != null) {
                 return reportData.ReportLayout;
             } else {
@@ -36,14 +36,14 @@ namespace AspNetCoreReportingApp.Services.Reporting {
 
         public override Dictionary<string, string> GetUrls() {
             var userIdentity = userService.GetCurrentUserId();
-            var reportData = dBContext.Reports.Where(a => a.Student.ID == userIdentity).Select(a => new ReportingControlModel() { Id = a.ID.ToString(), Title = string.IsNullOrEmpty(a.DisplayName) ? "Noname Report" : a.DisplayName });
+            var reportData = dBContext.Reports.Where(a => a.Student.Id == userIdentity).Select(a => new ReportingControlModel() { Id = a.ID.ToString(), Title = string.IsNullOrEmpty(a.DisplayName) ? "Noname Report" : a.DisplayName });
             var reports = reportData.ToList();
             return reports.ToDictionary(x => x.Id.ToString(), y => y.Title);
         }
 
         public override void SetData(XtraReport report, string url) {
             var userIdentity = userService.GetCurrentUserId();
-            var reportEntity = dBContext.Reports.Where(a => a.ID == int.Parse(url) && a.Student.ID == userIdentity).FirstOrDefault();
+            var reportEntity = dBContext.Reports.Where(a => a.ID == int.Parse(url) && a.Student.Id == userIdentity).FirstOrDefault();
             reportEntity.ReportLayout = ReportToByteArray(report);
             reportEntity.DisplayName = report.DisplayName;
             dBContext.SaveChanges();

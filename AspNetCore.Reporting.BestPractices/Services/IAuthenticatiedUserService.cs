@@ -5,7 +5,7 @@ using AspNetCoreReportingApp.Models;
 
 namespace AspNetCoreReportingApp.Services {
     public interface IAuthenticatiedUserService {
-        int GetCurrentUserId();
+        string GetCurrentUserId();
         string GetCurrentUserName();
         IEnumerable<Claim> GetCurrentUserClaims();
         Task<StudentDetailsModel> AuthenticateAsync(LoginRequest loginRequest);

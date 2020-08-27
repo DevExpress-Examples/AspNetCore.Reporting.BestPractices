@@ -6,6 +6,7 @@ using DevExpress.DataAccess.Native;
 using DevExpress.DataAccess.Sql;
 using DevExpress.DataAccess.Web;
 using DevExpress.DataAccess.Wizard.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
 namespace AspNetCoreReportingApp.Services.Reporting {
@@ -21,11 +22,14 @@ namespace AspNetCoreReportingApp.Services.Reporting {
 
     public class CustomConnectionProviderService : IConnectionProviderService {
         readonly IConfiguration configuration;
-        public CustomConnectionProviderService(IConfiguration configuration) {
+        readonly IHttpContextAccessor httpContextAccessor;
+        public CustomConnectionProviderService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor) {
             this.configuration = configuration;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         public SqlDataConnection LoadConnection(string connectionName) {
+            
             var connectionStringSection = configuration.GetSection("ReportingDataConnectionStrings");
             var connectionString = connectionStringSection?.GetValue<string>(connectionName);
             var connectionStringInfo = new ConnectionStringInfo { RunTimeConnectionString = connectionString, ProviderName = "SQLite" };

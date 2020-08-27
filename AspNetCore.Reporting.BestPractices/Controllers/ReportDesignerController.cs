@@ -6,9 +6,9 @@ using DevExpress.XtraReports.Web.Extensions;
 using DevExpress.XtraReports.Web.ReportDesigner;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ReportDesignerApp.Controllers {
+namespace AspNetCoreReportingApp.Controllers {
     [Route("api/[controller]")]
-    public class ReportDesignerController : Controller {
+    public class ReportDesignerApiController : Controller {
         [HttpPost("[action]"), HttpGet("[action]"), HttpOptions("[action]")]
         public object GetReportList([FromServices] ReportStorageWebExtension reportStorageWebExtension) {
             return reportStorageWebExtension.GetUrls();

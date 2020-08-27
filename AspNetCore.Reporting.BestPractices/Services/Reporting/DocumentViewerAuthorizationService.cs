@@ -5,8 +5,8 @@ using DevExpress.XtraReports.Web.WebDocumentViewer;
 
 namespace AspNetCoreReportingApp.Services.Reporting {
     class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWebDocumentViewerAuthorizationService {
-        static ConcurrentDictionary<string, int> DocumentIdOwnerMap { get; } = new ConcurrentDictionary<string, int>();
-        static ConcurrentDictionary<string, int> ReportIdOwnerMap { get; } = new ConcurrentDictionary<string, int>();
+        static ConcurrentDictionary<string, string> DocumentIdOwnerMap { get; } = new ConcurrentDictionary<string, string>();
+        static ConcurrentDictionary<string, string> ReportIdOwnerMap { get; } = new ConcurrentDictionary<string, string>();
 
         IAuthenticatiedUserService UserService { get; }
 
@@ -24,7 +24,7 @@ namespace AspNetCoreReportingApp.Services.Reporting {
             base.BuildStarted(reportId, documentId, buildProperties);
         }
 
-        void MapIdentifiersToUser(int userId, string documentId, string reportId) {
+        void MapIdentifiersToUser(string userId, string documentId, string reportId) {
             if(!string.IsNullOrEmpty(documentId)) {
                 DocumentIdOwnerMap.TryAdd(documentId, userId);
             }

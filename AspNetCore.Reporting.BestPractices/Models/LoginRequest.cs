@@ -6,7 +6,7 @@ namespace AspNetCoreReportingApp.Models {
         public string Username { get; set; }
 
         [Required]
-        public int UserID { get; set; }//We have created predefined users for simplicity, so we use it instead of hashed password in demo purposes
+        public string UserID { get; set; }//We have created predefined users for simplicity, so we use it instead of hashed password in demo purposes
 
         [Required]
         public string Password { get; set; }
