@@ -16,6 +16,7 @@ Generate an antiforgery token in a view and attach it to every request:
 ```cs
 SetupJwt('bearer token can be passed here', "@GetAntiXsrfRequestToken()");
 ```
+//TODO: I would like to change this method name SetupRequestHeaders
 
 See the example project's [Views/Home/DesignReport](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DisplayReport.cshtml) file for the full code.
 
@@ -56,6 +57,7 @@ To optimize memory consumption, use the following techniques:
   ```
 
 - Close the viewed reports on page unload to release resources consumed by a document when the client browser's window/tab is closed. To do that use the client-side `ASPxClientWebDocumentViewer.Close` method
+//TODO: or when a viewer are going to close (on the same page). F.e. when viewer is within popup or somewhere else on the same page.
 
   ```cs
   function WebDocumentViewer_BeforeRender(s, e) {
@@ -138,6 +140,7 @@ public class CustomWebDocumentViewerExceptionHandler : WebDocumentViewerExceptio
 Refer to the example project's [Services/Reporting/CustomExceptionHandlers.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Services/Reporting/CustomExceptionHandlers.cs) file for the full code.
 
 ## Implement User Authorization
+//TODO: IWebDocumentViewerExportedDocumentStorage missed. To prevent unathorized requests to export result files (Exorted document storage is used in case of async export/print operation)
 
 To perform user authorization and restrict access to reports based on arbitrary logic, implement and register an `IWebDocumentViewerAuthorizationService` along with `WebDocumentViewerOperationLogger`.
 
@@ -164,6 +167,7 @@ class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWe
 ```
 
 Register your authorization service implementation in **startup.js**.
+//TODO: startup.cs instead of .js
 
 [Startup.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Startup.cs#L106):
 
@@ -179,6 +183,8 @@ public class Startup {
 ```
 
 ## Prepare Application Skeleton
+//TODO: there are two skeleton section in this article (find the second below)
+//I think it should be better if we say here about responsiveness of the web application or some kind of loading feadback/indicator from the web page.
 
 Use the following best practices to create an efficient skeleton for a web reporting application.
 
@@ -244,6 +250,7 @@ public DataConnectionParametersBase GetDataConnectionParameters(string name) {
 ```
 
 In the IConnectionProviderService returned by the IConnectionProviderService, initialize and return the connection.</span>
+//TODO: should be: the IConnectionProviderService returned by the IConnectionProviderFactory
 
 ```cs
 public SqlDataConnection LoadConnection(string connectionName) {
@@ -261,6 +268,7 @@ public SqlDataConnection LoadConnection(string connectionName) {
 ```
 
 Register the implemented services in [Startup.js](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Startup.cs)
+//TODO: startup.cs instead of .js
 
 ## Localize Client UI
 
