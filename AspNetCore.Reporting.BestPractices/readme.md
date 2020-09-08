@@ -1,4 +1,6 @@
-﻿## Prevent Cross-Site Request Forgery
+﻿## Application Security
+
+### Prevent Cross-Site Request Forgery
 
 An antiforgery token is generate when the client-side reporting application is rendered on a view. The token is saved on the client and the client application passes it to the server with every request for verification.
 
@@ -14,9 +16,8 @@ Generate an antiforgery token in a view and attach it to every request:
 ```
 
 ```cs
-SetupJwt('bearer token can be passed here', "@GetAntiXsrfRequestToken()");
+SetupRequestHeaders('bearer token can be passed here', "@GetAntiXsrfRequestToken()");
 ```
-//TODO: I would like to change this method name SetupRequestHeaders
 
 See the example project's [Views/Home/DesignReport](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DisplayReport.cshtml) file for the full code.
 
@@ -38,6 +39,49 @@ public class CustomMVCWebDocumentViewerController : WebDocumentViewerController 
 
 For more information on how to use antiforgery tokens in ASP.NET, refer to the following topic in Microsoft documentation: [Prevent Cross-Site Request Forgery (XSRF/CSRF) attacks in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/anti-request-forgery).
 
+### Implement User Authorization
+
+To perform user authorization and restrict access to reports based on arbitrary logic, implement and register an `IWebDocumentViewerAuthorizationService` along with `WebDocumentViewerOperationLogger`.
+
+Additionally, implement an `IWebDocumentViewerExportedDocumentStorage` to prevent unauthorized requests to documents generated during asynchronous export and printing operations.
+
+[Services/Reporting/DocumentViewerAuthorizationService.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Services/Reporting/DocumentViewerAuthorizationService.cs):
+
+```cs
+class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWebDocumentViewerAuthorizationService {
+    ...
+    public override void ReportOpening(string reportId, string documentId, XtraReport report) {
+        MapIdentifiersToUser(UserService.GetCurrentUserId(), documentId, reportId);
+        base.ReportOpening(reportId, documentId, report);
+    }
+    void MapIdentifiersToUser(int userId, string documentId, string reportId) {
+        if(!string.IsNullOrEmpty(documentId)) {
+            DocumentIdOwnerMap.TryAdd(documentId, userId);
+        }
+        if(!string.IsNullOrEmpty(reportId)) {
+            ReportIdOwnerMap.TryAdd(reportId, userId);
+        }
+    }
+    ...
+
+}
+```
+
+Register your authorization service implementation in **startup.cs**.
+
+[Startup.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Startup.cs#L106):
+
+```cs
+public class Startup {
+    public void ConfigureServices(IServiceCollection services) {
+        ...
+        services.AddScoped<IWebDocumentViewerAuthorizationService, DocumentViewerAuthorizationService>();
+        ...
+    }
+    ...
+}
+```
+
 ## Optimize Memory Consumption
 
 This section describes how to optimize a reporting application's memory consumption, prevent memory leaks and cluttering on the server.
@@ -56,8 +100,7 @@ To optimize memory consumption, use the following techniques:
   });
   ```
 
-- Close the viewed reports on page unload to release resources consumed by a document when the client browser's window/tab is closed. To do that use the client-side `ASPxClientWebDocumentViewer.Close` method
-//TODO: or when a viewer are going to close (on the same page). F.e. when viewer is within popup or somewhere else on the same page.
+- When the page or a UI region (for example, a popup window) that displays the Document Viewer is about to be closed, close the the viewed report to release resources consumed by it. To do that use the client-side `ASPxClientWebDocumentViewer.Close` method:
 
   ```cs
   function WebDocumentViewer_BeforeRender(s, e) {
@@ -139,54 +182,13 @@ public class CustomWebDocumentViewerExceptionHandler : WebDocumentViewerExceptio
 
 Refer to the example project's [Services/Reporting/CustomExceptionHandlers.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Services/Reporting/CustomExceptionHandlers.cs) file for the full code.
 
-## Implement User Authorization
-//TODO: IWebDocumentViewerExportedDocumentStorage missed. To prevent unathorized requests to export result files (Exorted document storage is used in case of async export/print operation)
 
-To perform user authorization and restrict access to reports based on arbitrary logic, implement and register an `IWebDocumentViewerAuthorizationService` along with `WebDocumentViewerOperationLogger`.
-
-[Services/Reporting/DocumentViewerAuthorizationService.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Services/Reporting/DocumentViewerAuthorizationService.cs):
-
-```cs
-class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWebDocumentViewerAuthorizationService {
-    ...
-    public override void ReportOpening(string reportId, string documentId, XtraReport report) {
-        MapIdentifiersToUser(UserService.GetCurrentUserId(), documentId, reportId);
-        base.ReportOpening(reportId, documentId, report);
-    }
-    void MapIdentifiersToUser(int userId, string documentId, string reportId) {
-        if(!string.IsNullOrEmpty(documentId)) {
-            DocumentIdOwnerMap.TryAdd(documentId, userId);
-        }
-        if(!string.IsNullOrEmpty(reportId)) {
-            ReportIdOwnerMap.TryAdd(reportId, userId);
-        }
-    }
-    ...
-
-}
-```
-
-Register your authorization service implementation in **startup.js**.
-//TODO: startup.cs instead of .js
-
-[Startup.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Startup.cs#L106):
-
-```cs
-public class Startup {
-    public void ConfigureServices(IServiceCollection services) {
-        ...
-        services.AddScoped<IWebDocumentViewerAuthorizationService, DocumentViewerAuthorizationService>();
-        ...
-    }
-    ...
-}
-```
 
 ## Prepare Application Skeleton
-//TODO: there are two skeleton section in this article (find the second below)
-//I think it should be better if we say here about responsiveness of the web application or some kind of loading feadback/indicator from the web page.
 
-Use the following best practices to create an efficient skeleton for a web reporting application.
+This section describes how to implement an efficient application skeleton to maximize the application's responsiveness. With this approach, the client application's layout is loaded first and can display a progress indicator while the resources for the reporting components are being downloaded from the server.
+
+Use the following steps to prepare an application skeleton.
 
 In [\_Layout.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Shared/_Layout.cshtml), move all script registrations to the bottom of the layout:
 
@@ -249,8 +251,7 @@ public DataConnectionParametersBase GetDataConnectionParameters(string name) {
 }
 ```
 
-In the IConnectionProviderService returned by the IConnectionProviderService, initialize and return the connection.</span>
-//TODO: should be: the IConnectionProviderService returned by the IConnectionProviderFactory
+In the IConnectionProviderService returned by the IConnectionProviderFactory, initialize and return the connection.</span>
 
 ```cs
 public SqlDataConnection LoadConnection(string connectionName) {
@@ -267,8 +268,8 @@ public SqlDataConnection LoadConnection(string connectionName) {
 }
 ```
 
-Register the implemented services in [Startup.js](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Startup.cs)
-//TODO: startup.cs instead of .js
+Register the implemented services in [Startup.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Startup.cs)
+
 
 ## Localize Client UI
 
