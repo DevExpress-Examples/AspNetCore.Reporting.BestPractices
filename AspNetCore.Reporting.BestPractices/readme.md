@@ -21,6 +21,8 @@ SetupRequestHeaders('bearer token can be passed here', "@GetAntiXsrfRequestToken
 
 See the example project's [Views/Home/DesignReport](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DisplayReport.cshtml) file for the full code.
 
+***Vasily:** Как понимаю выше мы pассказываем о стандартном подходе. Нужно ли нам это? Мб имеет смысл сделать акцент только на том какие изменения надо сделать с нашими компонентами (часть ниже)?*
+
 To check a request token in a controller action on the server side, apply the `[ValidateAntiForgeryToken]` attribute to the action.
 
 [Controllers/CustomMVCReportingControllers](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Controllers/CustomMVCReportingControllers.cs):
@@ -36,6 +38,8 @@ public class CustomMVCWebDocumentViewerController : WebDocumentViewerController 
     }
 }
 ```
+
+***Vasily:** Пример кода только для вьювера. Нужен либо и код контроллеров для дизайнера, либо пояснение что для дизайнера надо модифицировать и два других контроллера.*
 
 For more information on how to use antiforgery tokens in ASP.NET, refer to the following topic in Microsoft documentation: [Prevent Cross-Site Request Forgery (XSRF/CSRF) attacks in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/anti-request-forgery).
 
@@ -67,6 +71,8 @@ class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWe
 }
 ```
 
+***Vasily:** Из этого кода не очень понятно как именно разрешается/запрещается доступ. Надо либо расписать поподробнее либо в коде комменты добаить.*
+
 Register your authorization service implementation in **startup.cs**.
 
 [Startup.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Startup.cs#L106):
@@ -88,6 +94,9 @@ This section describes how to optimize a reporting application's memory consumpt
 
 To optimize memory consumption, use the following techniques:
 
+
+***Vasily:** Для пунктов не хватает информации о том что каждвй делает и как влиеяет на потребление памяти/перформанс.*
+
 - UseCachedReportSourceBuilder() + UseFileXXXStorage
 
   ```cs
@@ -99,6 +108,9 @@ To optimize memory consumption, use the following techniques:
     viewerConfigurator.UseCachedReportSourceBuilder();
   });
   ```
+  
+  
+  ***Vasily:** Тут мы включаем хранение документов на диске вместо хранения их в памяти на сервере (ссылку можно дать на архитектуру). При этом жертвуем перфомансом.*
 
 - When the page or a UI region (for example, a popup window) that displays the Document Viewer is about to be closed, close the the viewed report to release resources consumed by it. To do that use the client-side `ASPxClientWebDocumentViewer.Close` method:
 
@@ -108,6 +120,9 @@ To optimize memory consumption, use the following techniques:
       s.Close();
   });
   ```
+
+
+  ***Vasily:** Тут тоже можно оперировать терминами Storage и Cache из доки по архитектуре. Важнынй моент, этим кодом мы очищаем память на сервере при закрытии таба в браузере.*
 
 - Configure Storage and Cache cleaners on application startup.
 
@@ -121,7 +136,13 @@ To optimize memory consumption, use the following techniques:
 
   > Keep in mind that .NET is a managed environment and unused memory is freed only during garbage collection. Refer to the [Fundamentals of garbage collection](https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals) article for more information.
 
+
+  ***Vasily:** Тут мы меняем время жизни репортов в сторадже/кэше что позволяет быстрее очищать ресурсы на сервере. Важный момент что после очистки стораджа, репорт посмотреть уже нельзя будет без пересоздания документа - нельзя будет переключать страницы, экспортить и т.д. (а то я видел клоунов кто время жизни выставлял в минуту)*
+
+
 ## Handle Exceptions
+
+***Vasily:** Мб дать ссылку на топик по диагностике ещё тут? Или отдельный **Troubleshoot** пункт завести и послать на соотв. доку*
 
 ### Logging errors that occurred in the code of DevExpress reporting components
 
@@ -185,6 +206,8 @@ Refer to the example project's [Services/Reporting/CustomExceptionHandlers.cs](h
 
 
 ## Prepare Application Skeleton
+
+***Vasily:** Мб картинку приаттачить показывающую пример скелетона? А то для меня например было не понятно что это вообще такое пока я не увидел вживую как выглядит скелетон.*
 
 This section describes how to implement an efficient application skeleton to maximize the application's responsiveness. With this approach, the client application's layout is loaded first and can display a progress indicator while the resources for the reporting components are being downloaded from the server.
 
@@ -273,6 +296,8 @@ Register the implemented services in [Startup.cs](https://github.com/DevExpress-
 
 ## Localize Client UI
 
+***Vasily:** Не показано как локализовать DevExtreme эдиторы*
+
 DevExpress client reporting controls use the DevExtreme localization mechanism to localize the UI and messages.
 
 To localize DevExpress reporting controls, go to [localization.devexpress.com](localization.devexpress.com), download the required localization JSON files and save them to the `locaization` folder within the application's wwwroot folder. After that, configure the view as described below:
@@ -298,13 +323,23 @@ To localize DevExpress reporting controls, go to [localization.devexpress.com](l
         ...
 ```
 
+***Vasily:** Важный момент, переводы могут покрывать не 100% строк. Так что тут не просто перейти и скачать, а ещё возмможно перевести некоторые строки вручную. У нас есть хорошая дока на эту тему, можно ссылку дать*
+
 For a full code example, refer to the example project's [Views/Home/DesignReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DisplayReport.cshtml).
 
 ## Bind to EF Core Report Data Source
 
+***Vasily:** Тут можно отметить что это пункт только для тех кто использует EF Core. Тоесть он не обязательен для тех у кого доступ к данным организован через другие механизмы*
+
 Refer to the following example for information on how to bind to an EF Core data source.
 
 https://github.com/DevExpress-Examples/Reporting-Entity-Framework-Core-In-AspNet-Core
+
+---
+
+***Vasily:** Про репорт сторадж/провайдер будем писать что-то?*
+*И про биндинг репорта к Object / List ? Сейчас это известаня проблема для веб приложений из-за особенностей сериализации. Можно сослаться на доку что делал Борис: [Create Object Data Source at Runtime](https://docs.devexpress.com/XtraReports/401902/web-reporting/asp-net-core-reporting/document-viewer/bind-to-data/create-object-data-source-for-loaded-report)*
+*И про прокидываение параметров в репорт. Это тоже известная боль и есть дока от Бриса [Pass Parameters from the Client to a Report](https://docs.devexpress.com/XtraReports/401930/web-reporting/javascript-reporting/angular/document-viewer/customization/parameter-sent-to-report)*
 
 ---
 
