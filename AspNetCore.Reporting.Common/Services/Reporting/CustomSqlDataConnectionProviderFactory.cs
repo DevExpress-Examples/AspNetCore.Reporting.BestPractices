@@ -29,7 +29,6 @@ namespace AspNetCore.Reporting.Common.Services.Reporting {
         }
 
         public SqlDataConnection LoadConnection(string connectionName) {
-            
             var connectionStringSection = configuration.GetSection("ReportingDataConnectionStrings");
             var connectionString = connectionStringSection?.GetValue<string>(connectionName);
             var connectionStringInfo = new ConnectionStringInfo { RunTimeConnectionString = connectionString, ProviderName = "SQLite" };

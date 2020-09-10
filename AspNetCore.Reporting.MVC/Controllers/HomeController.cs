@@ -14,8 +14,7 @@ namespace AspNetCore.Reporting.MVC.Controllers {
     //[Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     [Authorize]
     public class HomeController : Controller {
-        [AllowAnonymous]
-        public async Task<IActionResult> Index([FromServices] IAuthenticatiedUserService userService, [FromServices] SchoolDbContext dBContext, [FromServices] UserManager<StudentIdentity> userManager) {
+        public async Task<IActionResult> Index([FromServices] IAuthenticatiedUserService userService, [FromServices] SchoolDbContext dBContext) {
             //var students = DbDefaultsGenerator.GenerateStudents(userManager);
             //foreach(StudentIdentity s in students) {
             //    s.UserName = s.FirstMidName + s.LastName;

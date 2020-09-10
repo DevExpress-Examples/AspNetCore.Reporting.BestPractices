@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace AspNetCore.Reporting.MVC.Data {
     public static class DbInitializer {
-        public static void Initialize(SchoolDbContext context, UserManager<StudentIdentity> userManager, ReportsFactory factory) {
+        public static void Initialize(SchoolDbContext context, ReportsFactory factory) {
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
             // Look for any students.

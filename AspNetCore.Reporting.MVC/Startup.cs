@@ -1,4 +1,3 @@
-using System;
 using AspNetCore.Reporting.Common.Data;
 using AspNetCore.Reporting.Common.Services;
 using AspNetCore.Reporting.Common.Services.Reporting;
@@ -31,17 +30,14 @@ namespace AspNetCore.Reporting.MVC {
             services.AddDbContext<SchoolDbContext>(options =>
                 options.UseSqlite(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<StudentIdentity>(options => {
-                options.SignIn.RequireConfirmedAccount = true;
-            })
-                .AddUserStore<CustomStudentsUserStore>()
-                .AddEntityFrameworkStores<SchoolDbContext>();
+            services
+                .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie();
             services.ConfigureApplicationCookie(x => {
                 x.LoginPath = new PathString("/Account/Login");
             });
 
             services.AddControllersWithViews().RemoveDefaultReportingControllers().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0);
-            //services.AddRazorPages();
             services.AddDevExpressControls();
             services.ConfigureReportingServices(x => x.ConfigureReportDesigner(reportDesignerConfigurator => {
                 reportDesignerConfigurator.RegisterObjectDataSourceWizardTypeProvider<CustomObjectDataSourceWizardTypeProvider>();
@@ -83,7 +79,6 @@ namespace AspNetCore.Reporting.MVC {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
             });
         }
     }

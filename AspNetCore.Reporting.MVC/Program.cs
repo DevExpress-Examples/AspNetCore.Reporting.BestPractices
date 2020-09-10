@@ -24,8 +24,9 @@ namespace AspNetCore.Reporting.MVC {
                 var services = scope.ServiceProvider;
                 try {
                     var dbContext = services.GetRequiredService<SchoolDbContext>();
-                    var userManager = services.GetRequiredService<UserManager<StudentIdentity>>();
-                    DbInitializer.Initialize(dbContext, userManager, new Common.Reports.ReportsFactory());
+                    //var userManager = services.GetRequiredService<UserManager<StudentIdentity>>();
+                    //DbInitializer.Initialize(dbContext, userManager, new Common.Reports.ReportsFactory());
+                    DbInitializer.Initialize(dbContext, new Common.Reports.ReportsFactory());
                 } catch(Exception exception) {
                     var logger = services.GetRequiredService<ILogger<Program>>();
                     logger.LogError(exception, "An error occurred while seeding the database.");
