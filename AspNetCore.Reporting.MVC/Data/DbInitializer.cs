@@ -16,7 +16,7 @@ namespace AspNetCore.Reporting.MVC.Data {
                 return;// DB has been seeded
             }
 
-            var students = DbDefaultsGenerator.GenerateStudents();
+            var students = DbDefaultsGenerator.GenerateStudents(null);
             foreach(StudentIdentity s in students) {
                 context.Students.Add(s);
                 foreach(var report in factory.Reports.Select(a => new { a.Key, Value = a.Value() })) {

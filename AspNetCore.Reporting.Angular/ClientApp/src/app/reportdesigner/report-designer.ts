@@ -1,6 +1,8 @@
-import { Component, Inject, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, ViewEncapsulation, OnInit } from '@angular/core';
 import DevExpress from "@devexpress/analytics-core";
 import { AuthorizeService } from '../../api-authorization/authorize.service';
+import * as ko from 'knockout';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'report-designer',
@@ -18,11 +20,18 @@ import { AuthorizeService } from '../../api-authorization/authorize.service';
   ]
 })
 
-export class ReportDesignerComponent {
+export class ReportDesignerComponent implements OnInit {
   getDesignerModelAction = "api/ReportDesignerSetup/GetReportDesignerModel";
-  reportUrl = "TestReport";
+  get reportUrl() {
+    return this.koReportUrl();
+  };
+  set reportUrl(newUrl) {
+    this.koReportUrl(newUrl);
+  }
+  koReportUrl = ko.observable('');
 
-  constructor(@Inject('BASE_URL') public hostUrl: string, private authorize: AuthorizeService) {
+  constructor(@Inject('BASE_URL') public hostUrl: string, private authorize: AuthorizeService, private activateRoute: ActivatedRoute) {
+    window['ko'] = ko;
     this.authorize.getAccessToken()
       .subscribe(x => {
         DevExpress.Analytics.Utils.ajaxSetup.ajaxSettings = {
@@ -30,5 +39,12 @@ export class ReportDesignerComponent {
             'Authorization': 'Bearer ' + x
           }
         };
-      });}
+      });
+  }
+
+  ngOnInit() {
+    if(this.activateRoute.snapshot.queryParams['reportId']) {
+      this.reportUrl = this.activateRoute.snapshot.queryParams['reportId'];
+    }
+  }
 }

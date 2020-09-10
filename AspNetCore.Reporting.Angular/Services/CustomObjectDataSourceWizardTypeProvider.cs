@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using AspNetCore.Reporting.Angular.Services;
 using DevExpress.DataAccess.Web;
 
 namespace AspNetCore.Reporting.Common.Services.Reporting {

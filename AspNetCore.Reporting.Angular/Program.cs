@@ -1,6 +1,8 @@
 using System;
 using AspNetCore.Reporting.Angular.Data;
+using AspNetCore.Reporting.Common.Data;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -17,7 +19,8 @@ namespace AspNetCore.Reporting.Angular {
                 var services = scope.ServiceProvider;
                 try {
                     var context = services.GetRequiredService<SchoolDbContext>();
-                    DbInitializer.Initialize(context, new Common.Reports.ReportsFactory());
+                    var userManager = services.GetRequiredService<UserManager<StudentIdentity>>();
+                    DbInitializer.Initialize(context, userManager, new Common.Reports.ReportsFactory());
                 } catch(Exception exception) {
                     var logger = services.GetRequiredService<ILogger<Program>>();
                     logger.LogError(exception, "An error occurred while seeding the database.");

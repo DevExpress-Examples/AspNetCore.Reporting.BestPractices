@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 namespace AspNetCore.Reporting.Common.Data {
     public static class DbDefaultsGenerator {
 
-        public static StudentIdentity[] GenerateStudents() {
+        public static StudentIdentity[] GenerateStudents(UserManager<StudentIdentity> userManager) {
             var students = new StudentIdentity[] {
                 new StudentIdentity{ FirstMidName = "Carson", LastName = "Alexander", EnrollmentDate = DateTime.Parse("2005-09-01") },
                 new StudentIdentity{ FirstMidName = "Meredith", LastName = "Alonso", EnrollmentDate = DateTime.Parse("2002-09-01") },
@@ -15,15 +15,14 @@ namespace AspNetCore.Reporting.Common.Data {
                 new StudentIdentity{ FirstMidName = "Laura", LastName = "Norman", EnrollmentDate = DateTime.Parse("2003-09-01") },
                 new StudentIdentity{ FirstMidName = "Nino", LastName = "Olivetto", EnrollmentDate = DateTime.Parse("2005-09-01") }
             };
-            //foreach(var student in students) {
-            //    student.UserName = student.FirstMidName + student.LastName;
-            //    student.NormalizedUserName = userManager.NormalizeName(student.UserName);
-            //    student.Email = student.UserName + "@sample.email";
-            //    student.NormalizedEmail = userManager.NormalizeEmail(student.Email);
-            //    student.EmailConfirmed = true;
-            //    student.LockoutEnabled = true;
-            //    student.PasswordHash = userManager.PasswordHasher.HashPassword(student, "pass");
-            //}
+            foreach(var student in students) {
+                student.UserName = student.FirstMidName + student.LastName + "@sample.email";
+                student.NormalizedUserName = userManager?.NormalizeName(student.UserName);
+                student.Email = student.UserName;
+                student.NormalizedEmail = userManager?.NormalizeEmail(student.Email);
+                student.EmailConfirmed = true;
+                student.LockoutEnabled = true;
+            }
             return students;
         }
 

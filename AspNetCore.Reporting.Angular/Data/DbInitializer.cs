@@ -3,11 +3,12 @@ using System.Linq;
 using AspNetCore.Reporting.Common.Data;
 using AspNetCore.Reporting.Common.Reports;
 using DevExpress.XtraReports.UI;
+using Microsoft.AspNetCore.Identity;
 
 namespace AspNetCore.Reporting.Angular.Data {
     public static class DbInitializer {
-        public static void Initialize(SchoolDbContext context, ReportsFactory factory) {
-            //context.Database.EnsureDeleted();
+        public static void Initialize(SchoolDbContext context, UserManager<StudentIdentity> userManager, ReportsFactory factory) {
+            context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
             // Look for any students.
@@ -15,7 +16,7 @@ namespace AspNetCore.Reporting.Angular.Data {
                 return;   // DB has been seeded
             }
 
-            var students = DbDefaultsGenerator.GenerateStudents();
+            var students = DbDefaultsGenerator.GenerateStudents(userManager);
             foreach(StudentIdentity s in students) {
 
                 context.Students.Add(s);

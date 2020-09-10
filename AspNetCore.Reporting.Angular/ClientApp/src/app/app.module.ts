@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { DxReportViewerModule, DxReportDesignerModule } from 'devexpress-reporting-angular';
 import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
+import { ReportListComponent } from './report-list/report.list.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { ApiAuthorizationModule } from 'src/api-authorization/api-authorization.module';
 import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
@@ -23,7 +23,7 @@ import { ReportViewerComponent } from './reportviewer/report-viewer';
     HomeComponent,
     ReportViewerComponent,
     ReportDesignerComponent,
-    CounterComponent,
+    ReportListComponent,
     FetchDataComponent
   ],
   imports: [
@@ -37,7 +37,7 @@ import { ReportViewerComponent } from './reportviewer/report-viewer';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'designer', component: ReportDesignerComponent, canActivate: [AuthorizeGuard] },
       { path: 'viewer', component: ReportViewerComponent, canActivate: [AuthorizeGuard] },
-      { path: 'counter', component: CounterComponent },
+      { path: 'report-list', component: ReportListComponent, canActivate: [AuthorizeGuard]},
       { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthorizeGuard] },
     ])
   ],

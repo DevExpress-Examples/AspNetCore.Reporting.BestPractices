@@ -1,7 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using AspNetCore.Reporting.Angular.Models;
-@inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
+@using AspNetCore.Reporting.Common.Data; 
+@inject SignInManager<StudentIdentity> SignInManager
+@inject UserManager<StudentIdentity> UserManager
 
 @{
     string returnUrl = null;
@@ -26,9 +27,9 @@
     }
     else
     {
-        <li class="nav-item">
+        @*<li class="nav-item">
             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register" asp-route-returnUrl="@returnUrl">Register</a>
-        </li>
+        </li>*@
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login" asp-route-returnUrl="@returnUrl">Login</a>
         </li>

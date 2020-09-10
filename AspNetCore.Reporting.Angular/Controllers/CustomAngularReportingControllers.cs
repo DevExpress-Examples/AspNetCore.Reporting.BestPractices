@@ -10,14 +10,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AspNetCore.Reporting.Common.Controllers {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize]
     [Route("DXXRDVAngular")]
     public class AngularWebDocumentViewerController : WebDocumentViewerController {
         public AngularWebDocumentViewerController(IWebDocumentViewerMvcControllerService controllerService) : base(controllerService) {
         }
     }
 
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize]
     [Route("DXXQBAngular")]
     public class AngularQueryBuilderController : QueryBuilderController {
         public AngularQueryBuilderController(IQueryBuilderMvcControllerService controllerService) : base(controllerService) {
@@ -25,8 +27,9 @@ namespace AspNetCore.Reporting.Common.Controllers {
     }
 
     
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("DXXRDAngular")]
+    [Authorize]
     public class AngularReportDesignerController : ReportDesignerController {
         public AngularReportDesignerController(IReportDesignerMvcControllerService controllerService) : base(controllerService) {
         }

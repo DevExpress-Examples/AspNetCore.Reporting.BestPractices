@@ -1,0 +1,11 @@
+<h2>Reports</h2>
+<ul class="Reports">
+  <li *ngFor="let reportItem of reportList">
+  <span>{{reportItem.title}}</span>
+    <ul>
+      <li><a routerLink="/viewer" [queryParams]="{reportId: reportItem.id}" routerLinkActive="active">Show</a></li>
+      <li><a routerLink="/designer" [queryParams]="{reportId: reportItem.id}" routerLinkActive="active">Edit</a></li>
+    </ul>
+  <!--<button routerLink class="btn btn-primary" (click)="openReport(reportItem.Id)">Open</button>-->
+  </li>
+</ul>
