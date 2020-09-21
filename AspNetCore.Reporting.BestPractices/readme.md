@@ -4,7 +4,15 @@
 
 An antiforgery token is generate when the client-side reporting application is rendered on a view. The token is saved on the client and the client application passes it to the server with every request for verification.
 
+For more information on how to use antiforgery tokens in ASP.NET, refer to the following topic in Microsoft documentation: [Prevent Cross-Site Request Forgery (XSRF/CSRF) attacks in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/anti-request-forgery).
+
 Generate an antiforgery token in a view and attach it to every request:
+
+
+
+
+
+
 
 ```cs
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
@@ -19,13 +27,21 @@ Generate an antiforgery token in a view and attach it to every request:
 SetupRequestHeaders('bearer token can be passed here', "@GetAntiXsrfRequestToken()");
 ```
 
+
+
 See the example project's [Views/Home/DesignReport](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DisplayReport.cshtml) file for the full code.
 
-***Vasily:** Как понимаю выше мы pассказываем о стандартном подходе. Нужно ли нам это? Мб имеет смысл сделать акцент только на том какие изменения надо сделать с нашими компонентами (часть ниже)?*
+
+
+
+
+***Vasily:** Как понимаю выше мы рассказываем о стандартном подходе. Нужно ли нам это? Мб имеет смысл сделать акцент только на том какие изменения надо сделать с нашими компонентами (часть ниже)?*
 
 To check a request token in a controller action on the server side, apply the `[ValidateAntiForgeryToken]` attribute to the action.
 
 [Controllers/CustomMVCReportingControllers](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Controllers/CustomMVCReportingControllers.cs):
+
+##### Document Viewer
 
 ```cs
 [ValidateAntiForgeryToken]
@@ -39,9 +55,29 @@ public class CustomMVCWebDocumentViewerController : WebDocumentViewerController 
 }
 ```
 
-***Vasily:** Пример кода только для вьювера. Нужен либо и код контроллеров для дизайнера, либо пояснение что для дизайнера надо модифицировать и два других контроллера.*
+##### Report Designer
 
-For more information on how to use antiforgery tokens in ASP.NET, refer to the following topic in Microsoft documentation: [Prevent Cross-Site Request Forgery (XSRF/CSRF) attacks in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/anti-request-forgery).
+```cs
+[ValidateAntiForgeryToken]
+public class CustomMVCQueryBuilderController : QueryBuilderController {
+    public CustomMVCQueryBuilderController(IQueryBuilderMvcControllerService controllerService) : base(controllerService) {
+    }
+    public override Task<IActionResult> Invoke() {
+         return base.Invoke();
+    }
+}
+
+[ValidateAntiForgeryToken]
+public class CustomMVCReportDesignerController : ReportDesignerController {
+    public CustomMVCReportDesignerController(IReportDesignerMvcControllerService controllerService) : base(controllerService) {
+    }
+        
+    public override Task<IActionResult> Invoke() {
+        return base.Invoke();
+    }
+}
+```
+
 
 ### Implement User Authorization
 
@@ -52,6 +88,15 @@ Additionally, implement an `IWebDocumentViewerExportedDocumentStorage` to preven
 [Services/Reporting/DocumentViewerAuthorizationService.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Services/Reporting/DocumentViewerAuthorizationService.cs):
 
 ```cs
+static ConcurrentDictionary<string, string> DocumentIdOwnerMap { get; } = new ConcurrentDictionary<string, string>();
+static ConcurrentDictionary<string, string> ReportIdOwnerMap { get; } = new ConcurrentDictionary<string, string>();
+
+IAuthenticatiedUserService UserService { get; }
+
+public DocumentViewerAuthorizationService(IAuthenticatiedUserService userService) {
+    UserService = userService ?? throw new ArgumentNullException(nameof(userService));
+}
+
 class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWebDocumentViewerAuthorizationService {
     ...
     public override void ReportOpening(string reportId, string documentId, XtraReport report) {
@@ -67,7 +112,31 @@ class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWe
         }
     }
     ...
+    #region IWebDocumentViewerAuthorizationService
+    public bool CanCreateDocument() {
+        return true;
+    }
 
+    public bool CanCreateReport() {
+        return true;
+    }
+
+    public bool CanReadDocument(string documentId) {
+        return DocumentIdOwnerMap.TryGetValue(documentId, out var ownerId) && ownerId == UserService.GetCurrentUserId();
+    }
+
+    public bool CanReadReport(string reportId) {
+        return ReportIdOwnerMap.TryGetValue(reportId, out var ownerId) && ownerId == UserService.GetCurrentUserId();
+    }
+
+    public bool CanReleaseDocument(string documentId) {
+        return true;
+    }
+
+    public bool CanReleaseReport(string reportId) {
+        return true;
+    }
+    #endregion
 }
 ```
 
@@ -205,13 +274,13 @@ Refer to the example project's [Services/Reporting/CustomExceptionHandlers.cs](h
 
 
 
-## Prepare Application Skeleton
+## Prepare Skeleton Screen
 
 ***Vasily:** Мб картинку приаттачить показывающую пример скелетона? А то для меня например было не понятно что это вообще такое пока я не увидел вживую как выглядит скелетон.*
 
-This section describes how to implement an efficient application skeleton to maximize the application's responsiveness. With this approach, the client application's layout is loaded first and can display a progress indicator while the resources for the reporting components are being downloaded from the server.
+This section describes how to implement an efficient skeleton screen to maximize the application's responsiveness. With this approach, the client application's layout is loaded first and can display a progress indicator while the resources for the reporting components are being downloaded from the server.
 
-Use the following steps to prepare an application skeleton.
+Use the following steps to prepare a skeleton.
 
 In [\_Layout.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Shared/_Layout.cshtml), move all script registrations to the bottom of the layout:
 
@@ -296,8 +365,6 @@ Register the implemented services in [Startup.cs](https://github.com/DevExpress-
 
 ## Localize Client UI
 
-***Vasily:** Не показано как локализовать DevExtreme эдиторы*
-
 DevExpress client reporting controls use the DevExtreme localization mechanism to localize the UI and messages.
 
 To localize DevExpress reporting controls, go to [localization.devexpress.com](localization.devexpress.com), download the required localization JSON files and save them to the `locaization` folder within the application's wwwroot folder. After that, configure the view as described below:
@@ -323,14 +390,15 @@ To localize DevExpress reporting controls, go to [localization.devexpress.com](l
         ...
 ```
 
+The translation is not guaranteed to contain all strings required by your application. You can use the localization service's UI to add the required strings. See the [Localization Service](https://docs.devexpress.com/LocalizationService/16235/localization-service) article for more information.
 ***Vasily:** Важный момент, переводы могут покрывать не 100% строк. Так что тут не просто перейти и скачать, а ещё возмможно перевести некоторые строки вручную. У нас есть хорошая дока на эту тему, можно ссылку дать*
 
 For a full code example, refer to the example project's [Views/Home/DesignReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DisplayReport.cshtml).
 
-## Bind to EF Core Report Data Source
+## How to Bind a Report to an EF Core Data Source
 
-***Vasily:** Тут можно отметить что это пункт только для тех кто использует EF Core. Тоесть он не обязательен для тех у кого доступ к данным организован через другие механизмы*
-
+DevExpress reporting supports multiple data binding mechanisms. If you prefer to bind t6o EF Core ...
+TODO
 Refer to the following example for information on how to bind to an EF Core data source.
 
 https://github.com/DevExpress-Examples/Reporting-Entity-Framework-Core-In-AspNet-Core
