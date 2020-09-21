@@ -391,25 +391,17 @@ To localize DevExpress reporting controls, go to [localization.devexpress.com](l
 ```
 
 The translation is not guaranteed to contain all strings required by your application. You can use the localization service's UI to add the required strings. See the [Localization Service](https://docs.devexpress.com/LocalizationService/16235/localization-service) article for more information.
-***Vasily:** Важный момент, переводы могут покрывать не 100% строк. Так что тут не просто перейти и скачать, а ещё возмможно перевести некоторые строки вручную. У нас есть хорошая дока на эту тему, можно ссылку дать*
 
 For a full code example, refer to the example project's [Views/Home/DesignReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DisplayReport.cshtml).
 
 ## How to Bind a Report to an EF Core Data Source
 
-DevExpress reporting supports multiple data binding mechanisms. If you prefer to bind t6o EF Core ...
-TODO
-Refer to the following example for information on how to bind to an EF Core data source.
+You can bind a DevExpress report to an Entity Framework Core data source. For information on how to do this, refer to the following example:
 
 https://github.com/DevExpress-Examples/Reporting-Entity-Framework-Core-In-AspNet-Core
 
 ---
 
-***Vasily:** Про репорт сторадж/провайдер будем писать что-то?*
-*И про биндинг репорта к Object / List ? Сейчас это известаня проблема для веб приложений из-за особенностей сериализации. Можно сослаться на доку что делал Борис: [Create Object Data Source at Runtime](https://docs.devexpress.com/XtraReports/401902/web-reporting/asp-net-core-reporting/document-viewer/bind-to-data/create-object-data-source-for-loaded-report)*
-*И про прокидываение параметров в репорт. Это тоже известная боль и есть дока от Бриса [Pass Parameters from the Client to a Report](https://docs.devexpress.com/XtraReports/401930/web-reporting/javascript-reporting/angular/document-viewer/customization/parameter-sent-to-report)*
-
----
 
 ## Antiforgery (Low)
 
