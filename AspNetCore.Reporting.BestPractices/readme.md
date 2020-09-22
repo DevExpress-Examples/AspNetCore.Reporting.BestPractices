@@ -4,42 +4,19 @@
 
 An antiforgery token is generate when the client-side reporting application is rendered on a view. The token is saved on the client and the client application passes it to the server with every request for verification.
 
-For more information on how to use antiforgery tokens in ASP.NET, refer to the following topic in Microsoft documentation: [Prevent Cross-Site Request Forgery (XSRF/CSRF) attacks in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/anti-request-forgery).
+For more information on how to use antiforgery tokens in ASP.NET, refer to the following resources: 
 
-Generate an antiforgery token in a view and attach it to every request:
+##### Microsoft Documentation:
 
+- [Prevent Cross-Site Request Forgery (XSRF/CSRF) attacks in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/anti-request-forgery).
 
+##### DevExpress Security Best Practices:
 
-
-
-
-
-```cs
-@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
-@functions{
-    public string GetAntiXsrfRequestToken() {
-        return Xsrf.GetAndStoreTokens(this.Context).RequestToken;
-    }
-}
-```
-
-```cs
-SetupRequestHeaders('bearer token can be passed here', "@GetAntiXsrfRequestToken()");
-```
+- [ASP.NET WebForms - Preventing Cross-Site Request Forgery (CSRF)](https://github.com/DevExpress/aspnet-security-bestpractices/tree/master/SecurityBestPractices.WebForms#4-preventing-cross-site-request-forgery-csrf)
+- [ASP.NET MVC - Preventing Cross-Site Request Forgery (CSRF)](https://github.com/DevExpress/aspnet-security-bestpractices/tree/master/SecurityBestPractices.Mvc#4-preventing-cross-site-request-forgery-csrf)
 
 
-
-See the example project's [Views/Home/DesignReport](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DisplayReport.cshtml) file for the full code.
-
-
-
-
-
-***Vasily:** Как понимаю выше мы рассказываем о стандартном подходе. Нужно ли нам это? Мб имеет смысл сделать акцент только на том какие изменения надо сделать с нашими компонентами (часть ниже)?*
-
-To check a request token in a controller action on the server side, apply the `[ValidateAntiForgeryToken]` attribute to the action.
-
-[Controllers/CustomMVCReportingControllers](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Controllers/CustomMVCReportingControllers.cs):
+The following code samples demonstrate how to apply antyforgery request validation on the Document Viewer's and Report Designer's controller actions.
 
 ##### Document Viewer
 
@@ -78,6 +55,7 @@ public class CustomMVCReportDesignerController : ReportDesignerController {
 }
 ```
 
+See the example project's [Views/Home/DesignReport](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DisplayReport.cshtml) file for the full code.
 
 ### Implement User Authorization
 
@@ -88,22 +66,29 @@ Additionally, implement an `IWebDocumentViewerExportedDocumentStorage` to preven
 [Services/Reporting/DocumentViewerAuthorizationService.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Services/Reporting/DocumentViewerAuthorizationService.cs):
 
 ```cs
-static ConcurrentDictionary<string, string> DocumentIdOwnerMap { get; } = new ConcurrentDictionary<string, string>();
-static ConcurrentDictionary<string, string> ReportIdOwnerMap { get; } = new ConcurrentDictionary<string, string>();
-
-IAuthenticatiedUserService UserService { get; }
-
-public DocumentViewerAuthorizationService(IAuthenticatiedUserService userService) {
-    UserService = userService ?? throw new ArgumentNullException(nameof(userService));
-}
-
 class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWebDocumentViewerAuthorizationService {
-    ...
+    static ConcurrentDictionary<string, string> DocumentIdOwnerMap { get; } = new ConcurrentDictionary<string, string>();
+    static ConcurrentDictionary<string, string> ReportIdOwnerMap { get; } = new ConcurrentDictionary<string, string>();
+
+    IAuthenticatiedUserService UserService { get; }
+
+    public DocumentViewerAuthorizationService(IAuthenticatiedUserService userService) {
+        UserService = userService ?? throw new ArgumentNullException(nameof(userService));
+    }
+
+    // The code below overrides the WebDocumentViewerOperationLogger's methods to intersect report 
+    // and document creation operations and associats the report and document IDs with the owner's ID
     public override void ReportOpening(string reportId, string documentId, XtraReport report) {
         MapIdentifiersToUser(UserService.GetCurrentUserId(), documentId, reportId);
         base.ReportOpening(reportId, documentId, report);
     }
-    void MapIdentifiersToUser(int userId, string documentId, string reportId) {
+
+    public override void BuildStarted(string reportId, string documentId, ReportBuildProperties buildProperties) {
+        MapIdentifiersToUser(UserService.GetCurrentUserId(), documentId, reportId);
+        base.BuildStarted(reportId, documentId, buildProperties);
+    }
+
+    void MapIdentifiersToUser(string userId, string documentId, string reportId) {
         if(!string.IsNullOrEmpty(documentId)) {
             DocumentIdOwnerMap.TryAdd(documentId, userId);
         }
@@ -111,7 +96,8 @@ class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWe
             ReportIdOwnerMap.TryAdd(reportId, userId);
         }
     }
-    ...
+
+    // The code below defines authorization rules applyed to different operations on reports.
     #region IWebDocumentViewerAuthorizationService
     public bool CanCreateDocument() {
         return true;
@@ -140,7 +126,6 @@ class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWe
 }
 ```
 
-***Vasily:** Из этого кода не очень понятно как именно разрешается/запрещается доступ. Надо либо расписать поподробнее либо в коде комменты добаить.*
 
 Register your authorization service implementation in **startup.cs**.
 
@@ -163,10 +148,7 @@ This section describes how to optimize a reporting application's memory consumpt
 
 To optimize memory consumption, use the following techniques:
 
-
-***Vasily:** Для пунктов не хватает информации о том что каждвй делает и как влиеяет на потребление памяти/перформанс.*
-
-- UseCachedReportSourceBuilder() + UseFileXXXStorage
+- Configure the Document Viewer to to store server data on disk instead of memory. This significantly reduces the memory consumption at the cost of performance. 
 
   ```cs
   configurator.ConfigureWebDocumentViewer(viewerConfigurator => {
@@ -177,11 +159,8 @@ To optimize memory consumption, use the following techniques:
     viewerConfigurator.UseCachedReportSourceBuilder();
   });
   ```
-  
-  
-  ***Vasily:** Тут мы включаем хранение документов на диске вместо хранения их в памяти на сервере (ссылку можно дать на архитектуру). При этом жертвуем перфомансом.*
 
-- When the page or a UI region (for example, a popup window) that displays the Document Viewer is about to be closed, close the the viewed report to release resources consumed by it. To do that use the client-side `ASPxClientWebDocumentViewer.Close` method:
+- When the page or a UI region (for example, a popup window) that displays the Document Viewer is about to be closed, close the the viewed report to release the server resources (the Storage space and Cache). To do that use the client-side `ASPxClientWebDocumentViewer.Close` method:
 
   ```cs
   function WebDocumentViewer_BeforeRender(s, e) {
@@ -190,10 +169,7 @@ To optimize memory consumption, use the following techniques:
   });
   ```
 
-
-  ***Vasily:** Тут тоже можно оперировать терминами Storage и Cache из доки по архитектуре. Важнынй моент, этим кодом мы очищаем память на сервере при закрытии таба в браузере.*
-
-- Configure Storage and Cache cleaners on application startup.
+- Configure Storage and Cache cleaners on application startup. This allows you to control how long document data persists on the server, and consequently, how long the server resources are reserved by it. Note that after the Storage and Cache are cleared, you cannot continue viewing (scrolling, printing, etc.) the document without re-creating it, so make sure to use reasonable values for these settings.
 
   ```cs
   var cacheCleanerSettings = new CacheCleanerSettings(TimeSpan.FromMinutes(1), TimeSpan.FromSeconds(30), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2));
@@ -206,12 +182,9 @@ To optimize memory consumption, use the following techniques:
   > Keep in mind that .NET is a managed environment and unused memory is freed only during garbage collection. Refer to the [Fundamentals of garbage collection](https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals) article for more information.
 
 
-  ***Vasily:** Тут мы меняем время жизни репортов в сторадже/кэше что позволяет быстрее очищать ресурсы на сервере. Важный момент что после очистки стораджа, репорт посмотреть уже нельзя будет без пересоздания документа - нельзя будет переключать страницы, экспортить и т.д. (а то я видел клоунов кто время жизни выставлял в минуту)*
-
-
 ## Handle Exceptions
 
-***Vasily:** Мб дать ссылку на топик по диагностике ещё тут? Или отдельный **Troubleshoot** пункт завести и послать на соотв. доку*
+This document section describes the best practices that you should follow when you handle and log errors in a reporting application. For information on how to determine the exact cause of a problem with your application, refer to the [Reporting Application Diagnostics](https://docs.devexpress.com/XtraReports/401687/web-reporting/general-information/application-diagnostics) documentation topic.
 
 ### Logging errors that occurred in the code of DevExpress reporting components
 
@@ -276,9 +249,9 @@ Refer to the example project's [Services/Reporting/CustomExceptionHandlers.cs](h
 
 ## Prepare Skeleton Screen
 
-***Vasily:** Мб картинку приаттачить показывающую пример скелетона? А то для меня например было не понятно что это вообще такое пока я не увидел вживую как выглядит скелетон.*
+This section describes how to implement a skeleton screen to maximize the application's responsiveness. With this approach, the client first loads a mock screen that mimics the application's layout and then proceeds to load the resources for the reporting components.
 
-This section describes how to implement an efficient skeleton screen to maximize the application's responsiveness. With this approach, the client application's layout is loaded first and can display a progress indicator while the resources for the reporting components are being downloaded from the server.
+![Skeleton Screen](https://docs.devexpress.com/XtraReports/images/web-skeleton-designer.gif)
 
 Use the following steps to prepare a skeleton.
 
@@ -298,7 +271,7 @@ In [\_Layout.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting
 </html>
 ```
 
-in a view, render two separate parts of the reporting control:
+In a view, render two separate parts of the reporting control:
 
 - Call the `RenderHtml()` method to render markup.
 - Call the `RenderScripts()` method to render scripts.
