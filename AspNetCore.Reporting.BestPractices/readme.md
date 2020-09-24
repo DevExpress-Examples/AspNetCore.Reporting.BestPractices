@@ -1,4 +1,11 @@
-﻿## Application Security
+﻿## Introduction
+
+
+## Running the Example Application 
+
+
+
+## Application Security
 
 ### Prevent Cross-Site Request Forgery
 
@@ -16,7 +23,7 @@ For more information on how to use antiforgery tokens in ASP.NET, refer to the f
 - [ASP.NET MVC - Preventing Cross-Site Request Forgery (CSRF)](https://github.com/DevExpress/aspnet-security-bestpractices/tree/master/SecurityBestPractices.Mvc#4-preventing-cross-site-request-forgery-csrf)
 
 
-The following code samples demonstrate how to apply antyforgery request validation on the Document Viewer's and Report Designer's controller actions.
+The following code samples demonstrate how to apply antiforgery request validation on the Document Viewer's and Report Designer's controller actions.
 
 ##### Document Viewer
 
