@@ -1,13 +1,34 @@
 ﻿## Introduction
 
+This **README** file contains information about best practices that you should follow when you develop a web application with DevExpress reporting controls. 
+
+The repository also contains an example application that you can use to study the described techniques in practice. 
+
+Note that the example application is designed as a showcase for multiple design techniques and should not be used as a template for a new application.
 
 ## Running the Example Application 
 
-Follow the steps below to run the example application:
+Follow the steps below to run the example application.
 
--
--
--
+### Configure NuGet
+
+To run the example application, you need to install packages from the DevExpress NuGet feed. Refer to the following articles for information on how to obtain your DevExpress NuGet Feed URL and register the DevExpress NuGet Feed as a package source:
+
+- [Obtain Your NuGet Feed URL](https://docs.devexpress.com/GeneralInformation/116042/installation/install-devexpress-controls-using-nuget-packages/obtain-your-nuget-feed-url)
+- [Setup Visual Studio's NuGet Package Manager](https://docs.devexpress.com/GeneralInformation/116698/installation/install-devexpress-controls-using-nuget-packages/setup-visual-studios-nuget-package-manager)
+
+### Install NPM Dependencies
+
+- In the **ASP.NET Core MVC** project, run `npm install` in the root folder. 
+- In the **Angular** project, navigate to the **ClientApp** directory and run `nmp instal`.
+
+### Start the Application
+
+> **Note:** Before you run the application, ensure that the version of DevExpress packages in the NuGet package manager matches the version of client libraries in the project's **package.json** file
+
+Press **Run** button or F5 to run the example application.
+
+
 
 ## Optimize Memory Consumption
 
