@@ -6,6 +6,13 @@ The repository also contains an example application that you can use to study th
 
 Note that the example application is designed as a showcase for multiple design techniques and should not be used as a template for a new application.
 
+## Table of Contents:
+-
+-
+-
+-
+
+
 ## Running the Example Application 
 
 Follow the steps below to run the example application.
@@ -33,6 +40,8 @@ Press **Run** button or F5 to run the example application.
 ## Optimize Memory Consumption
 
 This section describes how to optimize a reporting application's memory consumption, prevent memory leaks and cluttering on the server.
+
+> Refer to the [Document Viewer Lifecycle](https://docs.devexpress.com/XtraReports/401587/web-reporting/general-information/document-viewer-lifecycle) for information oh how the Document Viewer stores report data and how this data is affected by the lifecycle stage.
 
 To optimize memory consumption, use the following techniques:
 
@@ -332,7 +341,7 @@ Refer to the example project's [Services/Reporting/CustomExceptionHandlers.cs](h
 
 This section describes how to implement a skeleton screen to maximize the application's responsiveness. With this approach, the client first loads a mock screen that mimics the application's layout and then proceeds to load the resources for the reporting components.
 
-![Skeleton Screen](https://docs.devexpress.com/XtraReports/images/web-skeleton-designer.gif)
+![web-skeleton-designer](https://user-images.githubusercontent.com/37070809/94427328-8f40a500-0197-11eb-87c4-82ec9862b148.png)
 
 Use the following steps to prepare a skeleton.
 
@@ -375,7 +384,7 @@ In a view, render two separate parts of the reporting control:
     <script src="~/js/reporting.thirdparty.bundle.js"></script>
     <script src="~/js/viewer.part.bundle.js"></script>
     <script src="~/js/designer.part.bundle.js"></script>
-    @designerRender.GetScripts()
+    @designerRender.RenderScripts()
 }
 ```
 
