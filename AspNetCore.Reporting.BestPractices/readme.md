@@ -2,15 +2,29 @@
 
 This **README** file contains information about best practices that you should follow when you develop a web application with DevExpress reporting controls. 
 
-The repository also contains an example application that you can use to study the described techniques in practice. 
+The repository also contains an example application that you can use to study the described techniques in action. This application is split into three projects:
 
-Note that the example application is designed as a showcase for multiple design techniques and should not be used as a template for a new application.
+- **ASP.NetCore.Reporting.MVC** - An ASP.Net Core MVC application.
+- **ASP.NetCore.Reporting.Angular** - An ASP.Net Core application with an Angular frontend.
+- **ASP.NetCore.Reporting.Common** - Implements services and business logic used by both MVC and Angular projects.
+
+Note that the example application is designed as a showcase for for the described best practices should not be used as a template for a new application.
 
 ## Table of Contents:
--
--
--
--
+- [Running the Example Application](#running-the-example-application)
+  - [Configure NuGet](#configure-nuget)
+  - [Install NPM Dependencies](#install-npm-dependencies)
+  - [Start the Application](#start-the-application)
+- [Optimize Memory Consumption](#optimize-memory-consumption)
+- [Manage Database Connections](#manage-database-connections)
+- [Application Security](#application-security)
+  - [Prevent Cross-Site Request Forgery](#prevent-cross-site-request-forgery)
+  - [Implement User Authorization](#implement-user-authorization)
+- [Handle Exceptions](#handle-exceptions)
+  - [Logging errors that occurred in the code of DevExpress reporting components](#logging-errors-that-occurred-in-the-code-of-devexpress-reporting-components)
+  - [Using custom exception handlers](#using-custom-exception-handlers)
+- [Prepare Skeleton Screen](#prepare-skeleton-screen)
+- [Localize Client UI](#localize-client-ui)
 
 
 ## Running the Example Application 
@@ -78,9 +92,7 @@ To optimize memory consumption, use the following techniques:
 
   > Keep in mind that .NET is a managed environment and unused memory is freed only during garbage collection. Refer to the [Fundamentals of garbage collection](https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals) article for more information.
 
-## Data Binding
-
-### Manage Database Connections
+## Manage Database Connections
 
 It is a good practice to serialize only connection names and implement a connection provider that returns data connections based on a name. This abstracts away all data connection logics and hides all connection parameters from the client.
 
@@ -117,11 +129,6 @@ public SqlDataConnection LoadConnection(string connectionName) {
 
 Register the implemented services in [Startup.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Startup.cs)
 
-### How to Bind a Report to an EF Core Data Source
-
-You can bind a DevExpress report to an Entity Framework Core data source. For information on how to do this, refer to the following example:
-
-https://github.com/DevExpress-Examples/Reporting-Entity-Framework-Core-In-AspNet-Core
 
 
 
