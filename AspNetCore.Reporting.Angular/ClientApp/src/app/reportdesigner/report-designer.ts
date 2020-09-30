@@ -1,5 +1,6 @@
 import { Component, Inject, ViewEncapsulation, OnInit } from '@angular/core';
 import DevExpress from "@devexpress/analytics-core";
+import DevExpressReporting from "devexpress-reporting";
 import { AuthorizeService } from '../../api-authorization/authorize.service';
 import * as ko from 'knockout';
 import { ActivatedRoute } from '@angular/router';
@@ -31,7 +32,6 @@ export class ReportDesignerComponent implements OnInit {
   koReportUrl = ko.observable('');
 
   constructor(@Inject('BASE_URL') public hostUrl: string, private authorize: AuthorizeService, private activateRoute: ActivatedRoute) {
-    window['ko'] = ko;
     this.authorize.getAccessToken()
       .subscribe(x => {
         DevExpress.Analytics.Utils.ajaxSetup.ajaxSettings = {
@@ -40,6 +40,7 @@ export class ReportDesignerComponent implements OnInit {
           }
         };
       });
+    DevExpressReporting.Reporting.Viewer.Settings.AsyncExportApproach = true;
   }
 
   ngOnInit() {

@@ -9,7 +9,6 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { DxReportViewerModule, DxReportDesignerModule } from 'devexpress-reporting-angular';
 import { HomeComponent } from './home/home.component';
 import { ReportListComponent } from './report-list/report.list.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { ApiAuthorizationModule } from 'src/api-authorization/api-authorization.module';
 import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
 import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
@@ -23,8 +22,7 @@ import { ReportViewerComponent } from './reportviewer/report-viewer';
     HomeComponent,
     ReportViewerComponent,
     ReportDesignerComponent,
-    ReportListComponent,
-    FetchDataComponent
+    ReportListComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -38,7 +36,6 @@ import { ReportViewerComponent } from './reportviewer/report-viewer';
       { path: 'designer', component: ReportDesignerComponent, canActivate: [AuthorizeGuard] },
       { path: 'viewer', component: ReportViewerComponent, canActivate: [AuthorizeGuard] },
       { path: 'report-list', component: ReportListComponent, canActivate: [AuthorizeGuard]},
-      { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthorizeGuard] },
     ])
   ],
   providers: [

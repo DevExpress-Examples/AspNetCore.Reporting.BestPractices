@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ViewerStorages\**" />
+    <Content Remove="ViewerStorages\**" />
+    <EmbeddedResource Remove="ViewerStorages\**" />
+    <None Remove="ViewerStorages\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Reports\CourseListReport.repx" />
     <None Remove="Reports\MyEnrollmentsReport.repx" />
   </ItemGroup>

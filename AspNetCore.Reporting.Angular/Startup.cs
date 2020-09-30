@@ -7,6 +7,7 @@ using DevExpress.AspNetCore;
 using DevExpress.AspNetCore.Reporting;
 using DevExpress.XtraReports.Web.ClientControls;
 using DevExpress.XtraReports.Web.Extensions;
+using DevExpress.XtraReports.Web.WebDocumentViewer;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,11 +21,13 @@ using Microsoft.Extensions.Logging;
 
 namespace AspNetCore.Reporting.Angular {
     public class Startup {
-        public Startup(IConfiguration configuration) {
+        public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment) {
             Configuration = configuration;
+            WebHostEnvironment = webHostEnvironment;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment WebHostEnvironment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
@@ -39,7 +42,7 @@ namespace AspNetCore.Reporting.Angular {
                 .AddEntityFrameworkStores<SchoolDbContext>();
 
             services.AddIdentityServer()
-                .AddApiAuthorization<StudentIdentity, SchoolDbContext>(x=> {
+                .AddApiAuthorization<StudentIdentity, SchoolDbContext>(x => {
                     var api = x.ApiResources.FirstOrDefault();
                     api.UserClaims = new[] { System.Security.Claims.ClaimTypes.Sid };
                 });
@@ -56,6 +59,10 @@ namespace AspNetCore.Reporting.Angular {
             services.AddSingleton<IScopedDbContextProvider<SchoolDbContext>, ScopedDbContextProvider<SchoolDbContext>>();
             services.AddScoped<IAuthenticatiedUserService, UserService<SchoolDbContext>>();
             services.AddTransient<ReportStorageWebExtension, EFCoreReportStorageWebExtension<SchoolDbContext>>();
+            string exportedDocumentsPath = System.IO.Path.Combine(WebHostEnvironment.ContentRootPath, "ViewerStorages", "ExportedDocuments");
+            var exportedDocumentService = new ExportedDocumentService(exportedDocumentsPath, "/Export/GetExportResult");
+            services.AddSingleton<IExportResultProvider>(exportedDocumentService);
+            services.AddSingleton<IWebDocumentViewerExportResultUriGenerator>(exportedDocumentService);
             services.AddTransient<CourseListReportRepository>();
             services.AddTransient<MyEnrollmentsReportRepository>();
 

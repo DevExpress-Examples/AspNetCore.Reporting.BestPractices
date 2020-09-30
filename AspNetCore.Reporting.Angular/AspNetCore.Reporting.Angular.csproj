@@ -28,8 +28,12 @@
 
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
+    <Compile Remove="ViewerStorages\**" />
     <Content Remove="$(SpaRoot)**" />
+    <Content Remove="ViewerStorages\**" />
+    <EmbeddedResource Remove="ViewerStorages\**" />
     <None Remove="$(SpaRoot)**" />
+    <None Remove="ViewerStorages\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
 

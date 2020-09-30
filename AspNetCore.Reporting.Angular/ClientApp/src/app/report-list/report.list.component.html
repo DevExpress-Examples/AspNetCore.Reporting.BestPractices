@@ -1,11 +1,12 @@
 <h2>Reports</h2>
 <ul class="Reports">
-  <li *ngFor="let reportItem of reportList">
-  <span>{{reportItem.title}}</span>
-    <ul>
-      <li><a routerLink="/viewer" [queryParams]="{reportId: reportItem.id}" routerLinkActive="active">Show</a></li>
-      <li><a routerLink="/designer" [queryParams]="{reportId: reportItem.id}" routerLinkActive="active">Edit</a></li>
-    </ul>
-  <!--<button routerLink class="btn btn-primary" (click)="openReport(reportItem.Id)">Open</button>-->
+  <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let reportItem of reportList">
+    <span>{{reportItem.title}}</span>
+    <div class="float-right action-buttons">
+      <div class="btn-group float-right">
+        <a class="btn btn-primary btn-xs" routerLink="/viewer" [queryParams]="{reportId: reportItem.id}" routerLinkActive="active">Show</a>
+        <a class="btn btn-primary btn-xs" routerLink="/designer" [queryParams]="{reportId: reportItem.id}" routerLinkActive="active">Edit</a>
+      </div>
+    </div>
   </li>
 </ul>
