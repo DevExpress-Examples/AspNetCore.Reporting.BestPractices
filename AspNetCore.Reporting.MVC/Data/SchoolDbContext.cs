@@ -1,5 +1,4 @@
 ﻿using AspNetCore.Reporting.Common.Data;
-using AspNetCore.Reporting.Common.Services;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,10 +14,10 @@ namespace AspNetCore.Reporting.MVC.Data {
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Course>().ToTable("Course");
-            modelBuilder.Entity<Enrollment>().ToTable("Enrollment");
-            modelBuilder.Entity<StudentIdentity>().ToTable("Student");
-            modelBuilder.Entity<ReportEntity>().ToTable("Report");
+            modelBuilder.Entity<Course>().ToTable("Courses");
+            modelBuilder.Entity<Enrollment>().ToTable("Enrollments");
+            modelBuilder.Entity<StudentIdentity>().ToTable("Students");
+            modelBuilder.Entity<ReportEntity>().ToTable("Reports");
         }
     }
 }

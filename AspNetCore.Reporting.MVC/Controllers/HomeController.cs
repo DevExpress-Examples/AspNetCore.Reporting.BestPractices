@@ -1,37 +1,16 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using AspNetCore.Reporting.Common.Data;
 using AspNetCore.Reporting.Common.Models;
 using AspNetCore.Reporting.Common.Services;
 using AspNetCore.Reporting.MVC.Data;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace AspNetCore.Reporting.MVC.Controllers {
-    //[Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     [Authorize]
     public class HomeController : Controller {
         public async Task<IActionResult> Index([FromServices] IAuthenticatiedUserService userService, [FromServices] SchoolDbContext dBContext) {
-            //var students = DbDefaultsGenerator.GenerateStudents(userManager);
-            //foreach(StudentIdentity s in students) {
-            //    s.UserName = s.FirstMidName + s.LastName;
-            //    s.NormalizedUserName = userManager.NormalizeName(s.UserName);
-            //    s.Email = s.UserName + "@sample.email";
-            //    s.NormalizedEmail = userManager.NormalizeEmail(s.Email);
-            //    s.EmailConfirmed = true;
-            //    s.LockoutEnabled = true;
-            //    dBContext.Students.Add(s);
-            //    var result = await userManager.CreateAsync(s, "Admin@123");
-            //    if(result.Succeeded)
-            //        dBContext.SaveChanges();
-            //    //s.PasswordHash = userManager.PasswordHasher.HashPassword(s, "Admin@123");
-            //    //s.SecurityStamp = Guid.NewGuid().ToString("N");
-            //}
-            //dBContext.SaveChanges();
-            //dBContext.Database.EnsureCreated();
             var reportData = !User.Identity.IsAuthenticated 
                 ? Enumerable.Empty<ReportingControlModel>()
                 : await dBContext
@@ -45,11 +24,11 @@ namespace AspNetCore.Reporting.MVC.Controllers {
             return View(reportData);
         }
 
-        public IActionResult DesignReport(ReportingControlModel model, [FromServices] IAuthenticatiedUserService userService) {
+        public IActionResult DesignReport(ReportingControlModel model) {
             return View(model);
         }
 
-        public IActionResult DisplayReport(ReportingControlModel model, [FromServices] IAuthenticatiedUserService userService) {
+        public IActionResult DisplayReport(ReportingControlModel model) {
             return View(model);
         }
         
