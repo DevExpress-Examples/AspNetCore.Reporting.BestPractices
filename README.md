@@ -43,7 +43,7 @@ To run the example application, you need to install packages from the DevExpress
 ### Install NPM Dependencies
 
 - In the **ASP.NET Core MVC** project, run `npm install` in the root folder. 
-- In the **Angular** project, navigate to the **ClientApp** directory and run `nmp instal`.
+- In the **Angular** project, navigate to the **ClientApp** directory and run `npm install`.
 
 ### Start the Application
 
@@ -370,7 +370,7 @@ In [\_Layout.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting
 </html>
 ```
 
-In a view, render two separate parts of the reporting control:
+In a view, add the `dx-reporting-skeleton-screen.css` file from the **devexpress-reporting** NPM package to the page that contains the Report Designer and render two separate parts of the reporting control:
 
 - Call the `RenderHtml()` method to render markup.
 - Call the `RenderScripts()` method to render scripts.
@@ -397,6 +397,7 @@ In a view, render two separate parts of the reporting control:
 }
 ```
 
+Refer to the [Enable the Skeleton Screen](https://docs.devexpress.com/XtraReports/401830/web-reporting/asp-net-core-reporting/end-user-report-designer/customization/enable-skeleton-screen) article for more information.
 
 ## Localize Client UI
 
