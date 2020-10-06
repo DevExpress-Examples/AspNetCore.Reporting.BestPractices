@@ -73,7 +73,7 @@ To optimize memory consumption, use the following techniques:
   });
   ```
 
-- When the page or a UI region (for example, a popup window) that displays the Document Viewer is about to be closed, close the the viewed report to release the server resources (the Storage space and Cache). To do that use the client-side `ASPxClientWebDocumentViewer.Close` method:
+- When the page or a UI region (for example, a popup window) that displays the Document Viewer is about to be closed, close the the viewed report to release the server resources (the Storage space and Cache). To do that use the Document Viewer's client-side `Close` method:
 
   ```cs
   function WebDocumentViewer_BeforeRender(s, e) {
