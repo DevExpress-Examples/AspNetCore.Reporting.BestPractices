@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This **README** file contains information about best practices that you should follow when you develop a web application with DevExpress reporting controls. 
+This **README** file contains information about best practices that you should follow when you develop a web application with DevExpress reporting controls.
 
 The repository also contains an example application that you can use to study the described techniques in action. This application is split into three projects:
 
@@ -10,10 +10,11 @@ The repository also contains an example application that you can use to study th
 - **ASP.NetCore.Reporting.Angular** - An ASP.Net Core application with an Angular frontend.
 - **ASP.NetCore.Reporting.Common** - Implements services and business logic used by both MVC and Angular projects.
 
-Note that the example application is designed as a showcase for for the described best practices should not be used as a template for a new application.
+You can use the example code in your web application and modify it to suit your use-case scenario.
 
 ## Table of Contents:
-- [Running the Example Application](#running-the-example-application)
+
+- [How to run the Example Application](#how-to-run-the-example-application)
   - [Configure NuGet](#configure-nuget)
   - [Install NPM Dependencies](#install-npm-dependencies)
   - [Start the Application](#start-the-application)
@@ -28,30 +29,27 @@ Note that the example application is designed as a showcase for for the describe
 - [Prepare Skeleton Screen](#prepare-skeleton-screen)
 - [Localize Client UI](#localize-client-ui)
 
-
-## Running the Example Application 
+## How to run the Example Application
 
 Follow the steps below to run the example application.
 
 ### Configure NuGet
 
-To run the example application, you need to install packages from the DevExpress NuGet feed. Refer to the following articles for information on how to obtain your DevExpress NuGet Feed URL and register the DevExpress NuGet Feed as a package source:
+To run the example application, you need to install packages from the DevExpress NuGet feed. Before you install the packages, use the following steps to configure NuGet:
 
-- [Obtain Your NuGet Feed URL](https://docs.devexpress.com/GeneralInformation/116042/installation/install-devexpress-controls-using-nuget-packages/obtain-your-nuget-feed-url)
-- [Setup Visual Studio's NuGet Package Manager](https://docs.devexpress.com/GeneralInformation/116698/installation/install-devexpress-controls-using-nuget-packages/setup-visual-studios-nuget-package-manager)
+1. [Obtain Your NuGet Feed URL](https://docs.devexpress.com/GeneralInformation/116042/installation/install-devexpress-controls-using-nuget-packages/obtain-your-nuget-feed-url)
+2. [Register your NuGet feed as a package sources](https://docs.devexpress.com/GeneralInformation/116698/installation/install-devexpress-controls-using-nuget-packages/setup-visual-studios-nuget-package-manager)
 
 ### Install NPM Dependencies
 
-- In the **ASP.NET Core MVC** project, run `npm install` in the root folder. 
+- In the **ASP.NET Core MVC** project, run `npm install` in the root folder.
 - In the **Angular** project, navigate to the **ClientApp** directory and run `npm install`.
 
 ### Start the Application
 
-> **Note:** Before you run the application, ensure that the version of DevExpress packages in the NuGet package manager matches the version of client libraries in the project's **package.json** file
+> **Note:** If you need to change the versions of DevExpress NuGet packages used in the example application, make sure to also change the DevExpress client library versions in the **package.json** file to the matching minor version number.
 
 Press **Run** button or F5 to run the example application.
-
-
 
 ## Optimize Memory Consumption
 
@@ -61,7 +59,7 @@ This section describes how to optimize a reporting application's memory consumpt
 
 To optimize memory consumption, use the following techniques:
 
-- Configure the Document Viewer to to store server data on disk instead of memory. This significantly reduces the memory consumption at the cost of performance. 
+- Configure the Document Viewer to to store server data on disk instead of memory. This significantly reduces the memory consumption at the cost of performance.
 
   ```cs
   configurator.ConfigureWebDocumentViewer(viewerConfigurator => {
@@ -92,7 +90,7 @@ To optimize memory consumption, use the following techniques:
   services.AddSingleton<StorageCleanerSettings>(storageCleanerSettings);
   ```
 
-  > Keep in mind that .NET is a managed environment and unused memory is freed only during garbage collection. Refer to the [Fundamentals of garbage collection](https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals) article for more information.
+  > Keep in mind that .NET is a managed environment, so data unloaded to the disk storage remains in memory until garbage collection. Refer to the [Fundamentals of garbage collection](https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals) article for more information.
 
 ## Manage Database Connections
 
@@ -131,16 +129,11 @@ public SqlDataConnection LoadConnection(string connectionName) {
 
 Register the implemented services in [Startup.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Startup.cs)
 
-
-
-
 ## Application Security
 
 ### Prevent Cross-Site Request Forgery
 
-An antiforgery token is generate when the client-side reporting application is rendered on a view. The token is saved on the client and the client application passes it to the server with every request for verification.
-
-For more information on how to use antiforgery tokens in ASP.NET, refer to the following resources: 
+To prevent request cross-site request forgery, DevExpress reporting controls uses the standard ASP.NET Core mechanism described in the following article:
 
 ##### Microsoft Documentation:
 
@@ -150,7 +143,6 @@ For more information on how to use antiforgery tokens in ASP.NET, refer to the f
 
 - [ASP.NET WebForms - Preventing Cross-Site Request Forgery (CSRF)](https://github.com/DevExpress/aspnet-security-bestpractices/tree/master/SecurityBestPractices.WebForms#4-preventing-cross-site-request-forgery-csrf)
 - [ASP.NET MVC - Preventing Cross-Site Request Forgery (CSRF)](https://github.com/DevExpress/aspnet-security-bestpractices/tree/master/SecurityBestPractices.Mvc#4-preventing-cross-site-request-forgery-csrf)
-
 
 The following code samples demonstrate how to apply antiforgery request validation on the Document Viewer's and Report Designer's controller actions.
 
@@ -184,7 +176,7 @@ public class CustomMVCQueryBuilderController : QueryBuilderController {
 public class CustomMVCReportDesignerController : ReportDesignerController {
     public CustomMVCReportDesignerController(IReportDesignerMvcControllerService controllerService) : base(controllerService) {
     }
-        
+
     public override Task<IActionResult> Invoke() {
         return base.Invoke();
     }
@@ -212,7 +204,7 @@ class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWe
         UserService = userService ?? throw new ArgumentNullException(nameof(userService));
     }
 
-    // The code below overrides the WebDocumentViewerOperationLogger's methods to intersect report 
+    // The code below overrides the WebDocumentViewerOperationLogger's methods to intersect report
     // and document creation operations and associats the report and document IDs with the owner's ID
     public override void ReportOpening(string reportId, string documentId, XtraReport report) {
         MapIdentifiersToUser(UserService.GetCurrentUserId(), documentId, reportId);
@@ -262,7 +254,6 @@ class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWe
 }
 ```
 
-
 Register your authorization service implementation in **startup.cs**.
 
 [Startup.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Startup.cs#L106):
@@ -277,9 +268,6 @@ public class Startup {
     ...
 }
 ```
-
-
-
 
 ## Handle Exceptions
 
@@ -343,8 +331,6 @@ public class CustomWebDocumentViewerExceptionHandler : WebDocumentViewerExceptio
 ```
 
 Refer to the example project's [Services/Reporting/CustomExceptionHandlers.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Services/Reporting/CustomExceptionHandlers.cs) file for the full code.
-
-
 
 ## Prepare Skeleton Screen
 
@@ -429,4 +415,3 @@ To localize DevExpress reporting controls, go to [localization.devexpress.com](l
 The translation is not guaranteed to contain all strings required by your application. You can use the localization service's UI to add the required strings. See the [Localization Service](https://docs.devexpress.com/LocalizationService/16235/localization-service) article for more information.
 
 For a full code example, refer to the example project's [Views/Home/DesignReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DisplayReport.cshtml).
-
