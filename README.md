@@ -90,11 +90,11 @@ To optimize memory consumption, use the following techniques:
   services.AddSingleton<StorageCleanerSettings>(storageCleanerSettings);
   ```
 
-  > Keep in mind that .NET is a managed environment, so data unloaded to the disk storage remains in memory until garbage collection. Refer to the [Fundamentals of garbage collection](https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals) article for more information.
+  > Keep in mind that .NET is a managed environment, so data unloaded to the disk storage remains in memory until the cache is cleaned and the garbage collection runs. Refer to the [Fundamentals of garbage collection](https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals) article for more information.
 
 ## Manage Database Connections
 
-It is a good practice to serialize only connection names and implement a connection provider that returns data connections based on a name. This abstracts away all data connection logics and hides all connection parameters from the client.
+DevExpress reporting components are configured to retrieve database connections from the application configuration file. This mechanism is secure: the serialized report contains only the connection name and not the connection string itself. If you implement a custom connection provider to customize this mechanism (for example, to filter the list of connections), ensure that you serialize data connections by name and do not pass connection parameters to the client.
 
 Reporting services retrieve the IConnectionProviderFactory and IDataSourceWizardConnectionStringsProvide through Dependency Injection. To learn how to implement these services, refer to the following example project's files:
 
@@ -102,7 +102,7 @@ Reporting services retrieve the IConnectionProviderFactory and IDataSourceWizard
 - [Services/Reporting/CustomSqlDataSourceWizardConnectionStringsProvider.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Services/Reporting/CustomSqlDataSourceWizardConnectionStringsProvider.cs)
 
 To ensure that encrypted connection parameters for SqlDataSource instances are not passed to the client,
-return null in the `IDataSourceWizardConnectionStringsProvider.GetDataConnectionParameters` method implementation:
+return 'null' in the `IDataSourceWizardConnectionStringsProvider.GetDataConnectionParameters` method implementation:
 
 ```cs
 public DataConnectionParametersBase GetDataConnectionParameters(string name) {
