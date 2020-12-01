@@ -4,11 +4,11 @@
 
 This **README** file contains information about best practices that you should follow when you develop a web application with DevExpress reporting controls.
 
-The repository also contains an example application that you can use to study the described techniques in action. This application is split into three projects:
+The repository also contains an example application that demonstrates the described techniques. This application is split into three projects:
 
 - **ASP.NetCore.Reporting.MVC** - An ASP.Net Core MVC application.
 - **ASP.NetCore.Reporting.Angular** - An ASP.Net Core application with an Angular frontend.
-- **ASP.NetCore.Reporting.Common** - Implements services and business logic used by both MVC and Angular projects.
+- **ASP.NetCore.Reporting.Common** - Implements services and business logic used by both the MVC and Angular projects.
 
 You can use the example code in your web application and modify it to suit your use-case scenario.
 
@@ -24,30 +24,30 @@ You can use the example code in your web application and modify it to suit your 
   - [Prevent Cross-Site Request Forgery](#prevent-cross-site-request-forgery)
   - [Implement User Authorization](#implement-user-authorization)
 - [Handle Exceptions](#handle-exceptions)
-  - [Logging errors that occurred in the code of DevExpress reporting components](#logging-errors-that-occurred-in-the-code-of-devexpress-reporting-components)
-  - [Using custom exception handlers](#using-custom-exception-handlers)
+  - [Log errors that occurred in the code of DevExpress reporting components](#log-errors-that-occurred-in-the-code-of-devexpress-reporting-components)
+  - [Use custom exception handlers](#use-custom-exception-handlers)
 - [Prepare Skeleton Screen](#prepare-skeleton-screen)
 - [Localize Client UI](#localize-client-ui)
 
 ## How to run the Example Application
 
-Follow the steps below to run the example application.
+Follow the steps below to run the example application in Microsoft Visual Studio.
 
 ### Configure NuGet
 
 To run the example application, you need to install packages from the DevExpress NuGet feed. Before you install the packages, use the following steps to configure NuGet:
 
 1. [Obtain Your NuGet Feed URL](https://docs.devexpress.com/GeneralInformation/116042/installation/install-devexpress-controls-using-nuget-packages/obtain-your-nuget-feed-url)
-2. [Register your NuGet feed as a package sources](https://docs.devexpress.com/GeneralInformation/116698/installation/install-devexpress-controls-using-nuget-packages/setup-visual-studios-nuget-package-manager)
+2. [Register the NuGet feed as a package sources](https://docs.devexpress.com/GeneralInformation/116698/installation/install-devexpress-controls-using-nuget-packages/setup-visual-studios-nuget-package-manager)
 
 ### Install NPM Dependencies
 
-- In the **ASP.NET Core MVC** project, run `npm install` in the root folder.
-- In the **Angular** project, navigate to the **ClientApp** directory and run `npm install`.
+- For the **ASP.NET Core MVC** project, run `npm install` in the project's root folder.
+- For the **Angular** project, navigate to the **ClientApp** directory and run `npm install`.
 
 ### Start the Application
 
-> **Note:** If you need to change the versions of DevExpress NuGet packages used in the example application, make sure to also change the DevExpress client library versions in the **package.json** file to the matching minor version number.
+> **Note:** If you change the versions of DevExpress NuGet packages used in the example application, make sure to also change the DevExpress client library versions in the **package.json** file to the matching minor version number.
 
 Press **Run** button or F5 to run the example application.
 
@@ -55,11 +55,11 @@ Press **Run** button or F5 to run the example application.
 
 This section describes how to optimize a reporting application's memory consumption, prevent memory leaks and cluttering on the server.
 
-> Refer to the [Document Viewer Lifecycle](https://docs.devexpress.com/XtraReports/401587/web-reporting/general-information/document-viewer-lifecycle) for information oh how the Document Viewer stores report data and how this data is affected by the lifecycle stage.
+> Refer to the [Document Viewer Lifecycle](https://docs.devexpress.com/XtraReports/401587/web-reporting/general-information/document-viewer-lifecycle) for information oh how the Document Viewer stores report data on different lifecycle stages.
 
 To optimize memory consumption, use the following techniques:
 
-- Configure the Document Viewer to to store server data on disk instead of memory. This significantly reduces the memory consumption at the cost of performance.
+- Configure the Document Viewer to to store server data on disk instead of memory. This reduces the memory consumption at the cost of performance.
 
   ```cs
   configurator.ConfigureWebDocumentViewer(viewerConfigurator => {
@@ -71,7 +71,7 @@ To optimize memory consumption, use the following techniques:
   });
   ```
 
-- When the page or a UI region (for example, a popup window) that displays the Document Viewer is about to be closed, close the the viewed report to release the server resources (the Storage space and Cache). To do that use the Document Viewer's client-side `Close` method:
+- When a page or a UI region (for example, a popup window) that displays the Document Viewer is about to be closed, close the the viewed report to release the server resources (the Storage space and Cache). To do that use the Document Viewer's client-side `Close` method:
 
   ```cs
   function WebDocumentViewer_BeforeRender(s, e) {
@@ -80,7 +80,7 @@ To optimize memory consumption, use the following techniques:
   });
   ```
 
-- Configure Storage and Cache cleaners on application startup. This allows you to control how long document data persists on the server, and consequently, how long the server resources are reserved by it. Note that after the Storage and Cache are cleared, you cannot continue viewing (scrolling, printing, etc.) the document without re-creating it, so make sure to use reasonable values for these settings.
+- Configure Storage and Cache cleaners on application startup. This allows you to control how long document data persists on the server, and consequently, how long the server resources are reserved to store this data. Note that after a document's data is removed for the Storage and Cache, it becomes impossible to navigate or print this document, so make sure to use reasonable values for these settings.
 
   ```cs
   var cacheCleanerSettings = new CacheCleanerSettings(TimeSpan.FromMinutes(1), TimeSpan.FromSeconds(30), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2));
@@ -90,7 +90,7 @@ To optimize memory consumption, use the following techniques:
   services.AddSingleton<StorageCleanerSettings>(storageCleanerSettings);
   ```
 
-  > Keep in mind that .NET is a managed environment, so data unloaded to the disk storage remains in memory until the cache is cleaned and the garbage collection runs. Refer to the [Fundamentals of garbage collection](https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals) article for more information.
+  > Keep in mind that .NET is a managed environment, so data unloaded to the disk storage and removed from cache remains in memory until the garbage collection runs. Refer to the [Fundamentals of garbage collection](https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals) article for more information.
 
 ## Manage Database Connections
 
@@ -273,7 +273,7 @@ public class Startup {
 
 This document section describes the best practices that you should follow when you handle and log errors in a reporting application. For information on how to determine the exact cause of a problem with your application, refer to the [Reporting Application Diagnostics](https://docs.devexpress.com/XtraReports/401687/web-reporting/general-information/application-diagnostics) documentation topic.
 
-### Logging errors that occurred in the code of DevExpress reporting components
+### Log errors that occurred in the code of DevExpress reporting components
 
 To handle exceptions generated by DevExpress reporting components, implement and register a custom logger service. In your implementation of the service, override the `Error` method. In the `Error` method's implementation, save errors to a log or database. If a Visual Studio debugger is attached, you can set a breakpoint and inspect errors in the Watch window.
 
@@ -306,7 +306,7 @@ public class ReportingLoggerService: LoggerService {
 LoggerService.Initialize(new ReportingLoggerService(loggerFactory.CreateLogger("DXReporting")));
 ```
 
-### Using custom exception handlers
+### Use custom exception handlers
 
 Use custom exception handler services to customize error details that are passed to the client and displayed in the client UI:
 
