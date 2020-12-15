@@ -94,7 +94,7 @@ To optimize memory consumption, use the following techniques:
 
 ## Manage Database Connections
 
-DevExpress reporting components are configured to retrieve database connections from the application configuration file. This mechanism is secure: the serialized report contains only the connection name and not the connection string itself. If you implement a custom connection provider to customize this mechanism (for example, to filter the list of connections), ensure that you serialize only the data connection's name and do not pass connection parameters to the client.
+DevExpress reporting components are configured to retrieve database connections from the application configuration file. This mechanism is secure: a serialized report contains only the connection name and not the connection string itself. If you implement a custom connection provider to customize this mechanism (for example, to filter the list of connections), ensure that you serialize only the data connection's name and do not pass connection parameters to the client.
 
 Reporting services obtain an IConnectionProviderFactory and IDataSourceWizardConnectionStringsProvide through Dependency Injection. To learn how to implement these services, refer to the following example project's files:
 
