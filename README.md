@@ -2,18 +2,19 @@
 
 ## Introduction
 
-This **README** file contains information about best practices that you should follow when you develop a web application with DevExpress reporting controls. 
+This **README** file describes best practices to follow when you develop a web application with DevExpress reporting controls.
 
-The repository also contains an example application that you can use to study the described techniques in action. This application is split into three projects:
+The repository also contains an example application that demonstrates the described techniques. This application is split into three projects:
 
 - **ASP.NetCore.Reporting.MVC** - An ASP.Net Core MVC application.
 - **ASP.NetCore.Reporting.Angular** - An ASP.Net Core application with an Angular frontend.
-- **ASP.NetCore.Reporting.Common** - Implements services and business logic used by both MVC and Angular projects.
+- **ASP.NetCore.Reporting.Common** - Implements services and business logic used by both the MVC and Angular projects.
 
-Note that the example application is designed as a showcase for for the described best practices should not be used as a template for a new application.
+You can use the example code in your web application and modify it for your use-case scenario.
 
 ## Table of Contents:
-- [Running the Example Application](#running-the-example-application)
+
+- [How to run the Example Application](#how-to-run-the-example-application)
   - [Configure NuGet](#configure-nuget)
   - [Install NPM Dependencies](#install-npm-dependencies)
   - [Start the Application](#start-the-application)
@@ -23,45 +24,42 @@ Note that the example application is designed as a showcase for for the describe
   - [Prevent Cross-Site Request Forgery](#prevent-cross-site-request-forgery)
   - [Implement User Authorization](#implement-user-authorization)
 - [Handle Exceptions](#handle-exceptions)
-  - [Logging errors that occurred in the code of DevExpress reporting components](#logging-errors-that-occurred-in-the-code-of-devexpress-reporting-components)
-  - [Using custom exception handlers](#using-custom-exception-handlers)
+  - [Log errors that occurred in the code of DevExpress reporting components](#log-errors-that-occurred-in-the-code-of-devexpress-reporting-components)
+  - [Use custom exception handlers](#use-custom-exception-handlers)
 - [Prepare Skeleton Screen](#prepare-skeleton-screen)
 - [Localize Client UI](#localize-client-ui)
 
+## How to run the Example Application
 
-## Running the Example Application 
-
-Follow the steps below to run the example application.
+Follow the steps below to run the example application in Microsoft Visual Studio.
 
 ### Configure NuGet
 
-To run the example application, you need to install packages from the DevExpress NuGet feed. Refer to the following articles for information on how to obtain your DevExpress NuGet Feed URL and register the DevExpress NuGet Feed as a package source:
+To run the example application, you need to install packages from the DevExpress NuGet feed. Use the following steps to configure NuGet:
 
-- [Obtain Your NuGet Feed URL](https://docs.devexpress.com/GeneralInformation/116042/installation/install-devexpress-controls-using-nuget-packages/obtain-your-nuget-feed-url)
-- [Setup Visual Studio's NuGet Package Manager](https://docs.devexpress.com/GeneralInformation/116698/installation/install-devexpress-controls-using-nuget-packages/setup-visual-studios-nuget-package-manager)
+1. [Obtain Your NuGet Feed URL](https://docs.devexpress.com/GeneralInformation/116042/installation/install-devexpress-controls-using-nuget-packages/obtain-your-nuget-feed-url)
+2. [Register the NuGet feed as a package sources](https://docs.devexpress.com/GeneralInformation/116698/installation/install-devexpress-controls-using-nuget-packages/setup-visual-studios-nuget-package-manager)
 
 ### Install NPM Dependencies
 
-- In the **ASP.NET Core MVC** project, run `npm install` in the root folder. 
-- In the **Angular** project, navigate to the **ClientApp** directory and run `npm install`.
+- For the **ASP.NET Core MVC** project, run `npm install` in the project's root folder.
+- For the **Angular** project, navigate to the **ClientApp** directory and run `npm install`.
 
 ### Start the Application
 
-> **Note:** Before you run the application, ensure that the version of DevExpress packages in the NuGet package manager matches the version of client libraries in the project's **package.json** file
+> **Note:** If you change the versions of DevExpress NuGet packages used in the example application, make sure to also specify the matching minor versions for DevExpress client libraries in the **package.json** file.
 
 Press **Run** button or F5 to run the example application.
-
-
 
 ## Optimize Memory Consumption
 
 This section describes how to optimize a reporting application's memory consumption, prevent memory leaks and cluttering on the server.
 
-> Refer to the [Document Viewer Lifecycle](https://docs.devexpress.com/XtraReports/401587/web-reporting/general-information/document-viewer-lifecycle) for information oh how the Document Viewer stores report data and how this data is affected by the lifecycle stage.
+> Refer to the [Document Viewer Lifecycle](https://docs.devexpress.com/XtraReports/401587/web-reporting/general-information/document-viewer-lifecycle) for information oh how the Document Viewer stores report data on different lifecycle stages.
 
 To optimize memory consumption, use the following techniques:
 
-- Configure the Document Viewer to to store server data on disk instead of memory. This significantly reduces the memory consumption at the cost of performance. 
+- Configure the Document Viewer to to store server data on disk instead of memory. This reduces the memory consumption at the cost of performance.
 
   ```cs
   configurator.ConfigureWebDocumentViewer(viewerConfigurator => {
@@ -73,7 +71,7 @@ To optimize memory consumption, use the following techniques:
   });
   ```
 
-- When the page or a UI region (for example, a popup window) that displays the Document Viewer is about to be closed, close the the viewed report to release the server resources (the Storage space and Cache). To do that use the Document Viewer's client-side `Close` method:
+- When a page or a UI region (for example, a popup window) that displays the Document Viewer is about to be closed, close the the viewed report to release the server resources (the Storage space and Cache). To do that use the Document Viewer's client-side `Close` method:
 
   ```cs
   function WebDocumentViewer_BeforeRender(s, e) {
@@ -82,7 +80,7 @@ To optimize memory consumption, use the following techniques:
   });
   ```
 
-- Configure Storage and Cache cleaners on application startup. This allows you to control how long document data persists on the server, and consequently, how long the server resources are reserved by it. Note that after the Storage and Cache are cleared, you cannot continue viewing (scrolling, printing, etc.) the document without re-creating it, so make sure to use reasonable values for these settings.
+- Configure Storage and Cache cleaners on application startup. This allows you to control how long document data persists on the server, and consequently, how long the server resources are reserved to store this data. Note that after a document's data is removed for the Storage and Cache, it becomes impossible to navigate or print this document, so make sure to use reasonable values for these settings.
 
   ```cs
   var cacheCleanerSettings = new CacheCleanerSettings(TimeSpan.FromMinutes(1), TimeSpan.FromSeconds(30), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2));
@@ -92,19 +90,18 @@ To optimize memory consumption, use the following techniques:
   services.AddSingleton<StorageCleanerSettings>(storageCleanerSettings);
   ```
 
-  > Keep in mind that .NET is a managed environment and unused memory is freed only during garbage collection. Refer to the [Fundamentals of garbage collection](https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals) article for more information.
+  > Keep in mind that .NET is a managed environment, so data saved to the disk storage and removed from cache remains in memory until the garbage collection runs. Refer to the [Fundamentals of garbage collection](https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals) article for more information.
 
 ## Manage Database Connections
 
-It is a good practice to serialize only connection names and implement a connection provider that returns data connections based on a name. This abstracts away all data connection logics and hides all connection parameters from the client.
+DevExpress reporting components are configured to retrieve database connections from the application configuration file. This mechanism is secure: the serialized report contains only the connection name and not the connection string itself. If you implement a custom connection provider to customize this mechanism (for example, to filter the list of connections), ensure that you serialize only the data connection's name and do not pass connection parameters to the client.
 
-Reporting services retrieve the IConnectionProviderFactory and IDataSourceWizardConnectionStringsProvide through Dependency Injection. To learn how to implement these services, refer to the following example project's files:
+Reporting services obtain an IConnectionProviderFactory and IDataSourceWizardConnectionStringsProvide through Dependency Injection. To learn how to implement these services, refer to the following example project's files:
 
 - [Services/Reporting/CustomSqlDataConnectionProviderFactory.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Services/Reporting/CustomSqlDataConnectionProviderFactory.cs)
 - [Services/Reporting/CustomSqlDataSourceWizardConnectionStringsProvider.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Services/Reporting/CustomSqlDataSourceWizardConnectionStringsProvider.cs)
 
-To ensure that encrypted connection parameters for SqlDataSource instances are not passed to the client,
-return null in the `IDataSourceWizardConnectionStringsProvider.GetDataConnectionParameters` method implementation:
+To ensure that encrypted connection parameters for SqlDataSource instances are not passed to the client, return `null` from the `IDataSourceWizardConnectionStringsProvider.GetDataConnectionParameters` method's implementation:
 
 ```cs
 public DataConnectionParametersBase GetDataConnectionParameters(string name) {
@@ -129,18 +126,13 @@ public SqlDataConnection LoadConnection(string connectionName) {
 }
 ```
 
-Register the implemented services in [Startup.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Startup.cs)
-
-
-
+Register the implemented services in [Startup.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Startup.cs).
 
 ## Application Security
 
 ### Prevent Cross-Site Request Forgery
 
-An antiforgery token is generate when the client-side reporting application is rendered on a view. The token is saved on the client and the client application passes it to the server with every request for verification.
-
-For more information on how to use antiforgery tokens in ASP.NET, refer to the following resources: 
+To prevent cross-site request forgery, DevExpress reporting controls use the standard ASP.NET Core mechanism described in the following articles:
 
 ##### Microsoft Documentation:
 
@@ -150,7 +142,6 @@ For more information on how to use antiforgery tokens in ASP.NET, refer to the f
 
 - [ASP.NET WebForms - Preventing Cross-Site Request Forgery (CSRF)](https://github.com/DevExpress/aspnet-security-bestpractices/tree/master/SecurityBestPractices.WebForms#4-preventing-cross-site-request-forgery-csrf)
 - [ASP.NET MVC - Preventing Cross-Site Request Forgery (CSRF)](https://github.com/DevExpress/aspnet-security-bestpractices/tree/master/SecurityBestPractices.Mvc#4-preventing-cross-site-request-forgery-csrf)
-
 
 The following code samples demonstrate how to apply antiforgery request validation on the Document Viewer's and Report Designer's controller actions.
 
@@ -184,7 +175,7 @@ public class CustomMVCQueryBuilderController : QueryBuilderController {
 public class CustomMVCReportDesignerController : ReportDesignerController {
     public CustomMVCReportDesignerController(IReportDesignerMvcControllerService controllerService) : base(controllerService) {
     }
-        
+
     public override Task<IActionResult> Invoke() {
         return base.Invoke();
     }
@@ -197,7 +188,7 @@ See the example project's [Views/Home/DesignReport](https://github.com/DevExpres
 
 To perform user authorization and restrict access to reports based on arbitrary logic, implement and register an `IWebDocumentViewerAuthorizationService` along with `WebDocumentViewerOperationLogger`.
 
-Additionally, implement an `IWebDocumentViewerExportedDocumentStorage` to prevent unauthorized requests to documents generated during asynchronous export and printing operations.
+Additionally, implement an `IWebDocumentViewerExportedDocumentStorage` to prevent unauthorized access to documents generated during asynchronous export and printing operations.
 
 [Services/Reporting/DocumentViewerAuthorizationService.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Services/Reporting/DocumentViewerAuthorizationService.cs):
 
@@ -212,7 +203,7 @@ class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWe
         UserService = userService ?? throw new ArgumentNullException(nameof(userService));
     }
 
-    // The code below overrides the WebDocumentViewerOperationLogger's methods to intersect report 
+    // The code below overrides the WebDocumentViewerOperationLogger's methods to intersect report
     // and document creation operations and associats the report and document IDs with the owner's ID
     public override void ReportOpening(string reportId, string documentId, XtraReport report) {
         MapIdentifiersToUser(UserService.GetCurrentUserId(), documentId, reportId);
@@ -233,7 +224,7 @@ class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWe
         }
     }
 
-    // The code below defines authorization rules applyed to different operations on reports.
+    // The code below defines authorization rules applied to different operations on reports.
     #region IWebDocumentViewerAuthorizationService
     public bool CanCreateDocument() {
         return true;
@@ -262,7 +253,6 @@ class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWe
 }
 ```
 
-
 Register your authorization service implementation in **startup.cs**.
 
 [Startup.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Startup.cs#L106):
@@ -278,16 +268,13 @@ public class Startup {
 }
 ```
 
-
-
-
 ## Handle Exceptions
 
-This document section describes the best practices that you should follow when you handle and log errors in a reporting application. For information on how to determine the exact cause of a problem with your application, refer to the [Reporting Application Diagnostics](https://docs.devexpress.com/XtraReports/401687/web-reporting/general-information/application-diagnostics) documentation topic.
+This document section describes the best practices that you should follow when you handle and log errors in a reporting application. For information on how to determine the cause of a problem with your application, refer to the [Reporting Application Diagnostics](https://docs.devexpress.com/XtraReports/401687/web-reporting/general-information/application-diagnostics) documentation topic.
 
-### Logging errors that occurred in the code of DevExpress reporting components
+### Log errors that occurred in the code of DevExpress reporting components
 
-To handle exceptions generated by DevExpress reporting components, implement and register a custom logger service. In your implementation of the service, override the `Error` method. In the `Error` method's implementation, save errors to a log or database. If a Visual Studio debugger is attached, you can set a breakpoint and inspect errors in the Watch window.
+To handle exceptions generated by the code of DevExpress reporting components, implement and register a logger service. In your implementation of the service, override the `Error` method. In the `Error` method's implementation, save errors to a log or database. If a Visual Studio debugger is attached, you can set a breakpoint and inspect errors in the Watch window.
 
 ##### Implement a logger class
 
@@ -318,7 +305,7 @@ public class ReportingLoggerService: LoggerService {
 LoggerService.Initialize(new ReportingLoggerService(loggerFactory.CreateLogger("DXReporting")));
 ```
 
-### Using custom exception handlers
+### Use custom exception handlers
 
 Use custom exception handler services to customize error details that are passed to the client and displayed in the client UI:
 
@@ -344,17 +331,15 @@ public class CustomWebDocumentViewerExceptionHandler : WebDocumentViewerExceptio
 
 Refer to the example project's [Services/Reporting/CustomExceptionHandlers.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Services/Reporting/CustomExceptionHandlers.cs) file for the full code.
 
-
-
 ## Prepare Skeleton Screen
 
-This section describes how to implement a skeleton screen to maximize the application's responsiveness. With this approach, the client first loads a mock screen that mimics the application's layout and then proceeds to load the resources for the reporting components.
+This section describes how to implement a skeleton screen that indicates that the application is being loaded. With this approach, the client first displays a mock screen that mimics the application's layout and then proceeds to load the resources for the reporting components.
 
 ![web-skeleton-designer](https://user-images.githubusercontent.com/37070809/94427328-8f40a500-0197-11eb-87c4-82ec9862b148.png)
 
 Use the following steps to prepare a skeleton.
 
-In [\_Layout.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Shared/_Layout.cshtml), move all script registrations to the bottom of the layout:
+In [\_Layout.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Shared/_Layout.cshtml), move all the `script` elements to the bottom of the layout:
 
 ```cs
 ...
@@ -403,30 +388,33 @@ Refer to the [Enable the Skeleton Screen](https://docs.devexpress.com/XtraReport
 
 DevExpress client reporting controls use the DevExtreme localization mechanism to localize the UI and messages.
 
-To localize DevExpress reporting controls, go to [localization.devexpress.com](localization.devexpress.com), download the required localization JSON files and save them to the `locaization` folder within the application's wwwroot folder. After that, configure the view as described below:
+To localize DevExpress reporting controls, go to [localization.devexpress.com](localization.devexpress.com), download the required localization JSON files and save them to the `locaization` folder within the application's `wwwroot` folder. After that, configure the view as described below:
 
 1. On the client `CustomizeLocalization` event, load the localization JSON files:
 
-```
-    function CustomizeLocalization(s, e){
-        e.LoadMessages($.get("/localization/reporting/dx-analytics-core.de.json"));
-        e.LoadMessages($.get("/localization/reporting/dx-reporting.de.json"));
-        e.LoadMessages($.get("/localization/devextreme/de.json").done(function(messages) { DevExpress.localization.loadMessages(messages); }));
-        e.SetAvailableCultures(["de"]);
-    }
+```js
+function CustomizeLocalization(s, e) {
+  e.LoadMessages($.get("/localization/reporting/dx-analytics-core.de.json"));
+  e.LoadMessages($.get("/localization/reporting/dx-reporting.de.json"));
+  e.LoadMessages(
+    $.get("/localization/devextreme/de.json").done(function (messages) {
+      DevExpress.localization.loadMessages(messages);
+    })
+  );
+  e.SetAvailableCultures(["de"]);
+}
 ```
 
 2. Set the `IncludeLocalization` option to `false` to disable automatic attachment of the localization dictionary:
 
 ```cs
-    Html.DevExpress().ReportDesigner("ReportDesigner").
+    Html.DevExpress().ReportDesigner("ReportDesigner")
         .ClientSideModelSettings(clientSide => {
             clientSide.IncludeLocalization = false;
         })
         ...
 ```
 
-The translation is not guaranteed to contain all strings required by your application. You can use the localization service's UI to add the required strings. See the [Localization Service](https://docs.devexpress.com/LocalizationService/16235/localization-service) article for more information.
+The translation is not guaranteed to contain all required strings. You can use the localization service's UI to add the missing strings as described in the [Localization Service](https://docs.devexpress.com/LocalizationService/16235/localization-service) article.
 
 For a full code example, refer to the example project's [Views/Home/DesignReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DisplayReport.cshtml).
-
