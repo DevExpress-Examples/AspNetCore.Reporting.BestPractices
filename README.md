@@ -388,7 +388,7 @@ Refer to the [Enable the Skeleton Screen](https://docs.devexpress.com/XtraReport
 
 DevExpress client reporting controls use the DevExtreme localization mechanism to localize the UI and messages.
 
-To localize DevExpress reporting controls, go to [localization.devexpress.com](localization.devexpress.com), download the required localization JSON files and save them to the `locaization` folder within the application's `wwwroot` folder. After that, configure the view as described below:
+To localize DevExpress reporting controls, go to [localization.devexpress.com](localization.devexpress.com), download the JSON files for the required localization and save them to the `locaization` folder within the application's `wwwroot` folder. After that, configure the view as described below:
 
 1. On the client `CustomizeLocalization` event, load the localization JSON files:
 
@@ -415,6 +415,6 @@ function CustomizeLocalization(s, e) {
         ...
 ```
 
-The translation is not guaranteed to contain all required strings. You can use the localization service's UI to add the missing strings as described in the [Localization Service](https://docs.devexpress.com/LocalizationService/16235/localization-service) article.
+A translation is not guaranteed to cover all required strings. You can use the localization service's UI to add the missing strings as described in the [Localization Service](https://docs.devexpress.com/LocalizationService/16235/localization-service) article.
 
 For a full code example, refer to the example project's [Views/Home/DesignReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DisplayReport.cshtml).
