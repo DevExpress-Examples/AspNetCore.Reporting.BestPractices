@@ -186,7 +186,7 @@ See the example project's [Views/Home/DesignReport](https://github.com/DevExpres
 
 ### Implement User Authorization
 
-To perform user authorization and restrict access to reports based on arbitrary logic, implement and register an `IWebDocumentViewerAuthorizationService` along with `WebDocumentViewerOperationLogger`.
+To authorize a user and restrict access to reports based on arbitrary logic, implement and register an `IWebDocumentViewerAuthorizationService` with `WebDocumentViewerOperationLogger`.
 
 You can also implement an `IWebDocumentViewerExportedDocumentStorage` to prevent unauthorized access to documents generated during asynchronous export and printing operations.
 
