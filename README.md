@@ -4,13 +4,13 @@
 
 This **README** file describes best practices to follow when you develop a web application with DevExpress reporting controls.
 
-The repository also contains an example application that demonstrates the described techniques. This application is split into three projects:
+This repository also contains an example application that demonstrates the described techniques. This application is split into three projects:
 
 - **ASP.NetCore.Reporting.MVC** - An ASP.Net Core MVC application.
 - **ASP.NetCore.Reporting.Angular** - An ASP.Net Core application with an Angular frontend.
-- **ASP.NetCore.Reporting.Common** - Implements services and business logic used by both the MVC and Angular projects.
+- **ASP.NetCore.Reporting.Common** - Implements services and business logic for the MVC and Angular projects.
 
-You can use the example code in your web application and modify it for your use-case scenario.
+You can use the example code in your web application and modify it for different scenarios.
 
 ## Table of Contents:
 
@@ -47,13 +47,13 @@ To run the example application, you need to install packages from the DevExpress
 
 ### Start the Application
 
-> **Note:** If you change the versions of DevExpress NuGet packages used in the example application, make sure to also specify the matching minor versions for DevExpress client libraries in the **package.json** file.
+> **Note:** If you change the version of DevExpress NuGet packages used in the example application, make sure you also specify the matching minor versions for DevExpress client libraries in the **package.json** file.
 
-Press **Run** button or F5 to run the example application.
+Press the **Run** button or F5 to run the example application.
 
 ## Optimize Memory Consumption
 
-This section describes how to optimize a reporting application's memory consumption, prevent memory leaks and cluttering on the server.
+This section describes how to optimize a reporting application's memory consumption, and prevent memory leaks and cluttering on the server.
 
 > Refer to the [Document Viewer Lifecycle](https://docs.devexpress.com/XtraReports/401587/web-reporting/general-information/document-viewer-lifecycle) for information oh how the Document Viewer stores report data on different lifecycle stages.
 
@@ -71,7 +71,7 @@ To optimize memory consumption, use the following techniques:
   });
   ```
 
-- When a page or a UI region (for example, a popup window) that displays the Document Viewer is about to be closed, close the the viewed report to release the server resources (the Storage space and Cache). To do that use the Document Viewer's client-side `Close` method:
+- When a page or a UI region (for example, a pop-up window) that displays the Document Viewer is about to be closed, close the the viewed report to release the server resources (the Storage space and Cache). To do that use the Document Viewer's client-side `Close` method:
 
   ```cs
   function WebDocumentViewer_BeforeRender(s, e) {
@@ -80,7 +80,7 @@ To optimize memory consumption, use the following techniques:
   });
   ```
 
-- Configure Storage and Cache cleaners on application startup. This allows you to control how long document data persists on the server, and consequently, how long the server resources are reserved to store this data. Note that after a document's data is removed for the Storage and Cache, it becomes impossible to navigate or print this document, so make sure to use reasonable values for these settings.
+- Configure Storage and Cache cleaners on application startup. This allows you to specify how long document data persists on the server, and consequently, how long the server resources are reserved to store this data. Note that after a document's data is removed for the Storage and Cache, you cannot navigate or print this document - make sure to use reasonable values for these settings.
 
   ```cs
   var cacheCleanerSettings = new CacheCleanerSettings(TimeSpan.FromMinutes(1), TimeSpan.FromSeconds(30), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2));
@@ -94,9 +94,9 @@ To optimize memory consumption, use the following techniques:
 
 ## Manage Database Connections
 
-DevExpress reporting components are configured to retrieve database connections from the application configuration file. This mechanism is secure: a serialized report contains only the connection name and not the connection string itself. If you implement a custom connection provider to customize this mechanism (for example, to filter the list of connections), ensure that you serialize only the data connection's name and do not pass connection parameters to the client.
+DevExpress reporting components are configured to retrieve database connections from the application configuration file. This mechanism is secure: a serialized report contains only the connection name. If you implement a custom connection provider to customize this mechanism (for example, to filter the list of connections), ensure you serialize only the data connection's name and do not pass connection parameters to the client.
 
-Reporting services obtain an IConnectionProviderFactory and IDataSourceWizardConnectionStringsProvide through Dependency Injection. To learn how to implement these services, refer to the following example project's files:
+Reporting services obtain an IConnectionProviderFactory and IDataSourceWizardConnectionStringsProvide through Dependency Injection. For instructions on how to implement these services, refer to the following example project's files:
 
 - [Services/Reporting/CustomSqlDataConnectionProviderFactory.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Services/Reporting/CustomSqlDataConnectionProviderFactory.cs)
 - [Services/Reporting/CustomSqlDataSourceWizardConnectionStringsProvider.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Services/Reporting/CustomSqlDataSourceWizardConnectionStringsProvider.cs)
@@ -186,9 +186,9 @@ See the example project's [Views/Home/DesignReport](https://github.com/DevExpres
 
 ### Implement User Authorization
 
-To perform user authorization and restrict access to reports based on arbitrary logic, implement and register an `IWebDocumentViewerAuthorizationService` along with `WebDocumentViewerOperationLogger`.
+To authorize a user and restrict access to reports based on arbitrary logic, implement and register an `IWebDocumentViewerAuthorizationService` with `WebDocumentViewerOperationLogger`.
 
-Additionally, implement an `IWebDocumentViewerExportedDocumentStorage` to prevent unauthorized access to documents generated during asynchronous export and printing operations.
+You can also implement an `IWebDocumentViewerExportedDocumentStorage` to prevent unauthorized access to documents generated during asynchronous export and printing operations.
 
 [Services/Reporting/DocumentViewerAuthorizationService.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Services/Reporting/DocumentViewerAuthorizationService.cs):
 
@@ -274,7 +274,7 @@ This document section describes the best practices that you should follow when y
 
 ### Log errors that occurred in the code of DevExpress reporting components
 
-To handle exceptions generated by the code of DevExpress reporting components, implement and register a logger service. In your implementation of the service, override the `Error` method. In the `Error` method's implementation, save errors to a log or database. If a Visual Studio debugger is attached, you can set a breakpoint and inspect errors in the Watch window.
+To handle exceptions generated by DevExpress reporting components, implement and register a logger service and override the `Error` method in your service implementation. In the `Error` method's implementation, save errors to a log or database. If a Visual Studio debugger is attached, you can set a breakpoint and inspect errors in the Watch window.
 
 ##### Implement a logger class
 
@@ -337,7 +337,7 @@ This section describes how to implement a skeleton screen that indicates when th
 
 ![web-skeleton-designer](https://user-images.githubusercontent.com/37070809/94427328-8f40a500-0197-11eb-87c4-82ec9862b148.png)
 
-Use the following steps to prepare a skeleton.
+Use the following steps to prepare a skeleton:
 
 In [\_Layout.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Shared/_Layout.cshtml), move all the `script` elements to the bottom of the layout:
 
@@ -388,9 +388,9 @@ Refer to the [Enable the Skeleton Screen](https://docs.devexpress.com/XtraReport
 
 DevExpress client reporting controls use the DevExtreme localization mechanism to localize the UI and messages.
 
-To localize DevExpress reporting controls, go to [localization.devexpress.com](localization.devexpress.com), download the JSON files for the required localization and save them to the `locaization` folder within the application's `wwwroot` folder. After that, configure the view as described below:
+To localize DevExpress reporting controls, go to [localization.devexpress.com](localization.devexpress.com), download the JSON files for the localization, and save them to the `locaization` folder within the application's `wwwroot` folder. After that, configure the view as described below:
 
-1. On the client `CustomizeLocalization` event, load the localization JSON files:
+1. In the client `CustomizeLocalization` event, load the localization JSON files:
 
 ```js
 function CustomizeLocalization(s, e) {
@@ -415,6 +415,6 @@ function CustomizeLocalization(s, e) {
         ...
 ```
 
-A translation is not guaranteed to cover all required strings. You can use the localization service's UI to add the missing strings as described in the [Localization Service](https://docs.devexpress.com/LocalizationService/16235/localization-service) article.
+A translation does not always cover all the possible strings. You can use the localization service's UI to add the missing strings as described in the [Localization Service](https://docs.devexpress.com/LocalizationService/16235/localization-service) article.
 
 For a full code example, refer to the example project's [Views/Home/DesignReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/blob/master/AspNetCore.Reporting.BestPractices/Views/Home/DisplayReport.cshtml).
