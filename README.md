@@ -333,7 +333,7 @@ Refer to the example project's [Services/Reporting/CustomExceptionHandlers.cs](h
 
 ## Prepare Skeleton Screen
 
-This section describes how to implement a skeleton screen that indicates that the application is being loaded. With this approach, the client first displays a mock screen that mimics the application's layout and then proceeds to load the resources for the reporting components.
+This section describes how to implement a skeleton screen that indicates when the application is being loaded. With this approach, the client first displays a mock screen that mimics the application's layout and then proceeds to load the resources for the reporting components.
 
 ![web-skeleton-designer](https://user-images.githubusercontent.com/37070809/94427328-8f40a500-0197-11eb-87c4-82ec9862b148.png)
 
