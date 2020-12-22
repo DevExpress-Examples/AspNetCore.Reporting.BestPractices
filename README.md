@@ -80,7 +80,7 @@ To optimize memory consumption, use the following techniques:
   });
   ```
 
-- Configure Storage and Cache cleaners on application startup. This allows you to specify how long document data persists on the server, and consequently, how long the server resources are reserved to store this data. Note that after a document's data is removed for the Storage and Cache, you cannot navigate or print this document - make sure to use reasonable values for these settings.
+- Configure Storage and Cache cleaners on application startup. This allows you to specify how long you want to reserve resources to store document data on the server. Note that after a document's data is removed for the Storage and Cache, you cannot navigate or print this document.
 
   ```cs
   var cacheCleanerSettings = new CacheCleanerSettings(TimeSpan.FromMinutes(1), TimeSpan.FromSeconds(30), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2));
