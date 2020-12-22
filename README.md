@@ -90,7 +90,7 @@ To optimize memory consumption, use the following techniques:
   services.AddSingleton<StorageCleanerSettings>(storageCleanerSettings);
   ```
 
-  > Keep in mind that .NET is a managed environment, so data saved to the disk storage and removed from cache remains in memory until the garbage collection runs. Refer to the [Fundamentals of garbage collection](https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals) article for more information.
+  > Keep in mind that .NET is a managed environment, so data saved to the disk storage and removed from cache remains in memory until .NET runs garbage collection. Refer to the [Fundamentals of garbage collection](https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals) article for more information.
 
 ## Manage Database Connections
 
