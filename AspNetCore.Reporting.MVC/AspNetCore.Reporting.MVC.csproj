@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>aspnet-AspNetCore.Reporting.MVC-4D4509A9-62A2-4451-8E5B-B8895C984457</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ViewerStorages\**" />
+    <Content Remove="ViewerStorages\**" />
+    <EmbeddedResource Remove="ViewerStorages\**" />
+    <None Remove="ViewerStorages\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Reports\CourseListReport.repx" />
+    <None Remove="Reports\MyEnrollmentsReport.repx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Reports\CourseListReport.repx" />
+    <EmbeddedResource Include="Reports\MyEnrollmentsReport.repx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
+    <PackageReference Include="DevExpress.AspNetCore.Reporting" Version="20.1.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.76" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AspNetCore.Reporting.Common\AspNetCore.Reporting.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Reports\CourseListReport.cs" />
+    <Compile Update="Reports\MyEnrollmentsReport.cs">
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Database\nwind.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
