@@ -1,12 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AspNetCore.Reporting.Common.Data;
 using AspNetCore.Reporting.MVC.Data;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -24,8 +18,6 @@ namespace AspNetCore.Reporting.MVC {
                 var services = scope.ServiceProvider;
                 try {
                     var dbContext = services.GetRequiredService<SchoolDbContext>();
-                    //var userManager = services.GetRequiredService<UserManager<StudentIdentity>>();
-                    //DbInitializer.Initialize(dbContext, userManager, new Common.Reports.ReportsFactory());
                     DbInitializer.Initialize(dbContext, new Common.Reports.ReportsFactory());
                 } catch(Exception exception) {
                     var logger = services.GetRequiredService<ILogger<Program>>();

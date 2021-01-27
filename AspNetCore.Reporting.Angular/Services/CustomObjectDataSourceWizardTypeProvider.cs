@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using DevExpress.DataAccess.Web;
 
-namespace AspNetCore.Reporting.Common.Services.Reporting {
+namespace AspNetCore.Reporting.Common.Services {
     public class CustomObjectDataSourceWizardTypeProvider : IObjectDataSourceWizardTypeProvider {
         public IEnumerable<Type> GetAvailableTypes(string context) {
             return new[] {

@@ -5,12 +5,10 @@ using DevExpress.AspNetCore.Reporting.ReportDesigner;
 using DevExpress.AspNetCore.Reporting.ReportDesigner.Native.Services;
 using DevExpress.AspNetCore.Reporting.WebDocumentViewer;
 using DevExpress.AspNetCore.Reporting.WebDocumentViewer.Native.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AspNetCore.Reporting.Common.Controllers {
-    //[Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     [Authorize]
     [Route("DXXRDVMVC")]
     [ValidateAntiForgeryToken]
