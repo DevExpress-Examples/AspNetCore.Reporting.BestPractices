@@ -337,7 +337,7 @@ This section describes how to implement a skeleton screen that indicates when th
 
 ![web-skeleton-designer](https://user-images.githubusercontent.com/37070809/94427328-8f40a500-0197-11eb-87c4-82ec9862b148.png)
 
-Use the following steps to prepare a skeleton:
+Use the following steps to prepare a skeleton screen:
 
 In [\_Layout.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/master/AspNetCore.Reporting.MVC/Views/Shared/_Layout.cshtml), move all the `script` elements to the bottom of the layout:
 
