@@ -61,17 +61,17 @@ To optimize memory consumption, use the following techniques:
 
 - Configure the Document Viewer to to store server data on disk instead of memory. This reduces the memory consumption at the cost of performance.
 
-  ```cs
-  configurator.ConfigureWebDocumentViewer(viewerConfigurator => {
-    // StorageSynchronizationMode.InterThread - it is a default value, use InterProcess if you use multiple application instances without ARR Affinity
-    viewerConfigurator.UseFileDocumentStorage("ViewerStorages\\Documents", StorageSynchronizationMode.InterThread);
-    viewerConfigurator.UseFileExportedDocumentStorage("ViewerStorages\\ExportedDocuments", StorageSynchronizationMode.InterThread);
-    viewerConfigurator.UseFileReportStorage("ViewerStorages\\Reports", StorageSynchronizationMode.InterThread);
-    viewerConfigurator.UseCachedReportSourceBuilder();
-  });
-  ```
+```cs
+configurator.ConfigureWebDocumentViewer(viewerConfigurator => {
+  // StorageSynchronizationMode.InterThread - it is a default value, use InterProcess if you use multiple application instances without ARR Affinity
+  viewerConfigurator.UseFileDocumentStorage("ViewerStorages\\Documents", StorageSynchronizationMode.InterThread);
+  viewerConfigurator.UseFileExportedDocumentStorage("ViewerStorages\\ExportedDocuments", StorageSynchronizationMode.InterThread);
+  viewerConfigurator.UseFileReportStorage("ViewerStorages\\Reports", StorageSynchronizationMode.InterThread);
+  viewerConfigurator.UseCachedReportSourceBuilder();
+});
+```
 
-- To allow users to close a page or a UI region (for example, a pop-up window) that displays the Document Viewer, you should first call the Document Viewer's client-side `Close` method to close the viewed report and release the server resources (the Storage space and Cache):
+- To allow users to close a page or a UI region (for example, a pop-up window) that displays the Document Viewer, you should first call the Document Viewer's client-side `Close` ethod to close the viewed report and release the server resources (the Storage space and Cache):
 
   ```cs
   function WebDocumentViewer_BeforeRender(s, e) {
@@ -82,13 +82,13 @@ To optimize memory consumption, use the following techniques:
 
 - Configure Storage and Cache cleaners on application startup. This allows you to specify how long you want to reserve resources to store document data on the server. Note that after a document's data is removed for the Storage and Cache, you cannot navigate or print this document.
 
-  ```cs
-  var cacheCleanerSettings = new CacheCleanerSettings(TimeSpan.FromMinutes(1), TimeSpan.FromSeconds(30), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2));
-  services.AddSingleton<CacheCleanerSettings>(cacheCleanerSettings);
+```cs
+var cacheCleanerSettings = new CacheCleanerSettings(TimeSpan.FromMinutes(1), TimeSpan.FromSeconds(30), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2));
+services.AddSingleton<CacheCleanerSettings>(cacheCleanerSettings);
 
-  var storageCleanerSettings = new StorageCleanerSettings(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(30), TimeSpan.FromHours(12), TimeSpan.FromHours(12), TimeSpan.FromHours(12));
-  services.AddSingleton<StorageCleanerSettings>(storageCleanerSettings);
-  ```
+var storageCleanerSettings = new StorageCleanerSettings(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(30), TimeSpan.FromHours(12), TimeSpan.FromHours(12), TimeSpan.FromHours(12));
+services.AddSingleton<StorageCleanerSettings>(storageCleanerSettings);
+```
 
   > Keep in mind that .NET is a managed environment, so data saved to the disk storage and removed from cache remains in memory until .NET runs garbage collection. Refer to the [Fundamentals of garbage collection](https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals) article for more information.
 
