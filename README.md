@@ -73,12 +73,12 @@ configurator.ConfigureWebDocumentViewer(viewerConfigurator => {
 
 - To allow users to close a page or a UI region (for example, a pop-up window) that displays the Document Viewer, you should first call the Document Viewer's client-side `Close` ethod to close the viewed report and release the server resources (the Storage space and Cache):
 
-  ```cs
-  function WebDocumentViewer_BeforeRender(s, e) {
-    $(window).on('beforeunload', function(e) {
-      s.Close();
-  });
-  ```
+```cs
+function WebDocumentViewer_BeforeRender(s, e) {
+  $(window).on('beforeunload', function(e) {
+    s.Close();
+});
+```
 
 - Configure Storage and Cache cleaners on application startup. This allows you to specify how long you want to reserve resources to store document data on the server. Note that after a document's data is removed for the Storage and Cache, you cannot navigate or print this document.
 
