@@ -204,7 +204,7 @@ class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWe
     }
 
     // The code below overrides the WebDocumentViewerOperationLogger's methods to intersect report
-    // and document creation operations and associats the report and document IDs with the owner's ID
+    // and document creation operations and associates the report and document IDs with the owner's ID
     public override void ReportOpening(string reportId, string documentId, XtraReport report) {
         MapIdentifiersToUser(UserService.GetCurrentUserId(), documentId, reportId);
         base.ReportOpening(reportId, documentId, report);
