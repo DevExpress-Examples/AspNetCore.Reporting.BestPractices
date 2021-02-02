@@ -1,7 +1,9 @@
+import { AsyncExportApproach } from "devexpress-reporting/scopes/reporting-viewer-settings"
+import { ajaxSetup } from "@devexpress/analytics-core/analytics-utils"
 import { Component, Inject, ViewEncapsulation, OnInit } from '@angular/core';
 import { AuthorizeService } from '../../api-authorization/authorize.service';
-import DevExpress from "@devexpress/analytics-core";
-import DevExpressReporting from "devexpress-reporting";
+
+
 import { ActivatedRoute } from '@angular/router';
 import * as ko from 'knockout';
 
@@ -32,14 +34,14 @@ export class ReportViewerComponent implements OnInit {
   constructor(@Inject('BASE_URL') public hostUrl: string, private authorize: AuthorizeService, private activateRoute: ActivatedRoute) {
     this.authorize.getAccessToken()
       .subscribe(x => {
-        DevExpress.Analytics.Utils.ajaxSetup.ajaxSettings = {
+        ajaxSetup.ajaxSettings = {
           headers: {
             'Authorization': 'Bearer ' + x
           }
         };
       });
 
-    DevExpressReporting.Reporting.Viewer.Settings.AsyncExportApproach = true;
+    AsyncExportApproach(true);
   }
 
   ngOnInit() {
