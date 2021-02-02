@@ -1,8 +1,6 @@
 import { AsyncExportApproach } from "devexpress-reporting/scopes/reporting-viewer-settings"
 import { ajaxSetup } from "@devexpress/analytics-core/analytics-utils"
 import { Component, Inject, ViewEncapsulation, OnInit } from '@angular/core';
-
-
 import { AuthorizeService } from '../../api-authorization/authorize.service';
 import * as ko from 'knockout';
 import { ActivatedRoute } from '@angular/router';
