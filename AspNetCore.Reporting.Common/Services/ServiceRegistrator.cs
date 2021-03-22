@@ -38,6 +38,7 @@ namespace AspNetCore.Reporting.Common.Services {
             services.AddScoped<IQueryBuilderExceptionHandler, CustomQueryBuilderExceptionHandler>();
 
             services.AddScoped<IWebDocumentViewerAuthorizationService, DocumentViewerAuthorizationService>();
+            services.AddScoped<IExportingAuthorizationService, DocumentViewerAuthorizationService>();
             services.AddScoped<WebDocumentViewerOperationLogger, DocumentViewerAuthorizationService>();
 
             //services.AddSingleton<IScopedDbContextProvider<SchoolDbContext>, ScopedDbContextProvider<SchoolDbContext>>();
