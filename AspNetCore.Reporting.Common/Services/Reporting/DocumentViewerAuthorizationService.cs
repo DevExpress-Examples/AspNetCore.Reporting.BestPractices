@@ -28,6 +28,7 @@ namespace AspNetCore.Reporting.Common.Services.Reporting {
         }
 
         public override ExportedDocument ExportDocumentStarting(string documentId, string asyncExportOperationId, string format, ExportOptions options, PrintingSystemBase printingSystem, Func<ExportedDocument> doExportSynchronously) {
+            MapIdentifiersToUser(UserService.GetCurrentUserId(), null, null, asyncExportOperationId);
             return base.ExportDocumentStarting(documentId, asyncExportOperationId, format, options, printingSystem, doExportSynchronously);
         }
 
