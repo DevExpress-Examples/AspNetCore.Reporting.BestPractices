@@ -9,6 +9,7 @@ using DevExpress.XtraReports.Web.ClientControls;
 using DevExpress.XtraReports.Web.Extensions;
 using DevExpress.XtraReports.Web.WebDocumentViewer;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -16,8 +17,10 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace AspNetCore.Reporting.Angular {
     public class Startup {
@@ -49,6 +52,8 @@ namespace AspNetCore.Reporting.Angular {
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
+
+            services.TryAddEnumerable(ServiceDescriptor.Singleton<IPostConfigureOptions<JwtBearerOptions>,ConfigureJwtBearerOptions>());
             services.AddControllersWithViews().AddNewtonsoftJson();
             services.AddRazorPages();
             services.ConfigureReportingServices(x => x.ConfigureReportDesigner(reportDesignerConfigurator => {
@@ -59,10 +64,6 @@ namespace AspNetCore.Reporting.Angular {
             services.AddSingleton<IScopedDbContextProvider<SchoolDbContext>, ScopedDbContextProvider<SchoolDbContext>>();
             services.AddScoped<IAuthenticatiedUserService, UserService<SchoolDbContext>>();
             services.AddTransient<ReportStorageWebExtension, EFCoreReportStorageWebExtension<SchoolDbContext>>();
-            string exportedDocumentsPath = System.IO.Path.Combine(WebHostEnvironment.ContentRootPath, "ViewerStorages", "ExportedDocuments");
-            var exportedDocumentService = new ExportedDocumentService(exportedDocumentsPath, "/Export/GetExportResult");
-            services.AddSingleton<IExportResultProvider>(exportedDocumentService);
-            services.AddSingleton<IWebDocumentViewerExportResultUriGenerator>(exportedDocumentService);
             services.AddTransient<CourseListReportRepository>();
             services.AddTransient<MyEnrollmentsReportRepository>();
 

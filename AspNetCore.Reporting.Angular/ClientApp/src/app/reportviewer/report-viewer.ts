@@ -1,9 +1,8 @@
-import { AsyncExportApproach } from "devexpress-reporting/scopes/reporting-viewer-settings"
-import { ajaxSetup } from "@devexpress/analytics-core/analytics-utils"
-import { Component, Inject, ViewEncapsulation, OnInit } from '@angular/core';
-import { AuthorizeService } from '../../api-authorization/authorize.service';
+import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ajaxSetup } from '@devexpress/analytics-core/analytics-utils';
 import * as ko from 'knockout';
+import { AuthorizeService } from '../../api-authorization/authorize.service';
 
 @Component({
   selector: 'report-viewer',
@@ -28,6 +27,9 @@ export class ReportViewerComponent implements OnInit {
   koReportUrl = ko.observable('');
   invokeAction: string = '/DXXRDVAngular';
 
+  useSameTabExport = true;
+  useAsynchronousExport = true;
+  exportAccesstoken: string;
 
   constructor(@Inject('BASE_URL') public hostUrl: string, private authorize: AuthorizeService, private activateRoute: ActivatedRoute) {
     this.authorize.getAccessToken()
@@ -37,9 +39,12 @@ export class ReportViewerComponent implements OnInit {
             'Authorization': 'Bearer ' + x
           }
         };
+        this.exportAccesstoken = x;
       });
+  }
 
-    AsyncExportApproach(true);
+  viewerOnExport(event) {
+    event.args.FormData['access_token'] = this.exportAccesstoken;
   }
 
   ngOnInit() {

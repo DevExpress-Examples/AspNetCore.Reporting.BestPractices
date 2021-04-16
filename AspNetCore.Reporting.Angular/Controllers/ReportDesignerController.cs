@@ -15,6 +15,8 @@ namespace AspNetCore.Reporting.Common.Controllers {
             //Fill a data source set if needed
             var modelGenerator = new ReportDesignerClientSideModelGenerator(HttpContext.RequestServices);
             var model = modelGenerator.GetModel(reportUrl, dataSources, "/DXXRDAngular", "/DXXRDVAngular", "/DXXQBAngular");
+            model.ReportPreviewSettings.ExportSettings.UseAsynchronousExport = true;
+            model.ReportPreviewSettings.ExportSettings.UseSameTab = true;
             string modelJsonScript = modelGenerator.GetJsonModelScript(model);
             return new JavaScriptSerializer().Deserialize<object>(modelJsonScript);
         }

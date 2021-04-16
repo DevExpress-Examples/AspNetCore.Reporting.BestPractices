@@ -1,3 +1,5 @@
-<dx-report-viewer [reportUrl]="reportUrl" height="800px">
+<dx-report-viewer [reportUrl]="reportUrl" height="800px>
+  <dxrv-callbacks (OnExport)="viewerOnExport($event)"></dxrv-callbacks>
   <dxrv-request-options [invokeAction]="invokeAction" [host]="hostUrl"></dxrv-request-options>
+  <dxrv-export-settings [useSameTab]="useSameTabExport" [useAsynchronousExport]="useAsynchronousExport"></dxrv-export-settings>
 </dx-report-viewer>

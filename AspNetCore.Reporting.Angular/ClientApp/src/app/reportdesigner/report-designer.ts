@@ -1,4 +1,3 @@
-import { AsyncExportApproach } from "devexpress-reporting/scopes/reporting-viewer-settings"
 import { ajaxSetup } from "@devexpress/analytics-core/analytics-utils"
 import { Component, Inject, ViewEncapsulation, OnInit } from '@angular/core';
 import { AuthorizeService } from '../../api-authorization/authorize.service';
@@ -30,6 +29,7 @@ export class ReportDesignerComponent implements OnInit {
     this.koReportUrl(newUrl);
   }
   koReportUrl = ko.observable('');
+  exportAccessToken: string;
 
   constructor(@Inject('BASE_URL') public hostUrl: string, private authorize: AuthorizeService, private activateRoute: ActivatedRoute) {
     this.authorize.getAccessToken()
@@ -39,8 +39,12 @@ export class ReportDesignerComponent implements OnInit {
             'Authorization': 'Bearer ' + x
           }
         };
+        this.exportAccessToken = x;
       });
-    AsyncExportApproach(true);
+  }
+
+  previewOnExport(event) {
+    event.args.FormData["access_token"] = this.exportAccessToken;
   }
 
   ngOnInit() {
