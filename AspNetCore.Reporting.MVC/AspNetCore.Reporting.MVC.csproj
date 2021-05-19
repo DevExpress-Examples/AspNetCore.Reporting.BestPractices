@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>aspnet-AspNetCore.Reporting.MVC-4D4509A9-62A2-4451-8E5B-B8895C984457</UserSecretsId>
@@ -41,7 +41,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <Target Name="PreBuild" BeforeTargets="BeforeBuild">
+  <Target Name="InstallJSDependencies" BeforeTargets="LibraryManagerRestore" Condition="!Exists('node_modules/')">
     <Exec Command="npm install" />
   </Target>
 </Project>
