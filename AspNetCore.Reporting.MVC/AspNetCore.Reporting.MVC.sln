@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.Reporting.MVC", "AspNetCore.Reporting.MVC.csproj", "{1255BCA4-CB7A-4317-9C9E-5F505213341B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Reporting.MVC", "AspNetCore.Reporting.MVC.csproj", "{1255BCA4-CB7A-4317-9C9E-5F505213341B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Reporting.Common", "..\AspNetCore.Reporting.Common\AspNetCore.Reporting.Common.csproj", "{669F289E-F10D-4239-A847-EA67CD0C70FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{1255BCA4-CB7A-4317-9C9E-5F505213341B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1255BCA4-CB7A-4317-9C9E-5F505213341B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1255BCA4-CB7A-4317-9C9E-5F505213341B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{669F289E-F10D-4239-A847-EA67CD0C70FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{669F289E-F10D-4239-A847-EA67CD0C70FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{669F289E-F10D-4239-A847-EA67CD0C70FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{669F289E-F10D-4239-A847-EA67CD0C70FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

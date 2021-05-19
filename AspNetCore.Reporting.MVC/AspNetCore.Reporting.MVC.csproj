@@ -19,29 +19,27 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
-    <PackageReference Include="DevExpress.AspNetCore.Reporting" Version="20.2.6" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.113" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AspNetCore.Reporting.Common\AspNetCore.Reporting.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Reports\CourseListReport.cs" />
-    <Compile Update="Reports\MyEnrollmentsReport.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Update="Reports\MyEnrollmentsReport.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Database\nwind.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <Target Name="PreBuild" BeforeTargets="BeforeBuild">
+  <Target Name="InstallJSDependencies" BeforeTargets="LibraryManagerRestore" Condition="!Exists('node_modules/')">
     <Exec Command="npm install" />
   </Target>
 </Project>

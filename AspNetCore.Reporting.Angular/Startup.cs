@@ -7,7 +7,6 @@ using DevExpress.AspNetCore;
 using DevExpress.AspNetCore.Reporting;
 using DevExpress.XtraReports.Web.ClientControls;
 using DevExpress.XtraReports.Web.Extensions;
-using DevExpress.XtraReports.Web.WebDocumentViewer;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -54,7 +53,7 @@ namespace AspNetCore.Reporting.Angular {
             services.ConfigureReportingServices(x => x.ConfigureReportDesigner(reportDesignerConfigurator => {
                 reportDesignerConfigurator.RegisterObjectDataSourceWizardTypeProvider<CustomObjectDataSourceWizardTypeProvider>();
             }));
-            ServiceRegistrator.AddCommonServices(services);
+            ServiceRegistrator.AddCommonServices(services, WebHostEnvironment.ContentRootPath);
 
             services.AddSingleton<IScopedDbContextProvider<SchoolDbContext>, ScopedDbContextProvider<SchoolDbContext>>();
             services.AddScoped<IAuthenticatiedUserService, UserService<SchoolDbContext>>();

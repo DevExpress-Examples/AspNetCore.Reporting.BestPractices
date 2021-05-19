@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AspNetCore.Reporting.Common.Controllers {
     [Authorize]
     [Route("DXXRDVMVC")]
-    [ValidateAntiForgeryToken]
+    [AutoValidateAntiforgeryToken]
     public class CustomMVCWebDocumentViewerController : WebDocumentViewerController {
         public CustomMVCWebDocumentViewerController(IWebDocumentViewerMvcControllerService controllerService) : base(controllerService) {
         }
@@ -23,7 +23,7 @@ namespace AspNetCore.Reporting.Common.Controllers {
 
     [Authorize]
     [Route("DXXQBMVC")]
-    [ValidateAntiForgeryToken]
+    [AutoValidateAntiforgeryToken]
     public class CustomMVCQueryBuilderController : QueryBuilderController {
         public CustomMVCQueryBuilderController(IQueryBuilderMvcControllerService controllerService) : base(controllerService) {
         }
@@ -35,7 +35,7 @@ namespace AspNetCore.Reporting.Common.Controllers {
     
     [Authorize]
     [Route("DXXRDMVC")]
-    [ValidateAntiForgeryToken]
+    [AutoValidateAntiforgeryToken]
     public class CustomMVCReportDesignerController : ReportDesignerController {
         public CustomMVCReportDesignerController(IReportDesignerMvcControllerService controllerService) : base(controllerService) {
         }

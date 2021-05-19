@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using AspNetCore.Reporting.Common.Data;
 using AspNetCore.Reporting.Common.Models;
 using DevExpress.XtraReports.UI;
@@ -25,6 +26,10 @@ namespace AspNetCore.Reporting.Common.Services.Reporting {
             return true;
         }
 
+        public override Task<byte[]> GetDataAsync(string url) {
+            return base.GetDataAsync(url);
+        }
+
         public override byte[] GetData(string url) {
             var userIdentity = userService.GetCurrentUserId();
             var reportData = dBContext.Reports.Where(a => a.ID == int.Parse(url) && a.Student.Id == userIdentity).FirstOrDefault();
@@ -35,11 +40,19 @@ namespace AspNetCore.Reporting.Common.Services.Reporting {
             }
         }
 
+        public override Task<Dictionary<string, string>> GetUrlsAsync() {
+            return base.GetUrlsAsync();
+        }
+
         public override Dictionary<string, string> GetUrls() {
             var userIdentity = userService.GetCurrentUserId();
             var reportData = dBContext.Reports.Where(a => a.Student.Id == userIdentity).Select(a => new ReportingControlModel() { Id = a.ID.ToString(), Title = string.IsNullOrEmpty(a.DisplayName) ? "Noname Report" : a.DisplayName });
             var reports = reportData.ToList();
             return reports.ToDictionary(x => x.Id.ToString(), y => y.Title);
+        }
+
+        public override Task SetDataAsync(XtraReport report, string url) {
+            return base.SetDataAsync(report, url);
         }
 
         public override void SetData(XtraReport report, string url) {
@@ -48,6 +61,10 @@ namespace AspNetCore.Reporting.Common.Services.Reporting {
             reportEntity.ReportLayout = ReportToByteArray(report);
             reportEntity.DisplayName = report.DisplayName;
             dBContext.SaveChanges();
+        }
+
+        public override Task<string> SetNewDataAsync(XtraReport report, string defaultUrl) {
+            return base.SetNewDataAsync(report, defaultUrl);
         }
 
         public override string SetNewData(XtraReport report, string defaultUrl) {

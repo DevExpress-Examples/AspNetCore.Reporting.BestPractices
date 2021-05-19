@@ -19,11 +19,13 @@ using Microsoft.Extensions.Logging;
 
 namespace AspNetCore.Reporting.MVC {
     public class Startup {
-        public Startup(IConfiguration configuration) {
+        public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment) {
             Configuration = configuration;
+            WebHostEnvironment = webHostEnvironment;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment WebHostEnvironment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
@@ -42,7 +44,7 @@ namespace AspNetCore.Reporting.MVC {
             services.ConfigureReportingServices(x => x.ConfigureReportDesigner(reportDesignerConfigurator => {
                 reportDesignerConfigurator.RegisterObjectDataSourceWizardTypeProvider<CustomObjectDataSourceWizardTypeProvider>();
             }));
-            ServiceRegistrator.AddCommonServices(services);
+            ServiceRegistrator.AddCommonServices(services, WebHostEnvironment.ContentRootPath);
 
             services.AddSingleton<IScopedDbContextProvider<SchoolDbContext>, ScopedDbContextProvider<SchoolDbContext>>();
             services.AddScoped<IAuthenticatiedUserService, UserService<SchoolDbContext>>();

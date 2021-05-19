@@ -1,8 +1,10 @@
 ﻿using System;
+using System.IO;
 using AspNetCore.Reporting.Common.Services.Reporting;
 using DevExpress.AspNetCore.Reporting;
 using DevExpress.DataAccess.Web;
 using DevExpress.DataAccess.Wizard.Services;
+using DevExpress.XtraReports.Services;
 using DevExpress.XtraReports.Web.QueryBuilder.Services;
 using DevExpress.XtraReports.Web.ReportDesigner.Services;
 using DevExpress.XtraReports.Web.WebDocumentViewer;
@@ -11,7 +13,7 @@ using IDataSourceWizardConnectionStringsProvider = DevExpress.DataAccess.Web.IDa
 
 namespace AspNetCore.Reporting.Common.Services {
     public class ServiceRegistrator {
-        public static IServiceCollection AddCommonServices(IServiceCollection services) {
+        public static IServiceCollection AddCommonServices(IServiceCollection services, string contentRootPath) {
             var cacheCleanerSettings = new CacheCleanerSettings(TimeSpan.FromMinutes(1), TimeSpan.FromSeconds(30), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2));
             services.AddSingleton<CacheCleanerSettings>(cacheCleanerSettings);
 
@@ -26,13 +28,17 @@ namespace AspNetCore.Reporting.Common.Services {
                 });
                 configurator.ConfigureWebDocumentViewer(viewerConfigurator => {
                     // StorageSynchronizationMode.InterThread - it is a default value, use InterProcess if you use multiple application instances without ARR Affinity
-                    viewerConfigurator.UseFileDocumentStorage("ViewerStorages\\Documents", StorageSynchronizationMode.InterThread);
-                    //viewerConfigurator.UseFileExportedDocumentStorage("ViewerStorages\\ExportedDocuments", StorageSynchronizationMode.InterThread);
-                    viewerConfigurator.UseFileReportStorage("ViewerStorages\\Reports", StorageSynchronizationMode.InterThread);
+                    viewerConfigurator.UseFileDocumentStorage(Path.Combine(contentRootPath, "ViewerStorages\\Documents"), StorageSynchronizationMode.InterThread);
+                    viewerConfigurator.UseFileExportedDocumentStorage(Path.Combine(contentRootPath, "ViewerStorages\\ExportedDocuments"), StorageSynchronizationMode.InterThread);
+                    viewerConfigurator.UseFileReportStorage(Path.Combine(contentRootPath, "ViewerStorages\\Reports"), StorageSynchronizationMode.InterThread);
                     viewerConfigurator.UseCachedReportSourceBuilder();
                 });
+                
+                services.AddScoped<IReportProviderAsync, CustomReportProviderAsync>();
+                configurator.UseAsyncEngine();
             });
 
+            services.AddScoped<IReportProvider, CustomReportProvider>();
             services.AddScoped<IWebDocumentViewerExceptionHandler, CustomWebDocumentViewerExceptionHandler>();
             services.AddScoped<IReportDesignerExceptionHandler, CustomReportDesignerExceptionHandler>();
             services.AddScoped<IQueryBuilderExceptionHandler, CustomQueryBuilderExceptionHandler>();
@@ -44,7 +50,6 @@ namespace AspNetCore.Reporting.Common.Services {
             //services.AddSingleton<IScopedDbContextProvider<SchoolDbContext>, ScopedDbContextProvider<SchoolDbContext>>();
 
             //services.AddScoped<IAuthenticatiedUserService, UserService>();
-            services.AddScoped<IWebDocumentViewerReportResolver, WebDocumentViewerReportResolver>();
             services.AddScoped<IObjectDataSourceInjector, ObjectDataSourceInjector>();
             //services.AddTransient<ReportStorageWebExtension, EFCoreReportStorageWebExtension>();
             //services.AddTransient<CourseListReportRepository>();

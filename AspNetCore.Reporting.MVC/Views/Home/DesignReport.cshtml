@@ -3,11 +3,9 @@
 
 @model AspNetCore.Reporting.Common.Models.ReportingControlModel
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
-@functions{
-    public string GetAntiXsrfRequestToken() {
-        return Xsrf.GetAndStoreTokens(this.Context).RequestToken;
-    }
-}
+@functions{ public string GetAntiXsrfRequestToken() {
+                return Xsrf.GetAndStoreTokens(this.Context).RequestToken;
+            } }
 <script>
     function DesignerBeforeRender(args) {
         var designer = args.designerModel;
@@ -17,14 +15,15 @@
                 designer.navigateByReports.closeAll().done(function() {
                     return;
                 });
-                return "Designer have changes";
+                return "Designer has changes";
             }
         });
+        //DevExpress.Reporting.Viewer.Settings.AsyncExportApproach(true);
     }
 
     function CustomizeLocalization(s, e){
-        e.LoadMessages($.get("/localization/reporting/dx-analytics-core.de.json"));
-        e.LoadMessages($.get("/localization/reporting/dx-reporting.de.json"));
+        //e.LoadMessages($.get("/localization/reporting/dx-analytics-core.de.json"));
+        //e.LoadMessages($.get("/localization/reporting/dx-reporting.de.json"));
         e.LoadMessages($.get("/localization/devextreme/de.json").done(function(messages) { DevExpress.localization.loadMessages(messages); }));
         e.SetAvailableCultures(["de"]);
     }
@@ -33,28 +32,27 @@
     }
 </script>
 <input type="hidden" id="RequestVerificationToken" name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
-@{
-    ViewData["Title"] = Model.Title;
-    var designerRender = Html.DevExpress().ReportDesigner("ReportDesigner")
-        .Height("800px")
-        .AutoBind(false)
-        .QueryBuilderHandlerUri("/DXXQBMVC")
-        .ReportDesignerHandlerUri("/DXXRDMVC")
-        .ReportPreviewHandlerUri("/DXXRDVMVC")
-        .ClientSideModelSettings(clientSide => {
-            clientSide.IncludeLocalization = false;
-        })
-        .ClientSideEvents(events => {
-            events.CustomizeLocalization("CustomizeLocalization");
-            events.BeforeRender("DesignerBeforeRender");
-            events.ExitDesigner("Exit");
-        });
-    if(string.IsNullOrEmpty(Model.Id)) {
-        designerRender.Bind(new XtraReport());
-    } else {
-        designerRender.Bind(Model.Id);
-    }
-    @:@designerRender.Build("reportDesignerOptions")
+@{ ViewData["Title"] = Model.Title;
+                var designerRender = Html.DevExpress().ReportDesigner("ReportDesigner")
+                    .Height("800px")
+                    .QueryBuilderHandlerUri("/DXXQBMVC")
+                    .ReportDesignerHandlerUri("/DXXRDMVC")
+                    .ReportPreviewHandlerUri("/DXXRDVMVC")
+                    .ClientSideModelSettings(clientSide => {
+                        clientSide.IncludeLocalization = false;
+                    })
+                    .ClientSideEvents(events => {
+                        events
+                            .CustomizeLocalization("CustomizeLocalization")
+                            .BeforeRender("DesignerBeforeRender")
+                            .ExitDesigner("Exit");
+                    });
+                if(string.IsNullOrEmpty(Model.Id)) {
+                    designerRender.Bind(new XtraReport());
+                } else {
+                    designerRender.Bind(Model.Id);
+                }
+    @:@designerRender.RenderHtml()
 }
 
 @section Scripts {
@@ -65,11 +63,6 @@
     <script src="~/js/reporting.thirdparty.bundle.js"></script>
     <script src="~/js/viewer.part.bundle.js"></script>
     <script src="~/js/designer.part.bundle.js"></script>
-
-    <script type="text/javascript">
-        (function() {
-            ko.applyBindings({ reportDesignerOptions: @designerRender });
-        })()
-    </script>
+    @designerRender.RenderScripts()
 }
 

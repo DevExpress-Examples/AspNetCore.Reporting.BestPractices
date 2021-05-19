@@ -4,11 +4,11 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@devexpress/analytics-core": "20.2.6",
+    "@devexpress/analytics-core": "20.2-stable",
     "bootstrap": "^4.3.1",
     "cldrjs": "^0.5.0",
-    "devexpress-reporting": "20.2.6",
-    "devextreme": "20.2.6",
+    "devexpress-reporting": "20.2-stable",
+    "devextreme": "20.2-stable",
     "globalize": "^1.3.0",
     "jquery-ui-dist": "^1.12.1"
   }
