@@ -2,11 +2,9 @@
 
 @model AspNetCore.Reporting.Common.Models.ReportingControlModel
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
-@functions{
-    public string GetAntiXsrfRequestToken() {
-        return Xsrf.GetAndStoreTokens(this.Context).RequestToken;
-    }
-}
+@functions{ public string GetAntiXsrfRequestToken() {
+                return Xsrf.GetAndStoreTokens(this.Context).RequestToken;
+            } }
 <script>
     function WebDocumentViewer_BeforeRender(s, e) {
         SetupJwt('bearer token can be passed here', "@GetAntiXsrfRequestToken()");
@@ -15,29 +13,32 @@
         });
     }
 
+    function OnViewerExport(_s, e) {
+        AttachXSRFToken_OnExport(e, "@GetAntiXsrfRequestToken()");
+    }
+
     function CustomizeLocalization(s, e) {
-        e.LoadMessages($.get("/localization/reporting/dx-analytics-core.de.json"));
-        e.LoadMessages($.get("/localization/reporting/dx-reporting.de.json"));
+        //e.LoadMessages($.get("/localization/reporting/dx-analytics-core.de.json"));
+        //e.LoadMessages($.get("/localization/reporting/dx-reporting.de.json"));
         e.LoadMessages($.get("/localization/devextreme/de.json").done(function(messages) { DevExpress.localization.loadMessages(messages); }));
         e.SetAvailableCultures(["de"]);
     }
 </script>
 <input type="hidden" id="RequestVerificationToken" name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
-@{
-    ViewData["Title"] = Model.Title;
-    var viewerRender = Html.DevExpress().WebDocumentViewer("DocumentViewer")
-        .ClientSideEvents(x => {
-            x.CustomizeLocalization("CustomizeLocalization");
-            x.BeforeRender("WebDocumentViewer_BeforeRender");
-        })
-        .ClientSideModelSettings(clientSide => {
-            clientSide.IncludeLocalization = false;
-        })
-    .Height("900px")
-    .HandlerUri("/DXXRDVMVC")
-    .AutoBind(false)
-    .Bind(Model.Id);
-    @:@viewerRender.Build("viewerModel")
+@{ ViewData["Title"] = Model.Title;
+                var viewerRender = Html.DevExpress().WebDocumentViewer("DocumentViewer")
+                    .ClientSideEvents(x => {
+                        x.CustomizeLocalization("CustomizeLocalization");
+                        x.BeforeRender("WebDocumentViewer_BeforeRender");
+                        x.OnExport("OnViewerExport");
+                    })
+                    .ClientSideModelSettings(clientSide => {
+                        clientSide.IncludeLocalization = false;
+                    })
+                .Height("900px")
+                .HandlerUri("/DXXRDVMVC")
+                .Bind(Model.Id);
+    @:@viewerRender.RenderHtml()
 }
 
 @section Scripts {
@@ -46,9 +47,5 @@
     <script src="~/js/reporting.thirdparty.bundle.js"></script>
     <script src="~/js/viewer.part.bundle.js"></script>
 
-    <script type="text/javascript">
-        (function() {
-            ko.applyBindings({ viewerModel: @viewerRender });
-        })()
-    </script>
+    @viewerRender.RenderScripts()
 }
