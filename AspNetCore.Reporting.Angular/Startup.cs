@@ -7,6 +7,7 @@ using DevExpress.AspNetCore;
 using DevExpress.AspNetCore.Reporting;
 using DevExpress.XtraReports.Web.ClientControls;
 using DevExpress.XtraReports.Web.Extensions;
+using DevExpress.XtraReports.Web.WebDocumentViewer;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
