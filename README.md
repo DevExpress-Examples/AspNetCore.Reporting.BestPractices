@@ -59,7 +59,7 @@ This section describes how to optimize a reporting application's memory consumpt
 
 To optimize memory consumption, use the following techniques:
 
-- Configure the Document Viewer to to store server data on disk instead of memory. This reduces the memory consumption at the cost of performance.
+- Configure the Document Viewer to store server data on disk instead of memory. This reduces the memory consumption at the cost of performance.
 
 ```cs
 configurator.ConfigureWebDocumentViewer(viewerConfigurator => {
@@ -181,7 +181,7 @@ public class CustomMVCReportDesignerController : ReportDesignerController {
     }
 }
 ```
-Print or export operation requires that you handle the **OnExport** client-side event to pass the access token.
+Print and export operations require that you handle the **OnExport** client-side event to pass the access token.
 
 See the example project's [Views/Home/DesignReport](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml) file for the full code.
 
