@@ -59,7 +59,7 @@ This section describes how to optimize a reporting application's memory consumpt
 
 To optimize memory consumption, use the following techniques:
 
-- Configure the Document Viewer to to store server data on disk instead of memory. This reduces the memory consumption at the cost of performance.
+- Configure the Document Viewer to store server data on disk instead of memory. This reduces the memory consumption at the cost of performance.
 
 ```cs
 configurator.ConfigureWebDocumentViewer(viewerConfigurator => {
@@ -140,8 +140,8 @@ To prevent cross-site request forgery, DevExpress reporting controls use the sta
 
 ##### DevExpress Security Best Practices:
 
-- [ASP.NET WebForms - Preventing Cross-Site Request Forgery (CSRF)](https://github.com/DevExpress/aspnet-security-bestpractices/tree/20.2.3+/SecurityBestPractices.WebForms#4-preventing-cross-site-request-forgery-csrf)
-- [ASP.NET MVC - Preventing Cross-Site Request Forgery (CSRF)](https://github.com/DevExpress/aspnet-security-bestpractices/tree/20.2.3+/SecurityBestPractices.Mvc#4-preventing-cross-site-request-forgery-csrf)
+- [ASP.NET WebForms - Preventing Cross-Site Request Forgery (CSRF)](https://github.com/DevExpress/aspnet-security-bestpractices/tree/master/SecurityBestPractices.WebForms#4-preventing-cross-site-request-forgery-csrf)
+- [ASP.NET MVC - Preventing Cross-Site Request Forgery (CSRF)]https://github.com/DevExpress/aspnet-security-bestpractices/tree/master/SecurityBestPractices.Mvc#4-preventing-cross-site-request-forgery-csrf)
 
 The following code samples demonstrate how to apply antiforgery request validation on the Document Viewer's and Report Designer's controller actions.
 
