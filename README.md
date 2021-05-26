@@ -400,7 +400,7 @@ Refer to the [Enable the Skeleton Screen](https://docs.devexpress.com/XtraReport
 
 DevExpress client reporting controls use the DevExtreme localization mechanism to localize the UI and messages.
 
-To localize DevExpress reporting controls, go to [localization.devexpress.com](localization.devexpress.com), download the JSON files for the localization, and save them to the `locaization` folder within the application's `wwwroot` folder. After that, configure the view as described below:
+To localize DevExpress reporting controls, go to [localization.devexpress.com](https://localization.devexpress.com/), download the JSON files for the localization, and save them to the `locaization` folder within the application's `wwwroot` folder. After that, configure the view as described below:
 
 1. In the client `CustomizeLocalization` event, load the localization JSON files:
 
