@@ -33,12 +33,12 @@
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Reports\CourseListReport.repx" />
-    <None Remove="Reports\MyEnrollmentsReport.repx" />
+    <None Remove="Reports\CourseListReport.vsrepx" />
+    <None Remove="Reports\MyEnrollmentsReport.vsrepx" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Reports\CourseListReport.repx" />
-    <EmbeddedResource Include="Reports\MyEnrollmentsReport.repx" />
+    <EmbeddedResource Include="Reports\CourseListReport.vsrepx" />
+    <EmbeddedResource Include="Reports\MyEnrollmentsReport.vsrepx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AspNetCore.Reporting.Common\AspNetCore.Reporting.Common.csproj" />
@@ -46,9 +46,17 @@
   <ItemGroup>
     <Compile Update="Reports\CourseListReport.cs">
       <SubType>Component</SubType>
+      <DependentUpon>CourseListReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CourseListReport.Designer.cs">
+      <DependentUpon>CourseListReport.vsrepx</DependentUpon>
     </Compile>
     <Compile Update="Reports\MyEnrollmentsReport.cs">
       <SubType>Component</SubType>
+      <DependentUpon>MyEnrollmentsReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\MyEnrollmentsReport.Designer.cs">
+      <DependentUpon>MyEnrollmentsReport.vsrepx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

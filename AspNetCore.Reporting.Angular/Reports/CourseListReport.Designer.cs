@@ -12,7 +12,7 @@ namespace AspNetCore.Reporting.Common.Reports {
     
     public partial class CourseListReport : DevExpress.XtraReports.UI.XtraReport {
         private void InitializeComponent() {
-            DevExpress.XtraReports.ReportInitializer reportInitializer = new DevExpress.XtraReports.ReportInitializer(this, "AspNetCore.Reporting.Angular.Reports.CourseListReport.repx");
+            DevExpress.XtraReports.ReportInitializer reportInitializer = new DevExpress.XtraReports.ReportInitializer(this, "AspNetCore.Reporting.Angular.Reports.CourseListReport.vsrepx");
 
             // Controls
             this.TopMargin = reportInitializer.GetControl<DevExpress.XtraReports.UI.TopMarginBand>("TopMargin");
