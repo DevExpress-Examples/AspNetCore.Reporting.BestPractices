@@ -10,12 +10,12 @@
     <None Remove="ViewerStorages\**" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Reports\CourseListReport.repx" />
-    <None Remove="Reports\MyEnrollmentsReport.repx" />
+    <None Remove="Reports\CourseListReport.vsrepx" />
+    <None Remove="Reports\MyEnrollmentsReport.vsrepx" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Reports\CourseListReport.repx" />
-    <EmbeddedResource Include="Reports\MyEnrollmentsReport.repx" />
+    <EmbeddedResource Include="Reports\CourseListReport.vsrepx" />
+    <EmbeddedResource Include="Reports\MyEnrollmentsReport.vsrepx" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
@@ -31,9 +31,18 @@
     <ProjectReference Include="..\AspNetCore.Reporting.Common\AspNetCore.Reporting.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Reports\CourseListReport.cs" />
+    <Compile Update="Reports\CourseListReport.cs">
+      <DependentUpon>CourseListReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\CourseListReport.Designer.cs">
+      <DependentUpon>CourseListReport.vsrepx</DependentUpon>
+    </Compile>
     <Compile Update="Reports\MyEnrollmentsReport.cs">
       <SubType>Component</SubType>
+      <DependentUpon>MyEnrollmentsReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Reports\MyEnrollmentsReport.Designer.cs">
+      <DependentUpon>MyEnrollmentsReport.vsrepx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

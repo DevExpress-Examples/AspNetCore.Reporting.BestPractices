@@ -29,7 +29,7 @@ You can use the example code in your web application and modify it for different
 - [Prepare Skeleton Screen](#prepare-skeleton-screen)
 - [Localize Client UI](#localize-client-ui)
 
-## How to run the Example Application
+## How to Run the Example Application
 
 Follow the steps below to run the example application in Microsoft Visual Studio.
 
@@ -61,34 +61,39 @@ To optimize memory consumption, use the following techniques:
 
 - Configure the Document Viewer to store server data on disk instead of memory. This reduces the memory consumption at the cost of performance.
 
-```cs
-configurator.ConfigureWebDocumentViewer(viewerConfigurator => {
-  // StorageSynchronizationMode.InterThread - it is a default value, use InterProcess if you use multiple application instances without ARR Affinity
-  viewerConfigurator.UseFileDocumentStorage("ViewerStorages\\Documents", StorageSynchronizationMode.InterThread);
-  viewerConfigurator.UseFileExportedDocumentStorage("ViewerStorages\\ExportedDocuments", StorageSynchronizationMode.InterThread);
-  viewerConfigurator.UseFileReportStorage("ViewerStorages\\Reports", StorageSynchronizationMode.InterThread);
-  viewerConfigurator.UseCachedReportSourceBuilder();
-});
-```
+    [ServiceRegistrator.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/ServiceRegistrator.cs#L29-L35)
+    ```cs
+    configurator.ConfigureWebDocumentViewer(viewerConfigurator => {
+        // StorageSynchronizationMode.InterThread - it is a default value, use InterProcess if you use multiple application instances without ARR Affinity
+        viewerConfigurator.UseFileDocumentStorage(Path.Combine(contentRootPath, "ViewerStorages\\Documents"), StorageSynchronizationMode.InterThread);
+        viewerConfigurator.UseFileExportedDocumentStorage(Path.Combine(contentRootPath, "ViewerStorages\\ExportedDocuments"), StorageSynchronizationMode.InterThread);
+        viewerConfigurator.UseFileReportStorage(Path.Combine(contentRootPath, "ViewerStorages\\Reports"), StorageSynchronizationMode.InterThread);
+        viewerConfigurator.UseCachedReportSourceBuilder();
+    });
+    ```
 
-- To allow users to close a page or a UI region (for example, a pop-up window) that displays the Document Viewer, you should first call the Document Viewer's client-side `Close` ethod to close the viewed report and release the server resources (the Storage space and Cache):
+- To allow users to close a page or a UI region (for example, a pop-up window) that displays the Document Viewer, you should first call the Document Viewer's client-side [Close](https://docs.devexpress.com/XtraReports/js-DevExpress.Reporting.Viewer.JSReportViewer?p=netframework#js_devexpress_reporting_viewer_jsreportviewer_close) method to close the viewed report and release the server resources (the Storage space and Cache):
 
-```cs
-function WebDocumentViewer_BeforeRender(s, e) {
-  $(window).on('beforeunload', function(e) {
-    s.Close();
-});
-```
+    [DisplayReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml#L9)
+    ```js
+    function WebDocumentViewer_BeforeRender(s, e) {
+    $(window).on('beforeunload', function(e) {
+        s.Close();
+    });
+    ```
 
 - Configure Storage and Cache cleaners on application startup. This allows you to specify how long you want to reserve resources to store document data on the server. Note that after a document's data is removed for the Storage and Cache, you cannot navigate or print this document.
 
-```cs
-var cacheCleanerSettings = new CacheCleanerSettings(TimeSpan.FromMinutes(1), TimeSpan.FromSeconds(30), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2));
-services.AddSingleton<CacheCleanerSettings>(cacheCleanerSettings);
+    [ServiceRegistrator.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/ServiceRegistrator.cs#L17-L21)
 
-var storageCleanerSettings = new StorageCleanerSettings(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(30), TimeSpan.FromHours(12), TimeSpan.FromHours(12), TimeSpan.FromHours(12));
-services.AddSingleton<StorageCleanerSettings>(storageCleanerSettings);
-```
+
+    ```csharp
+    var cacheCleanerSettings = new CacheCleanerSettings(TimeSpan.FromMinutes(1), TimeSpan.FromSeconds(30), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2));
+    services.AddSingleton<CacheCleanerSettings>(cacheCleanerSettings);
+
+    var storageCleanerSettings = new StorageCleanerSettings(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(30), TimeSpan.FromHours(12), TimeSpan.FromHours(12), TimeSpan.FromHours(12));
+    services.AddSingleton<StorageCleanerSettings>(storageCleanerSettings);
+    ```
 
   > Keep in mind that .NET is a managed environment, so data saved to the disk storage and removed from cache remains in memory until .NET runs garbage collection. Refer to the [Fundamentals of garbage collection](https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals) article for more information.
 
@@ -96,22 +101,26 @@ services.AddSingleton<StorageCleanerSettings>(storageCleanerSettings);
 
 DevExpress reporting components are configured to retrieve database connections from the application configuration file. This mechanism is secure: a serialized report contains only the connection name. If you implement a custom connection provider to customize this mechanism (for example, to filter the list of connections), ensure you serialize only the data connection's name and do not pass connection parameters to the client.
 
-Reporting services obtain an IConnectionProviderFactory and IDataSourceWizardConnectionStringsProvide through Dependency Injection. For instructions on how to implement these services, refer to the following example project's files:
+Reporting services obtain an [IConnectionProviderFactory](https://docs.devexpress.com/CoreLibraries/DevExpress.DataAccess.Web.IConnectionProviderFactory) and [IDataSourceWizardConnectionStringsProvider](https://docs.devexpress.com/CoreLibraries/DevExpress.DataAccess.Web.IDataSourceWizardConnectionStringsProvider) interfaces through Dependency Injection. For instructions on how to implement these services, refer to the following example project's files:
 
 - [Services/Reporting/CustomSqlDataConnectionProviderFactory.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/Reporting/CustomSqlDataConnectionProviderFactory.cs)
 - [Services/Reporting/CustomSqlDataSourceWizardConnectionStringsProvider.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/Reporting/CustomSqlDataSourceWizardConnectionStringsProvider.cs)
 
 To ensure that encrypted connection parameters for SqlDataSource instances are not passed to the client, return `null` from the `IDataSourceWizardConnectionStringsProvider.GetDataConnectionParameters` method's implementation:
 
-```cs
+[CustomSqlDataSourceWizardConnectionStringsProvider.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/Reporting/CustomSqlDataSourceWizardConnectionStringsProvider.cs#L18-L20)
+
+```csharp
 public DataConnectionParametersBase GetDataConnectionParameters(string name) {
-  return null;
+    return null;//to prevent serialization of encrypted connection parameters
 }
 ```
 
-In the IConnectionProviderService returned by the IConnectionProviderFactory, initialize and return the connection.</span>
+In the [IConnectionProviderService](https://docs.devexpress.com/CoreLibraries/DevExpress.DataAccess.Wizard.Services.IConnectionProviderService) interface returned by the IConnectionProviderFactory, initialize and return the connection.
 
-```cs
+[CustomSqlDataConnectionProviderFactory.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/Reporting/CustomSqlDataConnectionProviderFactory.cs#L31-L42)
+
+```csharp
 public SqlDataConnection LoadConnection(string connectionName) {
     var connectionStringSection = configuration.GetSection("ReportingDataConnectionStrings");
     var connectionString = connectionStringSection?.GetValue<string>(connectionName);
@@ -147,8 +156,10 @@ The following code samples demonstrate how to apply antiforgery request validati
 
 ##### Document Viewer
 
-```cs
-[ValidateAntiForgeryToken]
+[CustomMVCReportingControllers.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Controllers/CustomMVCReportingControllers.cs#L14-L22)
+
+```csharp
+[AutoValidateAntiforgeryToken]
 public class CustomMVCWebDocumentViewerController : WebDocumentViewerController {
     public CustomMVCWebDocumentViewerController(IWebDocumentViewerMvcControllerService controllerService) : base(controllerService) {
     }
@@ -161,41 +172,70 @@ public class CustomMVCWebDocumentViewerController : WebDocumentViewerController 
 
 ##### Report Designer
 
+[CustomMVCReportingControllers.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Controllers/CustomMVCReportingControllers.cs#L24-L46)
+
+
 ```cs
-[ValidateAntiForgeryToken]
+[AutoValidateAntiforgeryToken]
 public class CustomMVCQueryBuilderController : QueryBuilderController {
     public CustomMVCQueryBuilderController(IQueryBuilderMvcControllerService controllerService) : base(controllerService) {
     }
     public override Task<IActionResult> Invoke() {
-         return base.Invoke();
+        return base.Invoke();
     }
 }
 
-[ValidateAntiForgeryToken]
+
+[AutoValidateAntiforgeryToken]
 public class CustomMVCReportDesignerController : ReportDesignerController {
     public CustomMVCReportDesignerController(IReportDesignerMvcControllerService controllerService) : base(controllerService) {
     }
-
+    
     public override Task<IActionResult> Invoke() {
         return base.Invoke();
     }
 }
 ```
-Print and export operations require that you handle the **OnExport** client-side event to pass the access token.
+Print and export operations require that you handle the [OnExport](https://docs.devexpress.com/XtraReports/DevExpress.AspNetCore.Reporting.WebDocumentViewer.WebDocumentViewerClientSideEventsBuilder.OnExport(System.String)) client-side event to pass the access token:
 
-See the example project's [Views/Home/DesignReport](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml) file for the full code.
+[DisplayReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml#L5-L7)
+
+```cshtml
+@functions{ public string GetAntiXsrfRequestToken() {
+                return Xsrf.GetAndStoreTokens(this.Context).RequestToken;
+            } }
+```
+
+[DisplayReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml#L9-L18)
+
+
+```js
+function WebDocumentViewer_BeforeRender(s, e) {
+    SetupJwt('bearer token can be passed here', "@GetAntiXsrfRequestToken()");
+    $(window).on('beforeunload', function(e) {
+        s.Close();
+    });
+}
+
+function OnViewerExport(_s, e) {
+    AttachXSRFToken_OnExport(e, "@GetAntiXsrfRequestToken()");
+}
+```
+
+See the example project's [Views/Home/DesignReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml) file for the full code.
 
 ### Implement User Authorization
 
-To authorize a user and restrict access to reports based on arbitrary logic, implement and register an `IWebDocumentViewerAuthorizationService` with `WebDocumentViewerOperationLogger`.
+To authorize a user and restrict access to reports based on arbitrary logic, implement and register an [IWebDocumentViewerAuthorizationService](https://docs.devexpress.com/XtraReports/DevExpress.XtraReports.Web.WebDocumentViewer.IWebDocumentViewerAuthorizationService) with [WebDocumentViewerOperationLogger](https://docs.devexpress.com/XtraReports/DevExpress.XtraReports.Web.WebDocumentViewer.WebDocumentViewerOperationLogger).
 
-You can also implement an `IWebDocumentViewerExportedDocumentStorage` to prevent unauthorized access to documents generated during asynchronous export and printing operations.
+You can also implement an `DevExpress.XtraReports.Web.WebDocumentViewer.IExportedDocumentStorage` to prevent unauthorized access to documents generated during asynchronous export and printing operations.
 
-[Services/Reporting/DocumentViewerAuthorizationService.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/Reporting/DocumentViewerAuthorizationService.cs):
+[DocumentViewerAuthorizationService.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/Reporting/DocumentViewerAuthorizationService.cs):
 
-```cs
-class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWebDocumentViewerAuthorizationService {
+```csharp
+class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWebDocumentViewerAuthorizationService, IExportingAuthorizationService {
     static ConcurrentDictionary<string, string> DocumentIdOwnerMap { get; } = new ConcurrentDictionary<string, string>();
+    static ConcurrentDictionary<string, string> ExportedDocumentIdOwnerMap { get; } = new ConcurrentDictionary<string, string>();
     static ConcurrentDictionary<string, string> ReportIdOwnerMap { get; } = new ConcurrentDictionary<string, string>();
 
     IAuthenticatiedUserService UserService { get; }
@@ -204,28 +244,33 @@ class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWe
         UserService = userService ?? throw new ArgumentNullException(nameof(userService));
     }
 
-    // The code below overrides the WebDocumentViewerOperationLogger's methods to intersect report
-    // and document creation operations and associates the report and document IDs with the owner's ID
     public override void ReportOpening(string reportId, string documentId, XtraReport report) {
-        MapIdentifiersToUser(UserService.GetCurrentUserId(), documentId, reportId);
+        MapIdentifiersToUser(UserService.GetCurrentUserId(), documentId, reportId, null);
         base.ReportOpening(reportId, documentId, report);
     }
 
     public override void BuildStarted(string reportId, string documentId, ReportBuildProperties buildProperties) {
-        MapIdentifiersToUser(UserService.GetCurrentUserId(), documentId, reportId);
+        MapIdentifiersToUser(UserService.GetCurrentUserId(), documentId, reportId, null);
         base.BuildStarted(reportId, documentId, buildProperties);
     }
 
-    void MapIdentifiersToUser(string userId, string documentId, string reportId) {
-        if(!string.IsNullOrEmpty(documentId)) {
-            DocumentIdOwnerMap.TryAdd(documentId, userId);
-        }
-        if(!string.IsNullOrEmpty(reportId)) {
-            ReportIdOwnerMap.TryAdd(reportId, userId);
-        }
+    public override ExportedDocument ExportDocumentStarting(string documentId, string asyncExportOperationId, string format, ExportOptions options, PrintingSystemBase printingSystem, Func<ExportedDocument> doExportSynchronously) {
+        MapIdentifiersToUser(UserService.GetCurrentUserId(), null, null, asyncExportOperationId);
+        return base.ExportDocumentStarting(documentId, asyncExportOperationId, format, options, printingSystem, doExportSynchronously);
     }
 
-    // The code below defines authorization rules applied to different operations on reports.
+    void MapIdentifiersToUser(string userId, string documentId, string reportId, string exportedDocumentId) {
+        if(!string.IsNullOrEmpty(exportedDocumentId))
+            ExportedDocumentIdOwnerMap.TryAdd(exportedDocumentId, userId);
+
+        if(!string.IsNullOrEmpty(documentId)) 
+            DocumentIdOwnerMap.TryAdd(documentId, userId);
+
+        if(!string.IsNullOrEmpty(reportId)) 
+            ReportIdOwnerMap.TryAdd(reportId, userId);
+
+    }
+
     #region IWebDocumentViewerAuthorizationService
     public bool CanCreateDocument() {
         return true;
@@ -250,33 +295,38 @@ class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWe
     public bool CanReleaseReport(string reportId) {
         return true;
     }
+
+    public bool CanReadExportedDocument(string exportedDocumentId) {
+        return ExportedDocumentIdOwnerMap.TryGetValue(exportedDocumentId, out var ownerId) && ownerId == UserService.GetCurrentUserId();
+    }
     #endregion
 }
 ```
 
 Register your authorization service implementation at application startup. In this example the `ConfigureServices` method uses a custom `ServiceRegistrator` class to register services specific to web reporting.
 
-[Startup.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Startup.cs#L45):
+[Startup.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Startup.cs#L47):
 
 ```cs
 public class Startup {
     public void ConfigureServices(IServiceCollection services) {
         ...
-        ServiceRegistrator.AddCommonServices(services);
+        ServiceRegistrator.AddCommonServices(services, WebHostEnvironment.ContentRootPath);
         ...
     }
     ...
 }
 ```
-[ServiceRegistrator.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/ServiceRegistrator.cs#L40):
+[ServiceRegistrator.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/ServiceRegistrator.cs#L46-L48):
 ```cs
 public class ServiceRegistrator {
     public static IServiceCollection AddCommonServices(IServiceCollection services) {
-      // ...
-      services.AddScoped<IWebDocumentViewerAuthorizationService, DocumentViewerAuthorizationService>();
-      services.AddScoped<IExportingAuthorizationService, DocumentViewerAuthorizationService>();
-      services.AddScoped<WebDocumentViewerOperationLogger, DocumentViewerAuthorizationService>();
-      // ...
+        // ...
+        services.AddScoped<IWebDocumentViewerAuthorizationService, DocumentViewerAuthorizationService>();
+        services.AddScoped<IExportingAuthorizationService, DocumentViewerAuthorizationService>();
+        services.AddScoped<WebDocumentViewerOperationLogger, DocumentViewerAuthorizationService>();
+
+        // ...
     }
 }
 ```
@@ -285,15 +335,15 @@ public class ServiceRegistrator {
 
 This document section describes the best practices that you should follow when you handle and log errors in a reporting application. For information on how to determine the cause of a problem with your application, refer to the [Reporting Application Diagnostics](https://docs.devexpress.com/XtraReports/401687/web-reporting/general-information/application-diagnostics) documentation topic.
 
-### Log errors that occurred in the code of DevExpress reporting components
+### Log Errors that Occurred in the Code of DevExpress Reporting Components
 
 To handle exceptions generated by DevExpress reporting components, implement and register a logger service and override the `Error` method in your service implementation. In the `Error` method's implementation, save errors to a log or database. If a Visual Studio debugger is attached, you can set a breakpoint and inspect errors in the Watch window.
 
-##### Implement a logger class
+##### Implement a Logger Class
 
-[Services/Reporting/ReportingLoggerService.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/Reporting/ReportingLoggerService.cs):
+[ReportingLoggerService.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/Reporting/ReportingLoggerService.cs):
 
-```cs
+```csharp
 public class ReportingLoggerService: LoggerService {
     readonly ILogger logger;
     public ReportingLoggerService(ILogger logger) {
@@ -310,29 +360,27 @@ public class ReportingLoggerService: LoggerService {
 }
 ```
 
-##### Register the logger in **startup.cs**
+##### Register the Logger in **Startup.cs**
 
-[Startup.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Startup.cs#L139):
+[Startup.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Startup.cs#L70):
 
 ```cs
-LoggerService.Initialize(new ReportingLoggerService(loggerFactory.CreateLogger("DXReporting")));
+LoggerService.Initialize(new CustomReportingLoggerService(loggerFactory.CreateLogger("DXReporting")));
 ```
 
-### Use custom exception handlers
+### Use Custom Exception Handlers
 
 Use custom exception handler services to customize error details that are passed to the client and displayed in the client UI:
 
-```cs
-
-
+```csharp
 public class CustomWebDocumentViewerExceptionHandler : WebDocumentViewerExceptionHandler {
     public override string GetExceptionMessage(Exception ex) {
         if(ex is FileNotFoundException) {
-        #if DEBUG
+#if DEBUG
             return ex.Message;
-        #else
+#else
             return "File is not found.";
-        #endif
+#endif
         }
         return base.GetExceptionMessage(ex);
     }
@@ -352,18 +400,18 @@ This section describes how to implement a skeleton screen that indicates when th
 
 Use the following steps to prepare a skeleton screen:
 
-In [\_Layout.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Shared/_Layout.cshtml), move all the `script` elements to the bottom of the layout:
+In [_Layout.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Shared/_Layout.cshtml), move all the `script` elements to the bottom of the layout:
 
 ```cs
 ...
     <footer class="border-top footer text-muted">
         <div class="container">
-            <p>&copy; @DateTime.Now.Year - ASP.NET Core Reporting Demo Application</p>
+            &copy; 2021 - AspNetCore.Reporting.MVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/js/site.thirdparty.bundle.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @RenderSection("Scripts", false)
+    @RenderSection("Scripts", required: false)
 </body>
 </html>
 ```
@@ -373,7 +421,7 @@ In a view, add the `dx-reporting-skeleton-screen.css` file from the **devexpress
 - Call the `RenderHtml()` method to render markup.
 - Call the `RenderScripts()` method to render scripts.
 
-[Views/Home/DesignReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml):
+[DesignReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml):
 
 ```cs
 @{
@@ -405,20 +453,20 @@ To localize DevExpress reporting controls, go to [localization.devexpress.com](h
 
 1. In the client `CustomizeLocalization` event, load the localization JSON files:
 
+[DesignReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml#L27-L32)
+
 ```js
-function CustomizeLocalization(s, e) {
-  e.LoadMessages($.get("/localization/reporting/dx-analytics-core.de.json"));
-  e.LoadMessages($.get("/localization/reporting/dx-reporting.de.json"));
-  e.LoadMessages(
-    $.get("/localization/devextreme/de.json").done(function (messages) {
-      DevExpress.localization.loadMessages(messages);
-    })
-  );
-  e.SetAvailableCultures(["de"]);
+function CustomizeLocalization(s, e){
+    //e.LoadMessages($.get("/localization/reporting/dx-analytics-core.de.json"));
+    //e.LoadMessages($.get("/localization/reporting/dx-reporting.de.json"));
+    e.LoadMessages($.get("/localization/devextreme/de.json").done(function(messages) { DevExpress.localization.loadMessages(messages); }));
+    e.SetAvailableCultures(["de"]);
 }
 ```
 
 2. Set the `IncludeLocalization` option to `false` to disable automatic attachment of the localization dictionary:
+
+[DesignReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml#L44-L46):
 
 ```cs
     Html.DevExpress().ReportDesigner("ReportDesigner")
