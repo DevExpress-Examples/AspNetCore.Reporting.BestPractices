@@ -6,7 +6,7 @@ This **README** file describes best practices to follow when you develop a web a
 
 This repository also contains an example application that demonstrates the described techniques. This application is split into three projects:
 
-- [ASP.NetCore.Reporting.MVC](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Angular) - An ASP.Net Core MVC application.
+- [ASP.NetCore.Reporting.MVC](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC) - An ASP.Net Core MVC application.
 - [ASP.NetCore.Reporting.Angular](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Angular) - An ASP.Net Core application with an Angular frontend.
 - [ASP.NetCore.Reporting.Common](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common) - Implements services and business logic for the MVC and Angular projects.
 
@@ -14,18 +14,21 @@ You can use the example code in your web application and modify it for different
 
 ## Table of Contents:
 
-- [How to run the Example Application](#how-to-run-the-example-application)
+- [How to Run the Example Application](#how-to-run-the-example-application)
   - [Configure NuGet](#configure-nuget)
   - [Install NPM Dependencies](#install-npm-dependencies)
   - [Start the Application](#start-the-application)
+- [Switch to Asynchronous Mode](#switch-to-asynchronous-mode)
 - [Optimize Memory Consumption](#optimize-memory-consumption)
 - [Manage Database Connections](#manage-database-connections)
 - [Application Security](#application-security)
   - [Prevent Cross-Site Request Forgery](#prevent-cross-site-request-forgery)
+  - [Token-based Authorization for Print and Export Operations (ASP.NET Core)](#token-based-authorization-for-print-and-export-operations-aspnet-core)
+  - [Token-based Authorization for Print and Export Operations (Angular)](#token-based-authorization-for-print-and-export-operations-aspnet-core)
   - [Implement User Authorization](#implement-user-authorization)
 - [Handle Exceptions](#handle-exceptions)
-  - [Log errors that occurred in the code of DevExpress reporting components](#log-errors-that-occurred-in-the-code-of-devexpress-reporting-components)
-  - [Use custom exception handlers](#use-custom-exception-handlers)
+  - [Log Errors that Occurred in the Code of DevExpress Reporting Components](#log-errors-that-occurred-in-the-code-of-devexpress-reporting-components)
+  - [Use Custom Exception Handlers](#use-custom-exception-handlers)
 - [Prepare Skeleton Screen](#prepare-skeleton-screen)
 - [Localize Client UI](#localize-client-ui)
 
@@ -51,6 +54,22 @@ To run the example application, you need to install packages from the DevExpress
 
 Press the **Run** button or F5 to run the example application.
 
+## Switch to Asynchronous Mode
+
+Call the [UseAsyncEngine](https://docs.devexpress.com/XtraReports/DevExpress.AspNetCore.Reporting.ReportingConfigurationBuilder.UseAsyncEngine) method at application startup to use asynchronous counterparts of Reporting API interfaces and methods.
+
+[ServiceRegistrator.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/ServiceRegistrator.cs#L38)
+
+```cs
+services.ConfigureReportingServices(configurator => {
+    // ...
+    configurator.UseAsyncEngine();
+});
+```
+
+If a reporting control binds to a report model (the [WebDocumentViewerModel](https://docs.devexpress.com/XtraReports/DevExpress.XtraReports.Web.WebDocumentViewer.WebDocumentViewerModel) instance), the reporting engine uses asynchronous API calls. You should generate a report model in the controller and pass the model to the Document Viewer.
+
+If a reporting control is bound to a report instance or a string (report name), reporting engine does not use asynchronous methods and interfaces.
 ## Optimize Memory Consumption
 
 This section describes how to optimize a reporting application's memory consumption, and prevent memory leaks and cluttering on the server.
@@ -196,11 +215,32 @@ public class CustomMVCReportDesignerController : ReportDesignerController {
     }
 }
 ```
+
+### Token-based Authorization for Print and Export Operations (ASP.NET Core)
+
 Print and export operations require that you handle the [OnExport](https://docs.devexpress.com/XtraReports/DevExpress.AspNetCore.Reporting.WebDocumentViewer.WebDocumentViewerClientSideEventsBuilder.OnExport(System.String)) client-side event to pass the access token:
+
+[site.js](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/wwwroot/js/site.js)
+
+```js
+function SetupJwt(bearerToken, xsrf) {
+    DevExpress.Analytics.Utils.ajaxSetup.ajaxSettings = {
+        headers: {
+            //'Authorization': 'Bearer ' + bearerToken,
+            'RequestVerificationToken': xsrf
+        }
+    }; 
+}
+
+function AttachXSRFToken_OnExport(args, xsrf) {
+    args.FormData["__RequestVerificationToken"] = xsrf;
+}
+```
 
 [DisplayReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml#L5-L7)
 
 ```cshtml
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
 @functions{ public string GetAntiXsrfRequestToken() {
                 return Xsrf.GetAndStoreTokens(this.Context).RequestToken;
             } }
@@ -221,9 +261,66 @@ function OnViewerExport(_s, e) {
     AttachXSRFToken_OnExport(e, "@GetAntiXsrfRequestToken()");
 }
 ```
+[DisplayReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml#L33)
 
-See the example project's [Views/Home/DesignReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml) file for the full code.
+```html
+<input type="hidden" id="RequestVerificationToken" name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
+@{ var viewerRender = Html.DevExpress().WebDocumentViewer("DocumentViewer")
+        .ClientSideEvents(x => {
+            // ...
+            x.BeforeRender("WebDocumentViewer_BeforeRender");
+            x.OnExport("OnViewerExport");
+        })
+    // ...
+    .Height("900px")
+    .HandlerUri("/DXXRDVMVC")
+    .Bind(Model.Id);
+    @:@viewerRender.RenderHtml()
+}
+```
 
+Review the project's [Views/Home/DesignReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml) files for the full code.
+
+### Token-based Authorization for Print and Export Operations (Angular)
+
+In an Angular application you should handle the `OnExport` event and pass the access token in print and export operations:
+
+[report-viewer.html](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Angular/ClientApp/src/app/reportviewer/report-viewer.html)
+
+```html
+<dx-report-viewer [reportUrl]="reportUrl" height="800px">
+  <dxrv-callbacks (OnExport)="viewerOnExport($event)"></dxrv-callbacks>
+  <dxrv-request-options [invokeAction]="invokeAction" [host]="hostUrl"></dxrv-request-options>
+  <dxrv-export-settings [useSameTab]="useSameTabExport" [useAsynchronousExport]="useAsynchronousExport"></dxrv-export-settings>
+</dx-report-viewer>
+```
+[report-viewer.ts](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Angular/ClientApp/src/app/reportviewer/report-viewer.ts#L30-L48)
+
+```typescript
+import { AuthorizeService } from '../../api-authorization/authorize.service';
+// ...
+  useSameTabExport = true;
+  useAsynchronousExport = true;
+  exportAccesstoken: string;
+
+  constructor(@Inject('BASE_URL') public hostUrl: string, private authorize: AuthorizeService, private activateRoute: ActivatedRoute) {
+    this.authorize.getAccessToken()
+      .subscribe(x => {
+        ajaxSetup.ajaxSettings = {
+          headers: {
+            'Authorization': 'Bearer ' + x
+          }
+        };
+        this.exportAccesstoken = x;
+      });
+  }
+
+  viewerOnExport(event) {
+    event.args.FormData['access_token'] = this.exportAccesstoken;
+  }
+  // ...
+```
+Review the report viewer's files ([report-viewer.html](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Angular/ClientApp/src/app/reportviewer/report-viewer.html) and [report-viewer.ts](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Angular/ClientApp/src/app/reportviewer/report-viewer.ts)) or the report designer's files ([report-designer.html](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Angular/ClientApp/src/app/reportdesigner/report-designer.html) and [report-designer.ts](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Angular/ClientApp/src/app/reportdesigner/report-designer.ts)) for the full code.
 ### Implement User Authorization
 
 To authorize a user and restrict access to reports based on arbitrary logic, implement and register an [IWebDocumentViewerAuthorizationService](https://docs.devexpress.com/XtraReports/DevExpress.XtraReports.Web.WebDocumentViewer.IWebDocumentViewerAuthorizationService) with [WebDocumentViewerOperationLogger](https://docs.devexpress.com/XtraReports/DevExpress.XtraReports.Web.WebDocumentViewer.WebDocumentViewerOperationLogger).
