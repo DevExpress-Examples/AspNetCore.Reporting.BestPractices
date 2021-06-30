@@ -24,7 +24,7 @@ You can use the example code in your web application and modify it for different
 - [Application Security](#application-security)
   - [Prevent Cross-Site Request Forgery](#prevent-cross-site-request-forgery)
   - [Token-based Authorization for Print and Export Operations (ASP.NET Core)](#token-based-authorization-for-print-and-export-operations-aspnet-core)
-  - [Token-based Authorization for Print and Export Operations (Angular)](#token-based-authorization-for-print-and-export-operations-aspnet-core)
+  - [Token-based Authorization for Print and Export Operations (Angular)](#token-based-authorization-for-print-and-export-operations-angular)
   - [Implement User Authorization](#implement-user-authorization)
 - [Handle Exceptions](#handle-exceptions)
   - [Log Errors that Occurred in the Code of DevExpress Reporting Components](#log-errors-that-occurred-in-the-code-of-devexpress-reporting-components)
