@@ -23,7 +23,7 @@ You can use the example code in your web application and modify it for different
 - [Manage Database Connections](#manage-database-connections)
 - [Application Security](#application-security)
   - [Prevent Cross-Site Request Forgery](#prevent-cross-site-request-forgery)
-  - [Token-based Authorization for Print and Export Operations in ASP.NET Core)](#token-based-authorization-for-print-and-export-operations-in-aspnet-core)
+  - [Token-based Authorization for Print and Export Operations](#token-based-authorization-for-print-and-export-operations)
   - [Token-based Authorization for Print and Export Operations in Angular](#token-based-authorization-for-print-and-export-operations-in-angular)
   - [Implement User Authorization](#implement-user-authorization)
 - [Handle Exceptions](#handle-exceptions)
@@ -216,7 +216,7 @@ public class CustomMVCReportDesignerController : ReportDesignerController {
 }
 ```
 
-### Token-based Authorization for Print and Export Operations in ASP.NET Core
+### Token-based Authorization for Print and Export Operations
 
 Print and export operations require that you handle the [OnExport](https://docs.devexpress.com/XtraReports/DevExpress.AspNetCore.Reporting.WebDocumentViewer.WebDocumentViewerClientSideEventsBuilder.OnExport(System.String)) client-side event to pass the access token:
 
