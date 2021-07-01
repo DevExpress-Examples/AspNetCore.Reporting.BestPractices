@@ -23,8 +23,8 @@ You can use the example code in your web application and modify it for different
 - [Manage Database Connections](#manage-database-connections)
 - [Application Security](#application-security)
   - [Prevent Cross-Site Request Forgery](#prevent-cross-site-request-forgery)
-  - [Token-based Authorization for Print and Export Operations (ASP.NET Core)](#token-based-authorization-for-print-and-export-operations-aspnet-core)
-  - [Token-based Authorization for Print and Export Operations (Angular)](#token-based-authorization-for-print-and-export-operations-angular)
+  - [Token-based Authorization for Print and Export Operations in ASP.NET Core)](#token-based-authorization-for-print-and-export-operations-in-aspnet-core)
+  - [Token-based Authorization for Print and Export Operations in Angular](#token-based-authorization-for-print-and-export-operations-in-angular)
   - [Implement User Authorization](#implement-user-authorization)
 - [Handle Exceptions](#handle-exceptions)
   - [Log Errors that Occurred in the Code of DevExpress Reporting Components](#log-errors-that-occurred-in-the-code-of-devexpress-reporting-components)
@@ -216,7 +216,7 @@ public class CustomMVCReportDesignerController : ReportDesignerController {
 }
 ```
 
-### Token-based Authorization for Print and Export Operations (ASP.NET Core)
+### Token-based Authorization for Print and Export Operations in ASP.NET Core
 
 Print and export operations require that you handle the [OnExport](https://docs.devexpress.com/XtraReports/DevExpress.AspNetCore.Reporting.WebDocumentViewer.WebDocumentViewerClientSideEventsBuilder.OnExport(System.String)) client-side event to pass the access token:
 
@@ -281,7 +281,7 @@ function OnViewerExport(_s, e) {
 
 Review the project's [Views/Home/DesignReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml) files for the full code.
 
-### Token-based Authorization for Print and Export Operations (Angular)
+### Token-based Authorization for Print and Export Operations in Angular
 
 In an Angular application you should handle the `OnExport` event and pass the access token in print and export operations:
 
