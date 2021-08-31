@@ -31,13 +31,9 @@ namespace AspNetCore.Reporting.Common.Services.Reporting {
         public SqlDataConnection LoadConnection(string connectionName) {
             var connectionStringSection = configuration.GetSection("ReportingDataConnectionStrings");
             var connectionString = connectionStringSection?.GetValue<string>(connectionName);
-            var connectionStringInfo = new ConnectionStringInfo { RunTimeConnectionString = connectionString, ProviderName = "SQLite" };
-            DataConnectionParametersBase connectionParameters;
-            if(string.IsNullOrEmpty(connectionString)
-                || !AppConfigHelper.TryCreateSqlConnectionParameters(connectionStringInfo, out connectionParameters)
-                || connectionParameters == null) {
+            if (string.IsNullOrEmpty(connectionString))
                 throw new KeyNotFoundException($"Connection string '{connectionName}' not found.");
-            }
+            var connectionParameters = new CustomStringConnectionParameters(connectionString);
             return new SqlDataConnection(connectionName, connectionParameters);
         }
 
