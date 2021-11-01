@@ -559,6 +559,7 @@ To localize DevExpress reporting controls, go to [localization.devexpress.com](h
 
 ```js
 function CustomizeLocalization(s, e){
+    //obtain these files from the Localization Service and then uncomment this code
     //e.LoadMessages($.get("/localization/reporting/dx-analytics-core.de.json"));
     //e.LoadMessages($.get("/localization/reporting/dx-reporting.de.json"));
     e.LoadMessages($.get("/localization/devextreme/de.json").done(function(messages) { DevExpress.localization.loadMessages(messages); }));
