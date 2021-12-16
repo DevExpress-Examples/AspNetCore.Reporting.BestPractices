@@ -39,7 +39,7 @@ namespace AspNetCore.Reporting.MVC {
                 x.LoginPath = new PathString("/Account/Login");
             });
 
-            services.AddControllersWithViews().RemoveDefaultReportingControllers().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0);
+            services.AddControllersWithViews().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0);
             services.AddDevExpressControls();
             services.ConfigureReportingServices(x => x.ConfigureReportDesigner(reportDesignerConfigurator => {
                 reportDesignerConfigurator.RegisterObjectDataSourceWizardTypeProvider<CustomObjectDataSourceWizardTypeProvider>();

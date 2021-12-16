@@ -1,0 +1,8 @@
+{
+	"GitHubRepoName": "AspNetCore.Reporting.BestPractices",
+	"AutoGenerateVb" : false,
+	"GitHubBranchName": "21.2.3+",
+	"IsDefault": true,
+	"Topics" : ["reporting", "asp-net-core", "angular"],
+	"Description": "Best practices to follow when you develop a web application with DevExpress reporting controls."	
+}

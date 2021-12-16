@@ -1,8 +1,3 @@
-<!-- default badges list -->
-![](https://img.shields.io/endpoint?url=https://codecentral.devexpress.com/api/v1/VersionRange/267081008/21.1.2%2B)
-[![](https://img.shields.io/badge/Open_in_DevExpress_Support_Center-FF7200?style=flat-square&logo=DevExpress&logoColor=white)](https://supportcenter.devexpress.com/ticket/details/T939061)
-[![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
-<!-- default badges end -->
 # ASP.NET Core Reporting - Best Practices
 
 ## Introduction
@@ -11,9 +6,9 @@ This **README** file describes best practices to follow when you develop a web a
 
 This repository also contains an example application that demonstrates the described techniques. This application is split into three projects:
 
-- [ASP.NetCore.Reporting.MVC](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC) - An ASP.Net Core MVC application.
-- [ASP.NetCore.Reporting.Angular](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Angular) - An ASP.Net Core application with an Angular frontend.
-- [ASP.NetCore.Reporting.Common](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common) - Implements services and business logic for the MVC and Angular projects.
+- [ASP.NetCore.Reporting.MVC](AspNetCore.Reporting.MVC) - An ASP.Net Core MVC application.
+- [ASP.NetCore.Reporting.Angular](AspNetCore.Reporting.Angular) - An ASP.Net Core application with an Angular frontend.
+- [ASP.NetCore.Reporting.Common](AspNetCore.Reporting.Common) - Implements services and business logic for the MVC and Angular projects.
 
 You can use the example code in your web application and modify it for different scenarios.
 
@@ -59,11 +54,14 @@ To run the example application, you need to install packages from the DevExpress
 
 Press the **Run** button or F5 to run the example application.
 
+
+![Best Pracices for Web Reporting App](Images/screenshot.png)
+
 ## Switch to Asynchronous Mode
 
 Call the [UseAsyncEngine](https://docs.devexpress.com/XtraReports/DevExpress.AspNetCore.Reporting.ReportingConfigurationBuilder.UseAsyncEngine) method at application startup to use asynchronous counterparts of Reporting API interfaces and methods.
 
-[ServiceRegistrator.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/ServiceRegistrator.cs#L38)
+[ServiceRegistrator.cs](AspNetCore.Reporting.Common/Services/ServiceRegistrator.cs#L38)
 
 ```cs
 services.ConfigureReportingServices(configurator => {
@@ -85,7 +83,7 @@ To optimize memory consumption, use the following techniques:
 
 - Configure the Document Viewer to store server data on disk instead of memory. This reduces the memory consumption at the cost of performance.
 
-    [ServiceRegistrator.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/ServiceRegistrator.cs#L29-L35)
+    [ServiceRegistrator.cs](AspNetCore.Reporting.Common/Services/ServiceRegistrator.cs#L29-L35)
     ```cs
     configurator.ConfigureWebDocumentViewer(viewerConfigurator => {
         // StorageSynchronizationMode.InterThread - it is a default value, use InterProcess if you use multiple application instances without ARR Affinity
@@ -98,7 +96,7 @@ To optimize memory consumption, use the following techniques:
 
 - To allow users to close a page or a UI region (for example, a pop-up window) that displays the Document Viewer, you should first call the Document Viewer's client-side [Close](https://docs.devexpress.com/XtraReports/js-DevExpress.Reporting.Viewer.JSReportViewer?p=netframework#js_devexpress_reporting_viewer_jsreportviewer_close) method to close the viewed report and release the server resources (the Storage space and Cache):
 
-    [DisplayReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml#L9)
+    [DisplayReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml#L9)
     ```js
     function WebDocumentViewer_BeforeRender(s, e) {
     $(window).on('beforeunload', function(e) {
@@ -108,7 +106,7 @@ To optimize memory consumption, use the following techniques:
 
 - Configure Storage and Cache cleaners on application startup. This allows you to specify how long you want to reserve resources to store document data on the server. Note that after a document's data is removed for the Storage and Cache, you cannot navigate or print this document.
 
-    [ServiceRegistrator.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/ServiceRegistrator.cs#L17-L21)
+    [ServiceRegistrator.cs](AspNetCore.Reporting.Common/Services/ServiceRegistrator.cs#L17-L21)
 
 
     ```csharp
@@ -127,12 +125,12 @@ DevExpress reporting components are configured to retrieve database connections 
 
 Reporting services obtain an [IConnectionProviderFactory](https://docs.devexpress.com/CoreLibraries/DevExpress.DataAccess.Web.IConnectionProviderFactory) and [IDataSourceWizardConnectionStringsProvider](https://docs.devexpress.com/CoreLibraries/DevExpress.DataAccess.Web.IDataSourceWizardConnectionStringsProvider) interfaces through Dependency Injection. For instructions on how to implement these services, refer to the following example project's files:
 
-- [Services/Reporting/CustomSqlDataConnectionProviderFactory.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/Reporting/CustomSqlDataConnectionProviderFactory.cs)
-- [Services/Reporting/CustomSqlDataSourceWizardConnectionStringsProvider.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/Reporting/CustomSqlDataSourceWizardConnectionStringsProvider.cs)
+- [Services/Reporting/CustomSqlDataConnectionProviderFactory.cs](AspNetCore.Reporting.Common/Services/Reporting/CustomSqlDataConnectionProviderFactory.cs)
+- [Services/Reporting/CustomSqlDataSourceWizardConnectionStringsProvider.cs](AspNetCore.Reporting.Common/Services/Reporting/CustomSqlDataSourceWizardConnectionStringsProvider.cs)
 
 To ensure that encrypted connection parameters for SqlDataSource instances are not passed to the client, return `null` from the `IDataSourceWizardConnectionStringsProvider.GetDataConnectionParameters` method's implementation:
 
-[CustomSqlDataSourceWizardConnectionStringsProvider.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/Reporting/CustomSqlDataSourceWizardConnectionStringsProvider.cs#L18-L20)
+[CustomSqlDataSourceWizardConnectionStringsProvider.cs](AspNetCore.Reporting.Common/Services/Reporting/CustomSqlDataSourceWizardConnectionStringsProvider.cs#L18-L20)
 
 ```csharp
 public DataConnectionParametersBase GetDataConnectionParameters(string name) {
@@ -142,7 +140,7 @@ public DataConnectionParametersBase GetDataConnectionParameters(string name) {
 
 In the [IConnectionProviderService](https://docs.devexpress.com/CoreLibraries/DevExpress.DataAccess.Wizard.Services.IConnectionProviderService) interface returned by the IConnectionProviderFactory, initialize and return the connection.
 
-[CustomSqlDataConnectionProviderFactory.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/Reporting/CustomSqlDataConnectionProviderFactory.cs#L31-L42)
+[CustomSqlDataConnectionProviderFactory.cs](AspNetCore.Reporting.Common/Services/Reporting/CustomSqlDataConnectionProviderFactory.cs#L31-L42)
 
 ```csharp
 public SqlDataConnection LoadConnection(string connectionName) {
@@ -159,7 +157,7 @@ public SqlDataConnection LoadConnection(string connectionName) {
 }
 ```
 
-Register the implemented services in [Startup.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Startup.cs).
+Register the implemented services in [Startup.cs](AspNetCore.Reporting.MVC/Startup.cs).
 
 ## Application Security
 
@@ -180,7 +178,7 @@ The following code samples demonstrate how to apply antiforgery request validati
 
 ##### Document Viewer
 
-[CustomMVCReportingControllers.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Controllers/CustomMVCReportingControllers.cs#L14-L22)
+[CustomMVCReportingControllers.cs](AspNetCore.Reporting.MVC/Controllers/CustomMVCReportingControllers.cs#L14-L22)
 
 ```csharp
 [AutoValidateAntiforgeryToken]
@@ -196,7 +194,7 @@ public class CustomMVCWebDocumentViewerController : WebDocumentViewerController 
 
 ##### Report Designer
 
-[CustomMVCReportingControllers.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Controllers/CustomMVCReportingControllers.cs#L24-L46)
+[CustomMVCReportingControllers.cs](AspNetCore.Reporting.MVC/Controllers/CustomMVCReportingControllers.cs#L24-L46)
 
 
 ```cs
@@ -225,7 +223,7 @@ public class CustomMVCReportDesignerController : ReportDesignerController {
 
 Print and export operations require that you handle the [OnExport](https://docs.devexpress.com/XtraReports/DevExpress.AspNetCore.Reporting.WebDocumentViewer.WebDocumentViewerClientSideEventsBuilder.OnExport(System.String)) client-side event to pass the access token:
 
-[site.js](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/wwwroot/js/site.js)
+[site.js](AspNetCore.Reporting.MVC/wwwroot/js/site.js)
 
 ```js
 function SetupJwt(bearerToken, xsrf) {
@@ -242,7 +240,7 @@ function AttachXSRFToken_OnExport(args, xsrf) {
 }
 ```
 
-[DisplayReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml#L5-L7)
+[DisplayReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml#L5-L7)
 
 ```cshtml
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
@@ -251,7 +249,7 @@ function AttachXSRFToken_OnExport(args, xsrf) {
             } }
 ```
 
-[DisplayReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml#L9-L18)
+[DisplayReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml#L9-L18)
 
 
 ```js
@@ -266,7 +264,7 @@ function OnViewerExport(_s, e) {
     AttachXSRFToken_OnExport(e, "@GetAntiXsrfRequestToken()");
 }
 ```
-[DisplayReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml#L33)
+[DisplayReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml#L33)
 
 ```html
 <input type="hidden" id="RequestVerificationToken" name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
@@ -284,13 +282,13 @@ function OnViewerExport(_s, e) {
 }
 ```
 
-Review the project's [Views/Home/DesignReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml) files for the full code.
+Review the project's [Views/Home/DesignReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml) files for the full code.
 
 ### Token-based Authorization for Print and Export Operations in Angular
 
 In an Angular application you should handle the `OnExport` event and pass the access token in print and export operations:
 
-[report-viewer.html](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Angular/ClientApp/src/app/reportviewer/report-viewer.html)
+[report-viewer.html](AspNetCore.Reporting.Angular/ClientApp/src/app/reportviewer/report-viewer.html)
 
 ```html
 <dx-report-viewer [reportUrl]="reportUrl" height="800px">
@@ -299,7 +297,7 @@ In an Angular application you should handle the `OnExport` event and pass the ac
   <dxrv-export-settings [useSameTab]="useSameTabExport" [useAsynchronousExport]="useAsynchronousExport"></dxrv-export-settings>
 </dx-report-viewer>
 ```
-[report-viewer.ts](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Angular/ClientApp/src/app/reportviewer/report-viewer.ts#L30-L48)
+[report-viewer.ts](AspNetCore.Reporting.Angular/ClientApp/src/app/reportviewer/report-viewer.ts#L30-L48)
 
 ```typescript
 import { AuthorizeService } from '../../api-authorization/authorize.service';
@@ -325,14 +323,14 @@ import { AuthorizeService } from '../../api-authorization/authorize.service';
   }
   // ...
 ```
-Review the report viewer's files ([report-viewer.html](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Angular/ClientApp/src/app/reportviewer/report-viewer.html) and [report-viewer.ts](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Angular/ClientApp/src/app/reportviewer/report-viewer.ts)) or the report designer's files ([report-designer.html](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Angular/ClientApp/src/app/reportdesigner/report-designer.html) and [report-designer.ts](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Angular/ClientApp/src/app/reportdesigner/report-designer.ts)) for the full code.
+Review the report viewer's files ([report-viewer.html](AspNetCore.Reporting.Angular/ClientApp/src/app/reportviewer/report-viewer.html) and [report-viewer.ts](AspNetCore.Reporting.Angular/ClientApp/src/app/reportviewer/report-viewer.ts)) or the report designer's files ([report-designer.html](AspNetCore.Reporting.Angular/ClientApp/src/app/reportdesigner/report-designer.html) and [report-designer.ts](AspNetCore.Reporting.Angular/ClientApp/src/app/reportdesigner/report-designer.ts)) for the full code.
 ### Implement User Authorization
 
 To authorize a user and restrict access to reports based on arbitrary logic, implement and register an [IWebDocumentViewerAuthorizationService](https://docs.devexpress.com/XtraReports/DevExpress.XtraReports.Web.WebDocumentViewer.IWebDocumentViewerAuthorizationService) with [WebDocumentViewerOperationLogger](https://docs.devexpress.com/XtraReports/DevExpress.XtraReports.Web.WebDocumentViewer.WebDocumentViewerOperationLogger).
 
 You can also implement an `DevExpress.XtraReports.Web.WebDocumentViewer.IExportedDocumentStorage` to prevent unauthorized access to documents generated during asynchronous export and printing operations.
 
-[DocumentViewerAuthorizationService.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/Reporting/DocumentViewerAuthorizationService.cs):
+[DocumentViewerAuthorizationService.cs](AspNetCore.Reporting.Common/Services/Reporting/DocumentViewerAuthorizationService.cs):
 
 ```csharp
 class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWebDocumentViewerAuthorizationService, IExportingAuthorizationService {
@@ -407,7 +405,7 @@ class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWe
 
 Register your authorization service implementation at application startup. In this example the `ConfigureServices` method uses a custom `ServiceRegistrator` class to register services specific to web reporting.
 
-[Startup.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Startup.cs#L47):
+[Startup.cs](AspNetCore.Reporting.MVC/Startup.cs#L47):
 
 ```cs
 public class Startup {
@@ -419,7 +417,7 @@ public class Startup {
     ...
 }
 ```
-[ServiceRegistrator.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/ServiceRegistrator.cs#L46-L48):
+[ServiceRegistrator.cs](AspNetCore.Reporting.Common/Services/ServiceRegistrator.cs#L46-L48):
 ```cs
 public class ServiceRegistrator {
     public static IServiceCollection AddCommonServices(IServiceCollection services) {
@@ -443,7 +441,7 @@ To handle exceptions generated by DevExpress reporting components, implement and
 
 ##### Implement a Logger Class
 
-[ReportingLoggerService.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/Reporting/ReportingLoggerService.cs):
+[ReportingLoggerService.cs](AspNetCore.Reporting.Common/Services/Reporting/ReportingLoggerService.cs):
 
 ```csharp
 public class ReportingLoggerService: LoggerService {
@@ -464,7 +462,7 @@ public class ReportingLoggerService: LoggerService {
 
 ##### Register the Logger in **Startup.cs**
 
-[Startup.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Startup.cs#L70):
+[Startup.cs](AspNetCore.Reporting.MVC/Startup.cs#L70):
 
 ```cs
 LoggerService.Initialize(new CustomReportingLoggerService(loggerFactory.CreateLogger("DXReporting")));
@@ -492,17 +490,17 @@ public class CustomWebDocumentViewerExceptionHandler : WebDocumentViewerExceptio
 }
 ```
 
-Refer to the example project's [Services/Reporting/CustomExceptionHandlers.cs](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.Common/Services/Reporting/CustomExceptionHandlers.cs) file for the full code.
+Refer to the example project's [Services/Reporting/CustomExceptionHandlers.cs](AspNetCore.Reporting.Common/Services/Reporting/CustomExceptionHandlers.cs) file for the full code.
 
 ## Prepare Skeleton Screen
 
 This section describes how to implement a skeleton screen that indicates when the application is being loaded. With this approach, the client first displays a mock screen that mimics the application's layout and then proceeds to load the resources for the reporting components.
 
-![web-skeleton-designer](https://user-images.githubusercontent.com/37070809/94427328-8f40a500-0197-11eb-87c4-82ec9862b148.png)
+![web-skeleton-designer](Images/skeleton.png)
 
 Use the following steps to prepare a skeleton screen:
 
-In [_Layout.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Shared/_Layout.cshtml), move all the `script` elements to the bottom of the layout:
+In [_Layout.cshtml](AspNetCore.Reporting.MVC/Views/Shared/_Layout.cshtml), move all the `script` elements to the bottom of the layout:
 
 ```cs
 ...
@@ -523,7 +521,7 @@ In a view, add the `dx-reporting-skeleton-screen.css` file from the **devexpress
 - Call the `RenderHtml()` method to render markup.
 - Call the `RenderScripts()` method to render scripts.
 
-[DesignReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml):
+[DesignReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml):
 
 ```cs
 @{
@@ -555,7 +553,7 @@ To localize DevExpress reporting controls, go to [localization.devexpress.com](h
 
 1. In the client `CustomizeLocalization` event, load the localization JSON files:
 
-[DesignReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml#L27-L32)
+[DesignReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml#L27-L32)
 
 ```js
 function CustomizeLocalization(s, e){
@@ -569,7 +567,7 @@ function CustomizeLocalization(s, e){
 
 2. Set the `IncludeLocalization` option to `false` to disable automatic attachment of the localization dictionary:
 
-[DesignReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml#L44-L46):
+[DesignReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml#L44-L46):
 
 ```cs
     Html.DevExpress().ReportDesigner("ReportDesigner")
@@ -581,4 +579,4 @@ function CustomizeLocalization(s, e){
 
 A translation does not always cover all the possible strings. You can use the localization service's UI to add the missing strings as described in the [Localization Service](https://docs.devexpress.com/LocalizationService/16235/localization-service) article.
 
-For a full code example, refer to the example project's [Views/Home/DesignReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport.cshtml](https://github.com/DevExpress-Examples/AspNetCore.Reporting.BestPractices/tree/21.1.2+/AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml).
+For a full code example, refer to the example project's [Views/Home/DesignReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml).
