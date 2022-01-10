@@ -1,6 +1,0 @@
-SCC = This is a Source Code Control file
-
-[AspNetCore.Reporting.Common.csproj]
-SCC_Aux_Path = "net.tcp://vcsservice.devexpress.dev:9091/DXVCSService"
-SCC_Project_Name = "$/2021.2/Examples/XtraReports/Web/AspNetCore.Reporting.BestPractices/AspNetCore.Reporting.Common"
-
