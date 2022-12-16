@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace AspNetCore.Reporting.Common.Models {
     public class LoginRequest {

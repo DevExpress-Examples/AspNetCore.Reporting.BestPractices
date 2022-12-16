@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using DevExpress.Data.Entity;
 using DevExpress.DataAccess.ConnectionParameters;
@@ -30,7 +30,7 @@ namespace AspNetCore.Reporting.Common.Services.Reporting {
 
         public SqlDataConnection LoadConnection(string connectionName) {
             var connectionStringSection = configuration.GetSection("ReportingDataConnectionStrings");
-            var connectionString = connectionStringSection?.GetValue<string>(connectionName);
+            var connectionString = connectionStringSection?[connectionName];
             if (string.IsNullOrEmpty(connectionString))
                 throw new KeyNotFoundException($"Connection string '{connectionName}' not found.");
             var connectionParameters = new CustomStringConnectionParameters(connectionString);
@@ -38,7 +38,7 @@ namespace AspNetCore.Reporting.Common.Services.Reporting {
         }
 
         public SqlDataConnection WrongLoadConnection(string connectionName) {
-            var connectionString = configuration.GetSection("ReportingDataConnectionStrings")?.GetValue<string>(connectionName);
+            var connectionString = configuration.GetSection("ReportingDataConnectionStrings")?[connectionName];
             if(string.IsNullOrEmpty(connectionString))
                 throw new ArgumentException("There is no connection with name: " + connectionName);
             return new SqlDataConnection {

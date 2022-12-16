@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using AspNetCore.Reporting.Common.Services.Reporting;
 using DevExpress.AspNetCore.Reporting;

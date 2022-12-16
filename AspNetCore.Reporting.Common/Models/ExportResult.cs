@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace AspNetCore.Reporting.Common.Models {
     public class ExportResult {

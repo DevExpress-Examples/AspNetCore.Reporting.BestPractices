@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using DevExpress.Compatibility.System.Web;
 using DevExpress.XtraReports.Web.ReportDesigner;
 using Microsoft.AspNetCore.Authorization;

@@ -4,6 +4,7 @@
 /dist
 /dist-server
 /tmp
+/.angular
 /out-tsc
 
 # dependencies

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -20,7 +20,6 @@ namespace AspNetCore.Reporting.Common.Services {
             this.dbContext = dbContext;
         }
 
-        #region createuser
         public async Task<IdentityResult> CreateAsync(StudentIdentity user,
             CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
@@ -30,7 +29,6 @@ namespace AspNetCore.Reporting.Common.Services {
             await dbContext.SaveChangesAsync(cancellationToken);
             return IdentityResult.Success;
         }
-        #endregion
 
         public async Task<IdentityResult> DeleteAsync(StudentIdentity user,
             CancellationToken cancellationToken = default(CancellationToken)) {

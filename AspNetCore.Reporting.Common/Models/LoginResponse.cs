@@ -1,4 +1,4 @@
-﻿using AspNetCore.Reporting.Common.Data;
+using AspNetCore.Reporting.Common.Data;
 
 namespace AspNetCore.Reporting.Common.Models {
     public class LoginResponse {

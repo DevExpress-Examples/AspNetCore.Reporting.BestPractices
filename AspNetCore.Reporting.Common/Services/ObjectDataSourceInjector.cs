@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using DevExpress.DataAccess.ObjectBinding;
 using DevExpress.XtraReports.Native.Data;
 using DevExpress.XtraReports.UI;

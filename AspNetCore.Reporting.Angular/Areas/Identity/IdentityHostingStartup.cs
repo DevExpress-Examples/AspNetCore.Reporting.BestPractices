@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using AspNetCore.Reporting.Angular.Data;
 using AspNetCore.Reporting.Common.Data;
 using Microsoft.AspNetCore.Hosting;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.AspNetCore.Identity;
 
 namespace AspNetCore.Reporting.Common.Data {

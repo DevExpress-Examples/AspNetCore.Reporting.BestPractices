@@ -1,4 +1,4 @@
-﻿using AspNetCore.Reporting.Common.Data;
+using AspNetCore.Reporting.Common.Data;
 using AspNetCore.Reporting.MVC.Data;
 
 namespace AspNetCore.Reporting.MVC.Models {

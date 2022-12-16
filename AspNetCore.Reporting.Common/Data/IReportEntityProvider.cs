@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace AspNetCore.Reporting.Common.Data {
     public interface IReportEntityProvider {

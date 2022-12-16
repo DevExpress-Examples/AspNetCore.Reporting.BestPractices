@@ -1,6 +1,5 @@
-﻿using AspNetCore.Reporting.Common.Data;
-using AspNetCore.Reporting.Common.Services;
-using IdentityServer4.EntityFramework.Options;
+using AspNetCore.Reporting.Common.Data;
+using Duende.IdentityServer.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;

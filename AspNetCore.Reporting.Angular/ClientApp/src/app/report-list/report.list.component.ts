@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './report.list.component.html'
 })
 export class ReportListComponent {
-  reportList: ReportItem[];
+  reportList?: ReportItem[];
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     http.get<ReportItem[]>(baseUrl + 'reportlist').subscribe(result => {
       this.reportList = result;
@@ -15,6 +15,6 @@ export class ReportListComponent {
 }
 
 interface ReportItem {
-  Id: string;
-  Title: string;
+  id: string;
+  title: string;
 }

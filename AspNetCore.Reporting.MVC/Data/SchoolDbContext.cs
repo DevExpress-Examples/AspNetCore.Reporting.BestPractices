@@ -1,4 +1,4 @@
-﻿using AspNetCore.Reporting.Common.Data;
+using AspNetCore.Reporting.Common.Data;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

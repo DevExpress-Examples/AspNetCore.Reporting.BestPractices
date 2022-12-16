@@ -1,4 +1,4 @@
-﻿namespace AspNetCore.Reporting.Common.Data {
+namespace AspNetCore.Reporting.Common.Data {
     public enum Grade {
         A, B, C, D, F
     }

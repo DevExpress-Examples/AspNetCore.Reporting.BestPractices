@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using DevExpress.XtraReports.UI;
 using DevExpress.XtraReports.Web.ReportDesigner.Services;
 

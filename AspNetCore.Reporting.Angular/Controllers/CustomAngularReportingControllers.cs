@@ -1,4 +1,4 @@
-﻿using AspNetCore.Reporting.Common.Models;
+using AspNetCore.Reporting.Common.Models;
 using AspNetCore.Reporting.Common.Services;
 using DevExpress.AspNetCore.Reporting.QueryBuilder;
 using DevExpress.AspNetCore.Reporting.QueryBuilder.Native.Services;

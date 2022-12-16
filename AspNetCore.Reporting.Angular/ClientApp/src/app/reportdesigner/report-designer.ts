@@ -9,7 +9,6 @@ import { ActivatedRoute } from '@angular/router';
   encapsulation: ViewEncapsulation.None,
   templateUrl: './report-designer.html',
   styleUrls: [
-    "../../../node_modules/jquery-ui/themes/base/all.css",
     "../../../node_modules/devextreme/dist/css/dx.common.css",
     "../../../node_modules/devextreme/dist/css/dx.light.css",
     "../../../node_modules/@devexpress/analytics-core/dist/css/dx-analytics.common.css",
@@ -29,7 +28,7 @@ export class ReportDesignerComponent implements OnInit {
     this.koReportUrl(newUrl);
   }
   koReportUrl = ko.observable('');
-  exportAccessToken: string;
+  exportAccessToken: string | null = null;
 
   constructor(@Inject('BASE_URL') public hostUrl: string, private authorize: AuthorizeService, private activateRoute: ActivatedRoute) {
     this.authorize.getAccessToken()
@@ -43,7 +42,7 @@ export class ReportDesignerComponent implements OnInit {
       });
   }
 
-  previewOnExport(event) {
+  previewOnExport(event: any) {
     event.args.FormData["access_token"] = this.exportAccessToken;
   }
 

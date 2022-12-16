@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using DevExpress.XtraReports.Web.ClientControls;
 using Microsoft.Extensions.Logging;
 

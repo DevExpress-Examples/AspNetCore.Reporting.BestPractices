@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Threading.Tasks;
 using DevExpress.XtraReports.Services;
 using DevExpress.XtraReports.UI;

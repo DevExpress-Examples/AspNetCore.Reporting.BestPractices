@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
+using System.Web.Mvc;
 
 namespace AspNetCore.Reporting.Common.Models {
     public class LoginScreenModel {

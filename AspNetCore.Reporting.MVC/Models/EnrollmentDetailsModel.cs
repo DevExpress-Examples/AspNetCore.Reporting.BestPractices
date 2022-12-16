@@ -1,4 +1,4 @@
-﻿namespace AspNetCore.Reporting.MVC.Models {
+namespace AspNetCore.Reporting.MVC.Models {
     public class EnrollmentDetailsModel {
         public int EnrollmentID { get; set; }
         public string CourseTitle { get; set; }

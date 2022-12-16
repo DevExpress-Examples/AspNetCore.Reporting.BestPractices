@@ -1,4 +1,4 @@
-﻿namespace AspNetCore.Reporting.Common.Models {
+namespace AspNetCore.Reporting.Common.Models {
     public class EnrollmentDetailsModel {
         public int EnrollmentID { get; set; }
         public string CourseTitle { get; set; }

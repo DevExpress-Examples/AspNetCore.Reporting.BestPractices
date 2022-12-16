@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Linq;
 using AspNetCore.Reporting.Common.Data;
 using AspNetCore.Reporting.Common.Reports;

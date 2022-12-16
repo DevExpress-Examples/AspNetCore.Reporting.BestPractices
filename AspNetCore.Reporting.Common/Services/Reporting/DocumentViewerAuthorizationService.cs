@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using DevExpress.XtraPrinting;
 using DevExpress.XtraReports.UI;
@@ -44,7 +44,6 @@ namespace AspNetCore.Reporting.Common.Services.Reporting {
 
         }
 
-        #region IWebDocumentViewerAuthorizationService
         public bool CanCreateDocument() {
             return true;
         }
@@ -72,6 +71,5 @@ namespace AspNetCore.Reporting.Common.Services.Reporting {
         public bool CanReadExportedDocument(string exportedDocumentId) {
             return ExportedDocumentIdOwnerMap.TryGetValue(exportedDocumentId, out var ownerId) && ownerId == UserService.GetCurrentUserId();
         }
-        #endregion
     }
 }

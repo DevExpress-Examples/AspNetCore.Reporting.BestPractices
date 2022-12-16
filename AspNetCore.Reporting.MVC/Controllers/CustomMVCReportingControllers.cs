@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using DevExpress.AspNetCore.Reporting.QueryBuilder;
 using DevExpress.AspNetCore.Reporting.QueryBuilder.Native.Services;
 using DevExpress.AspNetCore.Reporting.ReportDesigner;
