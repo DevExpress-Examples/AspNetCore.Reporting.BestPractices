@@ -3,16 +3,19 @@
   "defaultProvider": "filesystem",
   "libraries": [
     {
-      "library": "node_modules/devextreme/dist/css/icons/",
+      "library": "node_modules/devextreme-dist/css/icons/",
       "destination": "wwwroot/css/icons",
       "files": [
         "dxicons.ttf",
         "dxicons.woff2",
-        "dxicons.woff"
+        "dxicons.woff",
+        "dxiconsmaterial.ttf",
+        "dxiconsmaterial.woff",
+        "dxiconsmaterial.woff2"
       ]
     },
     {
-      "library": "node_modules/devextreme/localization/messages/",
+      "library": "node_modules/devextreme-dist/js/localization/",
       "destination": "wwwroot/localization/devextreme",
       "files": [
         "de.json"

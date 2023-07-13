@@ -22,10 +22,9 @@
   {
     "outputFileName": "wwwroot/css/viewer.part.bundle.css",
     "inputFiles": [
-      "node_modules/devextreme/dist/css/dx.common.css",
-      "node_modules/devextreme/dist/css/dx.light.css",
+      "node_modules/devextreme-dist/css/dx.material.blue.light.css",
       "node_modules/@devexpress/analytics-core/dist/css/dx-analytics.common.css",
-      "node_modules/@devexpress/analytics-core/dist/css/dx-analytics.light.css",
+      "node_modules/@devexpress/analytics-core/dist/css/dx-analytics.material.blue.light.css",
       "node_modules/devexpress-reporting/dist/css/dx-webdocumentviewer.css"
     ],
     "minify": {
@@ -61,15 +60,6 @@
     "outputFileName": "wwwroot/js/reporting.thirdparty.bundle.js",
     "inputFiles": [
       "node_modules/knockout/build/output/knockout-latest.js",
-      "node_modules/cldrjs/dist/cldr.js",
-      "node_modules/cldrjs/dist/cldr/event.js",
-      "node_modules/cldrjs/dist/cldr/supplemental.js",
-      "node_modules/cldrjs/dist/cldr/unresolved.js",
-      "node_modules/globalize/dist/globalize.js",
-      "node_modules/globalize/dist/globalize/message.js",
-      "node_modules/globalize/dist/globalize/number.js",
-      "node_modules/globalize/dist/globalize/currency.js",
-      "node_modules/globalize/dist/globalize/date.js",
 
       "node_modules/ace-builds/src-min-noconflict/ace.js",
       "node_modules/ace-builds/src-min-noconflict/ext-language_tools.js",
@@ -85,9 +75,9 @@
   {
     "outputFileName": "wwwroot/js/viewer.part.bundle.js",
     "inputFiles": [
-      "node_modules/devextreme/dist/js/dx.all.js",
-      "node_modules/@devexpress/analytics-core/dist/js/dx-analytics-core.js",
-      "node_modules/devexpress-reporting/dist/js/dx-webdocumentviewer.js"
+      "node_modules/devextreme-dist/js/dx.all.js",
+      "node_modules/@devexpress/analytics-core/dist/js/dx-analytics-core.min.js",
+      "node_modules/devexpress-reporting/dist/js/dx-webdocumentviewer.min.js"
     ],
     "minify": {
       "enabled": false
@@ -100,8 +90,8 @@
       "node_modules/jszip/dist/jszip.min.js",
       "node_modules/devexpress-richedit/dist/dx.richedit.min.js",
 
-      "node_modules/@devexpress/analytics-core/dist/js/dx-querybuilder.js",
-      "node_modules/devexpress-reporting/dist/js/dx-reportdesigner.js"
+      "node_modules/@devexpress/analytics-core/dist/js/dx-querybuilder.min.js",
+      "node_modules/devexpress-reporting/dist/js/dx-reportdesigner.min.js"
     ],
     "minify": {
       "enabled": false

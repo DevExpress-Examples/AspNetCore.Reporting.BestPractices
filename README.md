@@ -1,5 +1,5 @@
 <!-- default badges list -->
-![](https://img.shields.io/endpoint?url=https://codecentral.devexpress.com/api/v1/VersionRange/267081008/2022.2)
+![](https://img.shields.io/endpoint?url=https://codecentral.devexpress.com/api/v1/VersionRange/267081008/21.1.2%2B)
 [![](https://img.shields.io/badge/Open_in_DevExpress_Support_Center-FF7200?style=flat-square&logo=DevExpress&logoColor=white)](https://supportcenter.devexpress.com/ticket/details/T939061)
 [![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
 <!-- default badges end -->
@@ -28,8 +28,8 @@ You can use the example code in your web application and modify it for different
 - [Manage Database Connections](#manage-database-connections)
 - [Application Security](#application-security)
   - [Prevent Cross-Site Request Forgery](#prevent-cross-site-request-forgery)
-  - [Token-based Authorization for Print and Export Operations](#token-based-authorization-for-print-and-export-operations)
-  - [Token-based Authorization for Print and Export Operations in Angular](#token-based-authorization-for-print-and-export-operations-in-angular)
+  - [Token-based Authentication](#token-based-authentication)
+  - [Token-based Authentication in Angular](#token-based-authentication-in-angular)
   - [Implement User Authorization](#implement-user-authorization)
 - [Handle Exceptions](#handle-exceptions)
   - [Log Errors that Occurred in the Code of DevExpress Reporting Components](#log-errors-that-occurred-in-the-code-of-devexpress-reporting-components)
@@ -224,24 +224,19 @@ public class CustomMVCReportDesignerController : ReportDesignerController {
 }
 ```
 
-### Token-based Authorization for Print and Export Operations
+### Token-based Authentication
 
-Print and export operations require that you handle the [OnExport](https://docs.devexpress.com/XtraReports/DevExpress.AspNetCore.Reporting.WebDocumentViewer.WebDocumentViewerClientSideEventsBuilder.OnExport(System.String)) client-side event to pass the access token:
-
+The following code snippet shows how to pass the access token:
 [site.js](AspNetCore.Reporting.MVC/wwwroot/js/site.js)
 
 ```js
 function SetupJwt(bearerToken, xsrf) {
-    DevExpress.Analytics.Utils.ajaxSetup.ajaxSettings = {
+    DevExpress.Analytics.Utils.fetchSetup.fetchSettings = {
         headers: {
             //'Authorization': 'Bearer ' + bearerToken,
             'RequestVerificationToken': xsrf
         }
     }; 
-}
-
-function AttachXSRFToken_OnExport(args, xsrf) {
-    args.FormData["__RequestVerificationToken"] = xsrf;
 }
 ```
 
@@ -264,10 +259,6 @@ function WebDocumentViewer_BeforeRender(s, e) {
         s.Close();
     });
 }
-
-function OnViewerExport(_s, e) {
-    AttachXSRFToken_OnExport(e, "@GetAntiXsrfRequestToken()");
-}
 ```
 [DisplayReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml#L33)
 
@@ -277,7 +268,6 @@ function OnViewerExport(_s, e) {
         .ClientSideEvents(x => {
             // ...
             x.BeforeRender("WebDocumentViewer_BeforeRender");
-            x.OnExport("OnViewerExport");
         })
     // ...
     .Height("900px")
@@ -289,19 +279,10 @@ function OnViewerExport(_s, e) {
 
 Review the project's [Views/Home/DesignReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml) or [Views/Home/DisplayReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml) files for the full code.
 
-### Token-based Authorization for Print and Export Operations in Angular
+### Token-based Authentication in Angular
 
-In an Angular application you should handle the `OnExport` event and pass the access token in print and export operations:
+The following code snippet shows how to pass the access token in an Angular application:
 
-[report-viewer.html](AspNetCore.Reporting.Angular/ClientApp/src/app/reportviewer/report-viewer.html)
-
-```html
-<dx-report-viewer [reportUrl]="reportUrl" height="800px">
-  <dxrv-callbacks (OnExport)="viewerOnExport($event)"></dxrv-callbacks>
-  <dxrv-request-options [invokeAction]="invokeAction" [host]="hostUrl"></dxrv-request-options>
-  <dxrv-export-settings [useSameTab]="useSameTabExport" [useAsynchronousExport]="useAsynchronousExport"></dxrv-export-settings>
-</dx-report-viewer>
-```
 [report-viewer.ts](AspNetCore.Reporting.Angular/ClientApp/src/app/reportviewer/report-viewer.ts#L30-L48)
 
 ```typescript
@@ -309,22 +290,16 @@ import { AuthorizeService } from '../../api-authorization/authorize.service';
 // ...
   useSameTabExport = true;
   useAsynchronousExport = true;
-  exportAccesstoken: string;
 
   constructor(@Inject('BASE_URL') public hostUrl: string, private authorize: AuthorizeService, private activateRoute: ActivatedRoute) {
     this.authorize.getAccessToken()
       .subscribe(x => {
-        ajaxSetup.ajaxSettings = {
+        fetchSetup.fetchSettings = {
           headers: {
             'Authorization': 'Bearer ' + x
           }
         };
-        this.exportAccesstoken = x;
       });
-  }
-
-  viewerOnExport(event) {
-    event.args.FormData['access_token'] = this.exportAccesstoken;
   }
   // ...
 ```

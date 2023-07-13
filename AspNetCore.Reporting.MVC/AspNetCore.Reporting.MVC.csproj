@@ -10,8 +10,14 @@
     <None Remove="ViewerStorages\**" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Database\nwind.db" />
     <None Remove="Reports\CourseListReport.vsrepx" />
     <None Remove="Reports\MyEnrollmentsReport.vsrepx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Database\nwind.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Reports\CourseListReport.vsrepx" />
@@ -44,11 +50,6 @@
     <Compile Update="Reports\MyEnrollmentsReport.Designer.cs">
       <DependentUpon>MyEnrollmentsReport.vsrepx</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="Database\nwind.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Target Name="InstallJSDependencies" BeforeTargets="LibraryManagerRestore" Condition="!Exists('node_modules/')">
     <Exec Command="npm install" />

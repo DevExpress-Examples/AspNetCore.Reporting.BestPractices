@@ -1,3 +1,4 @@
+using System.ComponentModel.Design;
 using System.IO;
 using System.Threading.Tasks;
 using DevExpress.XtraReports.Services;
@@ -17,6 +18,8 @@ namespace AspNetCore.Reporting.Common.Services.Reporting {
             var reportLayoutBytes = reportStorageWebExtension.GetData(id);
             using(var ms = new MemoryStream(reportLayoutBytes)) {
                 var report = XtraReport.FromXmlStream(ms);
+                var container = (IServiceContainer)report;
+                container.AddService(typeof(IReportProvider), this);
                 dataSourceInjector.Process(report);
                 return report;
             }
@@ -35,6 +38,8 @@ namespace AspNetCore.Reporting.Common.Services.Reporting {
             var reportLayoutBytes = await reportStorageWebExtension.GetDataAsync(id);
             using(var ms = new MemoryStream(reportLayoutBytes)) {
                 var report = XtraReport.FromXmlStream(ms);
+                var container = (IServiceContainer)report;
+                container.AddService(typeof(IReportProviderAsync), this);
                 dataSourceInjector.Process(report);
                 return report;
             }

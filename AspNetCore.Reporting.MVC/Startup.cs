@@ -4,6 +4,7 @@ using AspNetCore.Reporting.Common.Services.Reporting;
 using AspNetCore.Reporting.MVC.Data;
 using DevExpress.AspNetCore;
 using DevExpress.AspNetCore.Reporting;
+using DevExpress.Utils;
 using DevExpress.XtraReports.Web.ClientControls;
 using DevExpress.XtraReports.Web.Extensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -38,12 +39,20 @@ namespace AspNetCore.Reporting.MVC {
             services.ConfigureApplicationCookie(x => {
                 x.LoginPath = new PathString("/Account/Login");
             });
+            if(WebHostEnvironment.IsDevelopment()) { 
+                services.AddDatabaseDeveloperPageExceptionFilter();
+            }
 
             services.AddControllersWithViews();
             services.AddDevExpressControls();
-            services.ConfigureReportingServices(x => x.ConfigureReportDesigner(reportDesignerConfigurator => {
-                reportDesignerConfigurator.RegisterObjectDataSourceWizardTypeProvider<CustomObjectDataSourceWizardTypeProvider>();
-            }));
+            services.ConfigureReportingServices(x => {
+                if(WebHostEnvironment.IsDevelopment()) {
+                    x.UseDevelopmentMode();
+                }
+                x.ConfigureReportDesigner(reportDesignerConfigurator => {
+                    reportDesignerConfigurator.RegisterObjectDataSourceWizardTypeProvider<CustomObjectDataSourceWizardTypeProvider>();
+                });
+            });
             ServiceRegistrator.AddCommonServices(services, WebHostEnvironment.ContentRootPath);
 
             services.AddSingleton<IScopedDbContextProvider<SchoolDbContext>, ScopedDbContextProvider<SchoolDbContext>>();
@@ -51,23 +60,22 @@ namespace AspNetCore.Reporting.MVC {
             services.AddTransient<ReportStorageWebExtension, EFCoreReportStorageWebExtension<SchoolDbContext>>();
             services.AddTransient<IUserEmailStore<StudentIdentity>, CustomStudentsUserStore>();
             services.AddTransient<CourseListReportRepository>();
+            DeserializationSettings.RegisterTrustedClass(typeof(CourseListReportRepository));
             services.AddTransient<MyEnrollmentsReportRepository>();
+            DeserializationSettings.RegisterTrustedClass(typeof(MyEnrollmentsReportRepository)); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory) {
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
             app.UseDevExpressControls();
 
             if(env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
             } else {
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
-            LoggerService.Initialize(new CustomReportingLoggerService(loggerFactory.CreateLogger("DXReporting")));
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

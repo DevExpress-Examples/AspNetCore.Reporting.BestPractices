@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
+    <div class="container-fluid vh-100 d-flex flex-column">
     <header>
         <nav class="navbar navbar-expand-md navbar-dark bg-dark">
             <div class="container">
@@ -33,7 +34,7 @@
             }
         </nav>
     </header>
-    <div class="container-fluid">
+        <div class="container-fluid">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -44,6 +45,7 @@
             &copy; 2021 - AspNetCore.Reporting.MVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+    </div>
     <script src="~/js/site.thirdparty.bundle.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)

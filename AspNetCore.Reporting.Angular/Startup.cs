@@ -5,10 +5,9 @@ using AspNetCore.Reporting.Common.Services;
 using AspNetCore.Reporting.Common.Services.Reporting;
 using DevExpress.AspNetCore;
 using DevExpress.AspNetCore.Reporting;
-using DevExpress.XtraReports.Web.ClientControls;
+using DevExpress.Utils;
 using DevExpress.XtraReports.Web.Extensions;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -16,12 +15,10 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
-namespace AspNetCore.Reporting.Angular {
+namespace AspNetCore.Reporting.Angular
+{
     public class Startup {
         public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment) {
             Configuration = configuration;
@@ -52,19 +49,25 @@ namespace AspNetCore.Reporting.Angular {
             services.AddAuthentication()
                 .AddIdentityServerJwt();
 
-            services.TryAddEnumerable(ServiceDescriptor.Singleton<IPostConfigureOptions<JwtBearerOptions>, ConfigureJwtBearerOptions>());
             services.AddControllersWithViews().AddNewtonsoftJson();
             services.AddRazorPages();
-            services.ConfigureReportingServices(x => x.ConfigureReportDesigner(reportDesignerConfigurator => {
-                reportDesignerConfigurator.RegisterObjectDataSourceWizardTypeProvider<CustomObjectDataSourceWizardTypeProvider>();
-            }));
+            services.ConfigureReportingServices(x => {
+                if (WebHostEnvironment.IsDevelopment()) { 
+                    x.UseDevelopmentMode();
+                }
+                x.ConfigureReportDesigner(reportDesignerConfigurator => {
+                    reportDesignerConfigurator.RegisterObjectDataSourceWizardTypeProvider<CustomObjectDataSourceWizardTypeProvider>();
+                });
+            });
             ServiceRegistrator.AddCommonServices(services, WebHostEnvironment.ContentRootPath);
 
             services.AddSingleton<IScopedDbContextProvider<SchoolDbContext>, ScopedDbContextProvider<SchoolDbContext>>();
             services.AddScoped<IAuthenticatiedUserService, UserService<SchoolDbContext>>();
             services.AddTransient<ReportStorageWebExtension, EFCoreReportStorageWebExtension<SchoolDbContext>>();
             services.AddTransient<CourseListReportRepository>();
+            DeserializationSettings.RegisterTrustedClass(typeof(CourseListReportRepository));
             services.AddTransient<MyEnrollmentsReportRepository>();
+            DeserializationSettings.RegisterTrustedClass(typeof(MyEnrollmentsReportRepository));
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration => {
@@ -73,7 +76,7 @@ namespace AspNetCore.Reporting.Angular {
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory) {
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
             app.UseDevExpressControls();
             if(env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();                
@@ -88,8 +91,6 @@ namespace AspNetCore.Reporting.Angular {
             if(!env.IsDevelopment()) {
                 app.UseSpaStaticFiles();
             }
-
-            LoggerService.Initialize(new CustomReportingLoggerService(loggerFactory.CreateLogger("DXReporting")));
 
             app.UseRouting();
 

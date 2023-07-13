@@ -1,0 +1,17 @@
+#################
+## DevExpress
+#################
+
+## Examples Web root
+**/wwwroot/**/*.bundle.css
+**/wwwroot/**/dx-reporting-skeleton-screen.css
+**/wwwroot/**/*.bundle.js
+**/wwwroot/**/dxicons.ttf
+**/wwwroot/**/dxicons.woff
+**/wwwroot/**/dxicons.woff2
+**/wwwroot/**/dxiconsmaterial.ttf
+**/wwwroot/**/dxiconsmaterial.woff
+**/wwwroot/**/dxiconsmaterial.woff2
+**/wwwroot/lib/jquery/**/*
+**/wwwroot/lib/jquery/*
+**/ViewerStorages/

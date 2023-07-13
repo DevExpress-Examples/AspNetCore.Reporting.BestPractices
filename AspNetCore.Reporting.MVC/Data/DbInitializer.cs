@@ -1,10 +1,8 @@
-using System;
 using System.IO;
 using System.Linq;
 using AspNetCore.Reporting.Common.Data;
 using AspNetCore.Reporting.Common.Reports;
 using DevExpress.XtraReports.UI;
-using Microsoft.AspNetCore.Identity;
 
 namespace AspNetCore.Reporting.MVC.Data {
     public static class DbInitializer {

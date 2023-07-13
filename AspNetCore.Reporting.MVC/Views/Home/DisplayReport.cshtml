@@ -1,20 +1,18 @@
 @using DevExpress.AspNetCore
 
-@model AspNetCore.Reporting.Common.Models.ReportingControlModel
+@model AspNetCore.Reporting.MVC.Models.CustomViewerModel
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
-@functions{ public string GetAntiXsrfRequestToken() {
-                return Xsrf.GetAndStoreTokens(this.Context).RequestToken;
-            } }
+@functions {
+    public string GetAntiXsrfRequestToken() {
+        return Xsrf.GetAndStoreTokens(this.Context).RequestToken;
+    }
+}
 <script>
     function WebDocumentViewer_BeforeRender(s, e) {
         SetupJwt('bearer token can be passed here', "@GetAntiXsrfRequestToken()");
         $(window).on('beforeunload', function(e) {
             s.Close();
         });
-    }
-
-    function OnViewerExport(_s, e) {
-        AttachXSRFToken_OnExport(e, "@GetAntiXsrfRequestToken()");
     }
 
     function CustomizeLocalization(s, e) {
@@ -25,20 +23,22 @@
     }
 </script>
 <input type="hidden" id="RequestVerificationToken" name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
-@{ ViewData["Title"] = Model.Title;
-                var viewerRender = Html.DevExpress().WebDocumentViewer("DocumentViewer")
-                    .ClientSideEvents(x => {
-                        x.CustomizeLocalization("CustomizeLocalization");
-                        x.BeforeRender("WebDocumentViewer_BeforeRender");
-                        x.OnExport("OnViewerExport");
-                    })
-                    .ClientSideModelSettings(clientSide => {
-                        clientSide.IncludeLocalization = false;
-                    })
-                .Height("900px")
-                .HandlerUri("/DXXRDVMVC")
-                .Bind(Model.Id);
+@{
+    ViewData["Title"] = Model.Title;
+    var viewerRender = Html.DevExpress().WebDocumentViewer("DocumentViewer")
+        .ClientSideEvents(x => {
+            x.CustomizeLocalization("CustomizeLocalization");
+            x.BeforeRender("WebDocumentViewer_BeforeRender");
+        })
+        .ClientSideModelSettings(clientSide => {
+            clientSide.IncludeLocalization = false;
+            clientSide.IncludeCldrData = false;
+            clientSide.IncludeCldrSupplemental = false;
+        })
+    .Height("100%")
+    .Bind(Model.ViewerModel);
     @:@viewerRender.RenderHtml()
+
 }
 
 @section Scripts {

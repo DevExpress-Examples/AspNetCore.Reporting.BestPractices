@@ -9,7 +9,7 @@ namespace AspNetCore.Reporting.Common.Services.Reporting {
             this.logger = logger;
         }
         public override void Error(Exception exception, string message) {
-            var logMessage = $"[{DateTime.Now}]: Exception occurred. Message: '{message}'. Exception Details:\r\n{exception}";
+            var logMessage = $"[{DateTime.Now}]: Exception occurred. Message: '{message}'. Exception Details:{Environment.NewLine}{exception}";
             logger.LogError(logMessage);
         }
 
