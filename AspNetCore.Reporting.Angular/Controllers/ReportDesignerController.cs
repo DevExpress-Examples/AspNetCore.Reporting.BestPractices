@@ -1,6 +1,7 @@
 using System.Collections.Generic;
-using DevExpress.Compatibility.System.Web;
+using System.Net.Mime;
 using DevExpress.XtraReports.Web.ReportDesigner;
+using DevExpress.XtraReports.Web.ReportDesigner.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,15 +11,21 @@ namespace AspNetCore.Reporting.Common.Controllers {
     [Route("api/[controller]")]
     public class ReportDesignerSetupController : ControllerBase {
         [HttpPost("[action]")]
-        public object GetReportDesignerModel([FromForm] string reportUrl) {
+        public object GetReportDesignerModel([FromForm] string reportUrl,
+            [FromServices] IReportDesignerModelBuilder reportDesignerModel,
+            [FromServices] IReportDesignerClientSideModelGenerator modelGenerator) {
             Dictionary<string, object> dataSources = new Dictionary<string, object>();
             //Fill a data source set if needed
-            var modelGenerator = new ReportDesignerClientSideModelGenerator(HttpContext.RequestServices);
-            var model = modelGenerator.GetModel(reportUrl, dataSources, "/DXXRDAngular", "/DXXRDVAngular", "/DXXQBAngular");
-            model.ReportPreviewSettings.ExportSettings.UseAsynchronousExport = true;
-            model.ReportPreviewSettings.ExportSettings.UseSameTab = true;
-            string modelJsonScript = modelGenerator.GetJsonModelScript(model);
-            return new JavaScriptSerializer().Deserialize<object>(modelJsonScript);
+            reportDesignerModel
+                .Report(reportUrl)
+                .DataSources(dataSources)
+                .DesignerUri("/DXXRDAngular")
+                .ViewerUri("/DXXRDVAngular")
+                .QueryBuilderUri("/DXXQBAngular")
+                .BuildJsonModel();
+            var model = reportDesignerModel.BuildModel();
+            var modelJson = modelGenerator.GetJsonModelScript(model);
+            return Content(modelJson, MediaTypeNames.Application.Json);
         }
     }
 }

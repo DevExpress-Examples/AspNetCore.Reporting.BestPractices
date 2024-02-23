@@ -45,14 +45,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Reports\CourseListReport.cs">
-      <SubType>Component</SubType>
       <DependentUpon>CourseListReport.vsrepx</DependentUpon>
     </Compile>
     <Compile Update="Reports\CourseListReport.Designer.cs">
       <DependentUpon>CourseListReport.vsrepx</DependentUpon>
     </Compile>
     <Compile Update="Reports\MyEnrollmentsReport.cs">
-      <SubType>Component</SubType>
       <DependentUpon>MyEnrollmentsReport.vsrepx</DependentUpon>
     </Compile>
     <Compile Update="Reports\MyEnrollmentsReport.Designer.cs">
