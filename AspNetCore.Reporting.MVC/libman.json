@@ -3,6 +3,11 @@
   "defaultProvider": "filesystem",
   "libraries": [
     {
+      "library": "node_modules/ace-builds/css/",
+      "destination": "wwwroot/css/ace",
+      "files": [ "*.png", "*.svg"  ]
+    },
+    {
       "library": "node_modules/devextreme-dist/css/icons/",
       "destination": "wwwroot/css/icons",
       "files": [
