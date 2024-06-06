@@ -11,17 +11,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Database\nwind.db" />
-    <None Remove="Reports\CourseListReport.vsrepx" />
-    <None Remove="Reports\MyEnrollmentsReport.vsrepx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Database\nwind.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Reports\CourseListReport.vsrepx" />
-    <EmbeddedResource Include="Reports\MyEnrollmentsReport.vsrepx" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
@@ -35,21 +29,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AspNetCore.Reporting.Common\AspNetCore.Reporting.Common.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Reports\CourseListReport.cs">
-      <DependentUpon>CourseListReport.vsrepx</DependentUpon>
-    </Compile>
-    <Compile Update="Reports\CourseListReport.Designer.cs">
-      <DependentUpon>CourseListReport.vsrepx</DependentUpon>
-    </Compile>
-    <Compile Update="Reports\MyEnrollmentsReport.cs">
-      <SubType>Component</SubType>
-      <DependentUpon>MyEnrollmentsReport.vsrepx</DependentUpon>
-    </Compile>
-    <Compile Update="Reports\MyEnrollmentsReport.Designer.cs">
-      <DependentUpon>MyEnrollmentsReport.vsrepx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <Target Name="InstallJSDependencies" BeforeTargets="LibraryManagerRestore" Condition="!Exists('node_modules/')">
     <Exec Command="npm install" />

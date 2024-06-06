@@ -7,8 +7,8 @@ namespace AspNetCore.Reporting.Common.Reports {
         public Dictionary<string, Func<XtraReport>> Reports {
             get {
                 return new Dictionary<string, Func<XtraReport>>() {
-                    ["Enrollments"] = () => new MyEnrollmentsReport(),
-                    ["CourseList"] = () => new CourseListReport(),
+                    ["Enrollments"] = () => new MVC.Reports.MyEnrollmentsReport(),
+                    ["CourseList"] = () => new MVC.Reports.CourseListReport(),
                 };
             }
         }
