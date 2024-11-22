@@ -297,3 +297,4 @@ __pycache__/
 *.xsd.cs
 
 *.bak
+package-lock.json
