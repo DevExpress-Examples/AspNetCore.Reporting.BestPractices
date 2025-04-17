@@ -12,8 +12,8 @@ This **README** file describes best practices to follow when you develop a web a
 
 This repository also contains an example application that demonstrates the described techniques. This application is split into three projects:
 
-- [ASP.NetCore.Reporting.MVC](AspNetCore.Reporting.MVC) - An ASP.Net Core MVC application.
-- [ASP.NetCore.Reporting.Angular](AspNetCore.Reporting.Angular) - An ASP.Net Core application with an Angular frontend.
+- [ASP.NetCore.Reporting.MVC](AspNetCore.Reporting.MVC) - An ASP.NET Core MVC application.
+- [ASP.NetCore.Reporting.Angular](AspNetCore.Reporting.Angular) - An ASP.NET Core application with an Angular frontend.
 - [ASP.NetCore.Reporting.Common](AspNetCore.Reporting.Common) - Implements services and business logic for the MVC and Angular projects.
 
 You can use the example code in your web application and modify it for different scenarios.
