@@ -177,8 +177,8 @@ To prevent cross-site request forgery, DevExpress reporting controls use the sta
 
 ##### DevExpress Security Best Practices:
 
-- [ASP.NET WebForms - Preventing Cross-Site Request Forgery (CSRF)](https://github.com/DevExpress/aspnet-security-bestpractices/tree/master/SecurityBestPractices.WebForms#4-preventing-cross-site-request-forgery-csrf)
-- [ASP.NET MVC - Preventing Cross-Site Request Forgery (CSRF)](https://github.com/DevExpress/aspnet-security-bestpractices/tree/master/SecurityBestPractices.Mvc#4-preventing-cross-site-request-forgery-csrf)
+- [ASP.NET WebForms - Preventing Cross-Site Request Forgery (CSRF)](https://docs.devexpress.com/AspNet/404869/security-considerations/prevent-csrf)
+- [ASP.NET MVC - Preventing Cross-Site Request Forgery (CSRF)](https://docs.devexpress.com/AspNetMvc/405006/security-considerations/prevent-csrf)
 
 The following code samples demonstrate how to apply antiforgery request validation on the Document Viewer's and Report Designer's controller actions.
 
