@@ -54,14 +54,14 @@ To run the example application, you need to install packages from the DevExpress
 - For the **ASP.NET Core MVC** project, run `npm install` in the project's root folder.
 - For the **Angular** project, navigate to the **ClientApp** directory and run `npm install`.
 
-### Start the Application
-
 > **Note:** If you change the version of DevExpress NuGet packages used in the example application, make sure you also specify the matching minor versions for DevExpress client libraries in the **package.json** file.
+
+### Start the Application
 
 Press the **Run** button or F5 to run the example application.
 
 
-![Best Pracices for Web Reporting App](Images/screenshot.png)
+![Best Practices for Web Reporting App](Images/screenshot.png)
 
 ## Switch to Asynchronous Mode
 
@@ -105,9 +105,10 @@ To optimize memory consumption, use the following techniques:
     [DisplayReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml#L9)
     ```js
     function WebDocumentViewer_BeforeRender(s, e) {
-    $(window).on('beforeunload', function(e) {
-        s.Close();
-    });
+        $(window).on('beforeunload', function(e) {
+            s.Close();
+        });
+    }
     ```
 
 - Configure Storage and Cache cleaners on application startup. This allows you to specify how long you want to reserve resources to store document data on the server. Note that after a document's data is removed for the Storage and Cache, you cannot navigate or print this document.
