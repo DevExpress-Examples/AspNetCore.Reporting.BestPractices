@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using AspNetCore.Reporting.Angular.Data;
 using AspNetCore.Reporting.Common.Models;
 

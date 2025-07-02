@@ -1,22 +1,15 @@
-using System;
 using AspNetCore.Reporting.Angular.Data;
-using AspNetCore.Reporting.Angular.Server.Services;
 using AspNetCore.Reporting.Common.Data;
 using AspNetCore.Reporting.Common.Reports;
 using AspNetCore.Reporting.Common.Services;
 using AspNetCore.Reporting.Common.Services.Reporting;
 using DevExpress.AspNetCore;
 using DevExpress.AspNetCore.Reporting;
-using DevExpress.Security.Resources;
 using DevExpress.Utils;
 using DevExpress.XtraReports.Web.Extensions;
-using Duende.IdentityServer.EntityFramework.DbContexts;
-using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,7 +33,7 @@ builder.Services.AddControllersWithViews().AddNewtonsoftJson();
 builder.Services.AddRazorPages();
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowFrontendDev", policy => {
-        policy.WithOrigins("https://localhost:4200")
+        policy.WithOrigins(builder.Configuration.GetSection("IdentityServer:Clients:AspNetCore.Reporting.Angular.Client:AllowedCorsOrigins").Get<string[]>())
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();

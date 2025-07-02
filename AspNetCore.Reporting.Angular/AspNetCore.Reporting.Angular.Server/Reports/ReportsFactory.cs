@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using DevExpress.XtraReports.UI;
 
 namespace AspNetCore.Reporting.Common.Reports {

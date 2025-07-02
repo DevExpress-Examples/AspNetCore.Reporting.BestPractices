@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AspNetCore.Reporting.Angular.Data;
 using AspNetCore.Reporting.Common.Models;
 using AspNetCore.Reporting.Common.Services;

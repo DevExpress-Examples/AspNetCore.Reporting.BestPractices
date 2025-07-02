@@ -13,8 +13,6 @@ namespace AspNetCore.Reporting.Common.Controllers {
     public class AngularWebDocumentViewerController : WebDocumentViewerController {
         public AngularWebDocumentViewerController(IWebDocumentViewerMvcControllerService controllerService) : base(controllerService) {
         }
-
-
     }
 
     [Authorize]
@@ -24,7 +22,7 @@ namespace AspNetCore.Reporting.Common.Controllers {
         }
     }
 
-    
+
     [Route("DXXRDAngular")]
     [Authorize]
     public class AngularReportDesignerController : ReportDesignerController {

@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using DevExpress.DataAccess.Web;
 
 namespace AspNetCore.Reporting.Common.Services {
