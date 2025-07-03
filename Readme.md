@@ -283,7 +283,8 @@ Review the project's [Views/Home/DesignReport.cshtml](AspNetCore.Reporting.MVC/V
 
 The following code snippet shows how to pass the access token in an Angular application:
 
-[report-viewer.ts](/AspNetCore.Reporting.Angular/AspNetCore.Reporting.Angular.Client/src/app/reportviewer/report-viewer.ts#L30-L40)
+[report-viewer.ts](AspNetCore.Reporting.Angular/AspNetCore.Reporting.Angular.Client/src/app/reportviewer/report-viewer.ts#L30-L40)
+
 
 ```typescript
 import { AuthorizeService } from '../../api-authorization/authorize.service';
