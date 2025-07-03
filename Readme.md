@@ -12,9 +12,9 @@ This **README** file describes best practices to follow when you develop a web a
 
 This repository also contains an example application that demonstrates the described techniques. This application is split into three projects:
 
-- [ASP.NetCore.Reporting.MVC](AspNetCore.Reporting.MVC) - An ASP.NET Core MVC application.
-- [ASP.NetCore.Reporting.Angular](AspNetCore.Reporting.Angular) - An ASP.NET Core application with an Angular frontend.
-- [ASP.NetCore.Reporting.Common](AspNetCore.Reporting.Common) - Implements services and business logic for the MVC and Angular projects.
+- [AspNetCore.Reporting.MVC](AspNetCore.Reporting.MVC) - An ASP.NET Core MVC application.
+- [AspNetCore.Reporting.Angular](AspNetCore.Reporting.Angular) - An application with ASP.NET Core backend and Angular frontend.
+- [AspNetCore.Reporting.Common](AspNetCore.Reporting.Common) - Implements services and business logic for the MVC and Angular projects.
 
 You can use the example code in your web application and modify it for different scenarios.
 
@@ -52,14 +52,13 @@ To run the example application, you need to install packages from the DevExpress
 ### Install NPM Dependencies
 
 - For the **ASP.NET Core MVC** project, run `npm install` in the project's root folder.
-- For the **Angular** project, navigate to the **ClientApp** directory and run `npm install`.
+- For the **Angular** project, navigate to the *AspNetCore.Reporting.Angular.Client* directory and run `npm install`.
 
-> **Note:** If you change the version of DevExpress NuGet packages used in the example application, make sure you also specify the matching minor versions for DevExpress client libraries in the **package.json** file.
+> **Note:** If you change the version of DevExpress NuGet packages used in the example application, make sure you also specify the matching minor versions for DevExpress client libraries in the *package.json* file.
 
 ### Start the Application
 
 Press the **Run** button or F5 to run the example application.
-
 
 ![Best Practices for Web Reporting App](Images/screenshot.png)
 
@@ -115,7 +114,6 @@ To optimize memory consumption, use the following techniques:
 
     [ServiceRegistrator.cs](AspNetCore.Reporting.Common/Services/ServiceRegistrator.cs#L17-L21)
 
-
     ```csharp
     var cacheCleanerSettings = new CacheCleanerSettings(TimeSpan.FromMinutes(1), TimeSpan.FromSeconds(30), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2));
     services.AddSingleton<CacheCleanerSettings>(cacheCleanerSettings);
@@ -124,7 +122,7 @@ To optimize memory consumption, use the following techniques:
     services.AddSingleton<StorageCleanerSettings>(storageCleanerSettings);
     ```
 
-  > Keep in mind that .NET is a managed environment, so data saved to the disk storage and removed from cache remains in memory until .NET runs garbage collection. Refer to the [Fundamentals of garbage collection](https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals) article for more information.
+> Keep in mind that .NET is a managed environment, so data saved to the disk storage and removed from cache remains in memory until .NET runs garbage collection. Refer to the [Fundamentals of garbage collection](https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/fundamentals) article for more information.
 
 ## Manage Database Connections
 
@@ -285,7 +283,8 @@ Review the project's [Views/Home/DesignReport.cshtml](AspNetCore.Reporting.MVC/V
 
 The following code snippet shows how to pass the access token in an Angular application:
 
-[report-viewer.ts](AspNetCore.Reporting.Angular/ClientApp/src/app/reportviewer/report-viewer.ts#L30-L48)
+[report-viewer.ts](AspNetCore.Reporting.Angular/AspNetCore.Reporting.Angular.Client/src/app/reportviewer/report-viewer.ts#L30-L40)
+
 
 ```typescript
 import { AuthorizeService } from '../../api-authorization/authorize.service';
@@ -305,7 +304,8 @@ import { AuthorizeService } from '../../api-authorization/authorize.service';
   }
   // ...
 ```
-Review the report viewer's files ([report-viewer.html](AspNetCore.Reporting.Angular/ClientApp/src/app/reportviewer/report-viewer.html) and [report-viewer.ts](AspNetCore.Reporting.Angular/ClientApp/src/app/reportviewer/report-viewer.ts)) or the report designer's files ([report-designer.html](AspNetCore.Reporting.Angular/ClientApp/src/app/reportdesigner/report-designer.html) and [report-designer.ts](AspNetCore.Reporting.Angular/ClientApp/src/app/reportdesigner/report-designer.ts)) for the full code.
+Review the report viewer's files ([report-viewer.html](AspNetCore.Reporting.Angular/AspNetCore.Reporting.Angular.Client//src/app/reportviewer/report-viewer.html) and [report-viewer.ts](AspNetCore.Reporting.Angular/AspNetCore.Reporting.Angular.Client/src/app/reportviewer/report-viewer.ts)) or the report designer's files ([report-designer.html](AspNetCore.Reporting.Angular/AspNetCore.Reporting.Angular.Client/src/app/reportdesigner/report-designer.html) and [report-designer.ts](AspNetCore.Reporting.Angular/AspNetCore.Reporting.Angular.Client/src/app/reportdesigner/report-designer.ts)) for the full code.
+
 ### Implement User Authorization
 
 To authorize a user and restrict access to reports based on arbitrary logic, implement and register an [IWebDocumentViewerAuthorizationService](https://docs.devexpress.com/XtraReports/DevExpress.XtraReports.Web.WebDocumentViewer.IWebDocumentViewerAuthorizationService) with [WebDocumentViewerOperationLogger](https://docs.devexpress.com/XtraReports/DevExpress.XtraReports.Web.WebDocumentViewer.WebDocumentViewerOperationLogger).
