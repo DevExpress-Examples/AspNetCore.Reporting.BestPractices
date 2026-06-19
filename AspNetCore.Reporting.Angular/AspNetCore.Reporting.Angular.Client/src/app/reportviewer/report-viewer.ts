@@ -5,15 +5,16 @@ import * as ko from 'knockout';
 import { AuthorizeService } from '../../api-authorization/authorize.service';
 
 @Component({
-  selector: 'report-viewer',
-  encapsulation: ViewEncapsulation.None,
-  templateUrl: './report-viewer.html',
-  styleUrls: [
-    "../../../node_modules/devextreme/dist/css/dx.material.blue.light.css",
-    "../../../node_modules/@devexpress/analytics-core/dist/css/dx-analytics.common.css",
-    "../../../node_modules/@devexpress/analytics-core/dist/css/dx-analytics.material.blue.light.css",
-    "../../../node_modules/devexpress-reporting/dist/css/dx-webdocumentviewer.css"
-  ]
+    selector: 'report-viewer',
+    encapsulation: ViewEncapsulation.None,
+    templateUrl: './report-viewer.html',
+    styleUrls: [
+        "../../../node_modules/devextreme/dist/css/dx.material.blue.light.css",
+        "../../../node_modules/@devexpress/analytics-core/dist/css/dx-analytics.common.css",
+        "../../../node_modules/@devexpress/analytics-core/dist/css/dx-analytics.material.blue.light.css",
+        "../../../node_modules/devexpress-reporting/dist/css/dx-webdocumentviewer.css"
+    ],
+    standalone: false
 })
 export class ReportViewerComponent implements OnInit {
   get reportUrl() {

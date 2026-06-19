@@ -3,8 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 
 @Component({
-  selector: 'report-list-component',
-  templateUrl: './report.list.component.html'
+    selector: 'report-list-component',
+    templateUrl: './report.list.component.html',
+    standalone: false
 })
 export class ReportListComponent {
   reportList?: ReportItem[];

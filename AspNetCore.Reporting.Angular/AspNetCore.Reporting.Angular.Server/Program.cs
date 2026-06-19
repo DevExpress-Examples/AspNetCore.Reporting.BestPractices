@@ -69,7 +69,6 @@ using(var scope = app.Services.CreateScope()) {
         logger.LogError(exception, "An error occurred while seeding the database.");
     }
 }
-app.UseDevExpressControls();
 if(app.Environment.IsDevelopment()) {
     app.UseDeveloperExceptionPage();
 } else {
@@ -81,11 +80,11 @@ if(app.Environment.IsDevelopment()) {
 //var contentDirectoryAllowRule = DirectoryAccessRule.Allow(new DirectoryInfo(Path.Combine(app.Environment.ContentRootPath, "Content")).FullName);
 //AccessSettings.ReportingSpecificResources.SetRules(contentDirectoryAllowRule, UrlAccessRule.Allow());
 
+app.UseDevExpressControls();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseCors("AllowFrontendDev");
 app.UseRouting();
-app.UseDevExpressControls();
 app.UseAuthentication();
 app.UseIdentityServer();
 app.UseAuthorization();

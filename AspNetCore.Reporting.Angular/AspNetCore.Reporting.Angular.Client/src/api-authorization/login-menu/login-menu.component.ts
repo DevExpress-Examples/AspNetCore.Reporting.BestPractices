@@ -4,9 +4,10 @@ import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-login-menu',
-  templateUrl: './login-menu.component.html',
-  styleUrls: ['./login-menu.component.css']
+    selector: 'app-login-menu',
+    templateUrl: './login-menu.component.html',
+    styleUrls: ['./login-menu.component.css'],
+    standalone: false
 })
 export class LoginMenuComponent implements OnInit {
   public isAuthenticated!: Observable<boolean>;

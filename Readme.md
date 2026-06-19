@@ -44,10 +44,7 @@ Follow the steps below to run the example application in Microsoft Visual Studio
 
 ### Configure NuGet
 
-To run the example application, you need to install packages from the DevExpress NuGet feed. Use the following steps to configure NuGet:
-
-1. [Obtain Your NuGet Feed URL](https://docs.devexpress.com/GeneralInformation/116042/installation/install-devexpress-controls-using-nuget-packages/obtain-your-nuget-feed-url)
-2. [Register the NuGet feed as a package sources](https://docs.devexpress.com/GeneralInformation/116698/installation/install-devexpress-controls-using-nuget-packages/setup-visual-studios-nuget-package-manager)
+To run the example application, install packages from nuget.org. Fro additional information, refer to the following topic: [Install DevExpress NuGet Products](https://docs.devexpress.com/GeneralInformation/116042/nuget/obtain-your-nuget-feed-credentials).
 
 ### Install NPM Dependencies
 
@@ -101,7 +98,7 @@ To optimize memory consumption, use the following techniques:
 
 - To allow users to close a page or a UI region (for example, a pop-up window) that displays the Document Viewer, you should first call the Document Viewer's client-side [Close](https://docs.devexpress.com/XtraReports/js-DevExpress.Reporting.Viewer.JSReportViewer?p=netframework#js_devexpress_reporting_viewer_jsreportviewer_close) method to close the viewed report and release the server resources (the Storage space and Cache):
 
-    [DisplayReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml#L9)
+    [DisplayReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml#L11)
     ```js
     function WebDocumentViewer_BeforeRender(s, e) {
         $(window).on('beforeunload', function(e) {
@@ -145,19 +142,15 @@ public DataConnectionParametersBase GetDataConnectionParameters(string name) {
 
 In the [IConnectionProviderService](https://docs.devexpress.com/CoreLibraries/DevExpress.DataAccess.Wizard.Services.IConnectionProviderService) interface returned by the IConnectionProviderFactory, initialize and return the connection.
 
-[CustomSqlDataConnectionProviderFactory.cs](AspNetCore.Reporting.Common/Services/Reporting/CustomSqlDataConnectionProviderFactory.cs#L31-L42)
+[CustomSqlDataConnectionProviderFactory.cs](AspNetCore.Reporting.Common/Services/Reporting/CustomSqlDataConnectionProviderFactory.cs#L31-L38)
 
 ```csharp
 public SqlDataConnection LoadConnection(string connectionName) {
     var connectionStringSection = configuration.GetSection("ReportingDataConnectionStrings");
-    var connectionString = connectionStringSection?.GetValue<string>(connectionName);
-    var connectionStringInfo = new ConnectionStringInfo { RunTimeConnectionString = connectionString, ProviderName = "SQLite" };
-    DataConnectionParametersBase connectionParameters;
-    if(string.IsNullOrEmpty(connectionString)
-        || !AppConfigHelper.TryCreateSqlConnectionParameters(connectionStringInfo, out connectionParameters)
-        || connectionParameters == null) {
+    var connectionString = connectionStringSection?[connectionName];
+    if (string.IsNullOrEmpty(connectionString))
         throw new KeyNotFoundException($"Connection string '{connectionName}' not found.");
-    }
+    var connectionParameters = new CustomStringConnectionParameters(connectionString);
     return new SqlDataConnection(connectionName, connectionParameters);
 }
 ```
@@ -186,6 +179,8 @@ The following code samples demonstrate how to apply antiforgery request validati
 [CustomMVCReportingControllers.cs](AspNetCore.Reporting.MVC/Controllers/CustomMVCReportingControllers.cs#L14-L22)
 
 ```csharp
+[Authorize]
+[Route("DXXRDVMVC")]
 [AutoValidateAntiforgeryToken]
 public class CustomMVCWebDocumentViewerController : WebDocumentViewerController {
     public CustomMVCWebDocumentViewerController(IWebDocumentViewerMvcControllerService controllerService) : base(controllerService) {
@@ -203,6 +198,8 @@ public class CustomMVCWebDocumentViewerController : WebDocumentViewerController 
 
 
 ```cs
+[Authorize]
+[Route("DXXQBMVC")]
 [AutoValidateAntiforgeryToken]
 public class CustomMVCQueryBuilderController : QueryBuilderController {
     public CustomMVCQueryBuilderController(IQueryBuilderMvcControllerService controllerService) : base(controllerService) {
@@ -213,6 +210,8 @@ public class CustomMVCQueryBuilderController : QueryBuilderController {
 }
 
 
+[Authorize]
+[Route("DXXRDMVC")]
 [AutoValidateAntiforgeryToken]
 public class CustomMVCReportDesignerController : ReportDesignerController {
     public CustomMVCReportDesignerController(IReportDesignerMvcControllerService controllerService) : base(controllerService) {
@@ -240,7 +239,7 @@ function SetupJwt(bearerToken, xsrf) {
 }
 ```
 
-[DisplayReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml#L5-L7)
+[DisplayReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml#L4-L9)
 
 ```cshtml
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
@@ -249,7 +248,7 @@ function SetupJwt(bearerToken, xsrf) {
             } }
 ```
 
-[DisplayReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml#L9-L18)
+[DisplayReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml#L11-L16)
 
 
 ```js
@@ -260,7 +259,7 @@ function WebDocumentViewer_BeforeRender(s, e) {
     });
 }
 ```
-[DisplayReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml#L33)
+[DisplayReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DisplayReport.cshtml#L25)
 
 ```html
 <input type="hidden" id="RequestVerificationToken" name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
@@ -270,9 +269,8 @@ function WebDocumentViewer_BeforeRender(s, e) {
             x.BeforeRender("WebDocumentViewer_BeforeRender");
         })
     // ...
-    .Height("900px")
-    .HandlerUri("/DXXRDVMVC")
-    .Bind(Model.Id);
+    .Height("100%")
+    .Bind(Model.ViewerModel);
     @:@viewerRender.RenderHtml()
 }
 ```
@@ -283,7 +281,7 @@ Review the project's [Views/Home/DesignReport.cshtml](AspNetCore.Reporting.MVC/V
 
 The following code snippet shows how to pass the access token in an Angular application:
 
-[report-viewer.ts](AspNetCore.Reporting.Angular/AspNetCore.Reporting.Angular.Client/src/app/reportviewer/report-viewer.ts#L30-L40)
+[report-viewer.ts](AspNetCore.Reporting.Angular/AspNetCore.Reporting.Angular.Client/src/app/reportviewer/report-viewer.ts#L32-L41)
 
 
 ```typescript
@@ -353,7 +351,6 @@ class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWe
 
     }
 
-    #region IWebDocumentViewerAuthorizationService
     public bool CanCreateDocument() {
         return true;
     }
@@ -381,13 +378,12 @@ class DocumentViewerAuthorizationService : WebDocumentViewerOperationLogger, IWe
     public bool CanReadExportedDocument(string exportedDocumentId) {
         return ExportedDocumentIdOwnerMap.TryGetValue(exportedDocumentId, out var ownerId) && ownerId == UserService.GetCurrentUserId();
     }
-    #endregion
 }
 ```
 
 Register your authorization service implementation at application startup. In this example the `ConfigureServices` method uses a custom `ServiceRegistrator` class to register services specific to web reporting.
 
-[Startup.cs](AspNetCore.Reporting.MVC/Startup.cs#L47):
+[Startup.cs](AspNetCore.Reporting.MVC/Startup.cs#L56):
 
 ```cs
 public class Startup {
@@ -402,7 +398,7 @@ public class Startup {
 [ServiceRegistrator.cs](AspNetCore.Reporting.Common/Services/ServiceRegistrator.cs#L46-L48):
 ```cs
 public class ServiceRegistrator {
-    public static IServiceCollection AddCommonServices(IServiceCollection services) {
+    public static IServiceCollection AddCommonServices(IServiceCollection services, string contentRootPath) {
         // ...
         services.AddScoped<IWebDocumentViewerAuthorizationService, DocumentViewerAuthorizationService>();
         services.AddScoped<IExportingAuthorizationService, DocumentViewerAuthorizationService>();
@@ -432,7 +428,7 @@ public class ReportingLoggerService: LoggerService {
         this.logger = logger;
     }
     public override void Error(Exception exception, string message) {
-        var logMessage = $"[{DateTime.Now}]: Exception occurred. Message: '{message}'. Exception Details:\r\n{exception}";
+        var logMessage = $"[{DateTime.Now}]: Exception occurred. Message: '{message}'. Exception Details:{Environment.NewLine}{exception}";
         logger.LogError(logMessage);
     }
 
@@ -442,12 +438,12 @@ public class ReportingLoggerService: LoggerService {
 }
 ```
 
-##### Register the Logger in **Startup.cs**
+##### Register the Logger
 
-[Startup.cs](AspNetCore.Reporting.MVC/Startup.cs#L70):
+Call `LoggerService.Initialize` at application startup and pass the logger factory obtained from the DI container:
 
 ```cs
-LoggerService.Initialize(new CustomReportingLoggerService(loggerFactory.CreateLogger("DXReporting")));
+LoggerService.Initialize(new ReportingLoggerService(loggerFactory.CreateLogger("DXReporting")));
 ```
 
 ### Use Custom Exception Handlers
@@ -507,8 +503,9 @@ In a view, add the `dx-reporting-skeleton-screen.css` file from the **devexpress
 
 ```cs
 @{
-    var designerRender = Html.DevExpress().ReportDesigner("ReportDesigner").Height("800px").Bind(Model.Id);//you can set another options here
-    @:@designerRender.GetHtml()
+    var designerRender = Html.DevExpress().ReportDesigner("ReportDesigner").Height("100%");//you can set other options here
+    designerRender.Bind(Model.DesignerModel);
+    @:@designerRender.RenderHtml()
 }
 
 ...
@@ -535,7 +532,7 @@ To localize DevExpress reporting controls, go to [localization.devexpress.com](h
 
 1. In the client `CustomizeLocalization` event, load the localization JSON files:
 
-[DesignReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml#L27-L32)
+[DesignReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml#L25-L30)
 
 ```js
 function CustomizeLocalization(s, e){
@@ -549,7 +546,7 @@ function CustomizeLocalization(s, e){
 
 2. Set the `IncludeLocalization` option to `false` to disable automatic attachment of the localization dictionary:
 
-[DesignReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml#L44-L46):
+[DesignReport.cshtml](AspNetCore.Reporting.MVC/Views/Home/DesignReport.cshtml#L40-L43):
 
 ```cs
     Html.DevExpress().ReportDesigner("ReportDesigner")

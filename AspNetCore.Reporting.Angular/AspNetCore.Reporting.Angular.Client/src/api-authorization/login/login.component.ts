@@ -10,9 +10,10 @@ import { environment } from '../../environments/environment';
 // a user can simply perform a redirect to this component with a returnUrl query parameter and
 // let the component perform the login and return back to the return url.
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.css'],
+    standalone: false
 })
 export class LoginComponent implements OnInit {
   public message = new BehaviorSubject<string | null>(null);
