@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { fetchSetup } from '@devexpress/analytics-core/analytics-utils';
 import * as ko from 'knockout';
 import { AuthorizeService } from '../../api-authorization/authorize.service';
+import { DxReportViewerModule, DxReportDesignerModule } from 'devexpress-reporting-angular';
 
 @Component({
     selector: 'report-viewer',
@@ -14,7 +15,8 @@ import { AuthorizeService } from '../../api-authorization/authorize.service';
         "../../../node_modules/@devexpress/analytics-core/dist/css/dx-analytics.material.blue.light.css",
         "../../../node_modules/devexpress-reporting/dist/css/dx-webdocumentviewer.css"
     ],
-    standalone: false
+    standalone: true,
+    imports: [DxReportViewerModule, DxReportDesignerModule]
 })
 export class ReportViewerComponent implements OnInit {
   get reportUrl() {

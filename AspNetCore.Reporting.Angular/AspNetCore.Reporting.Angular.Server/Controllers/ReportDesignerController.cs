@@ -18,9 +18,9 @@ namespace AspNetCore.Reporting.Common.Controllers {
             reportDesignerModel
                 .Report(reportUrl)
                 .DataSources(dataSources)
-                .DesignerUri("/DXXRDAngular")
-                .ViewerUri("/DXXRDVAngular")
-                .QueryBuilderUri("/DXXQBAngular")
+                .DesignerUri("DXXRDAngular")
+                .ViewerUri("DXXRDVAngular")
+                .QueryBuilderUri("DXXQBAngular")
                 .BuildJsonModel();
             var model = reportDesignerModel.BuildModel();
             var modelJson = modelGenerator.GetJsonModelScript(model);

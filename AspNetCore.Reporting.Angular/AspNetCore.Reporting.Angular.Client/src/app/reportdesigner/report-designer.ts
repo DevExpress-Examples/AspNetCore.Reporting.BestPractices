@@ -1,9 +1,10 @@
 import { fetchSetup } from "@devexpress/analytics-core/analytics-utils"
-import { Component, Inject, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { environment } from "../../environments/environment";
 import { AuthorizeService } from '../../api-authorization/authorize.service';
 import * as ko from 'knockout';
 import { ActivatedRoute } from '@angular/router';
-import { environment } from "../../environments/environment";
+import { DxReportDesignerModule, DxReportViewerModule } from "devexpress-reporting-angular";
 
 @Component({
     selector: 'report-designer',
@@ -19,7 +20,8 @@ import { environment } from "../../environments/environment";
         "../../../node_modules/devexpress-reporting/dist/css/dx-webdocumentviewer.css",
         "../../../node_modules/devexpress-reporting/dist/css/dx-reportdesigner.css"
     ],
-    standalone: false
+    standalone: true,
+    imports: [DxReportDesignerModule, DxReportViewerModule]
 })
 
 export class ReportDesignerComponent implements OnInit {
