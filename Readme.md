@@ -44,7 +44,7 @@ Follow the steps below to run the example application in Microsoft Visual Studio
 
 ### Configure NuGet
 
-To run the example application, install packages from nuget.org. Fro additional information, refer to the following topic: [Install DevExpress NuGet Products](https://docs.devexpress.com/GeneralInformation/116042/nuget/obtain-your-nuget-feed-credentials).
+To run the example application, install packages from nuget.org. For additional information, refer to the following topic: [Install DevExpress NuGet Products](https://docs.devexpress.com/GeneralInformation/116042/nuget/obtain-your-nuget-feed-credentials).
 
 ### Install NPM Dependencies
 
@@ -79,7 +79,7 @@ If a reporting control is bound to a report instance or a string (report name), 
 
 This section describes how to optimize a reporting application's memory consumption, and prevent memory leaks and cluttering on the server.
 
-> Refer to the [Document Viewer Lifecycle](https://docs.devexpress.com/XtraReports/401587/web-reporting/general-information/document-viewer-lifecycle) for information oh how the Document Viewer stores report data on different lifecycle stages.
+> Refer to the [Document Viewer Lifecycle](https://docs.devexpress.com/XtraReports/401587/web-reporting/general-information/document-viewer-lifecycle) for information on how the Document Viewer stores report data on different lifecycle stages.
 
 To optimize memory consumption, use the following techniques:
 
