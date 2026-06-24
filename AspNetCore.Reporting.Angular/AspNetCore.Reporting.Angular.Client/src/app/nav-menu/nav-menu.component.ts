@@ -1,23 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { LoginMenuComponent } from '../../api-authorization/login-menu/login-menu.component';
-import { NgClass } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
     selector: 'app-nav-menu',
     templateUrl: './nav-menu.component.html',
     styleUrls: ['./nav-menu.component.css'],
-    standalone: true,
-    imports: [RouterLink, NgClass, LoginMenuComponent, RouterLinkActive]
+    imports: [RouterLink, LoginMenuComponent, RouterLinkActive]
 })
 export class NavMenuComponent {
-  isExpanded = false;
+  protected readonly isExpanded = signal(false);
 
   collapse() {
-    this.isExpanded = false;
+    this.isExpanded.set(false);
   }
 
   toggle() {
-    this.isExpanded = !this.isExpanded;
+    this.isExpanded.update(value => !value);
   }
 }

@@ -13,7 +13,6 @@ import { AsyncPipe } from '@angular/common';
     selector: 'app-logout',
     templateUrl: './logout.component.html',
     styleUrls: ['./logout.component.css'],
-    standalone: true,
     imports: [AsyncPipe]
 })
 export class LogoutComponent implements OnInit {

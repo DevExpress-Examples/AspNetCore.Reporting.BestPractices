@@ -1,14 +1,12 @@
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { NgFor } from '@angular/common';
 
 @Component({
     selector: 'report-list-component',
     templateUrl: './report.list.component.html',
-    standalone: true,
-    imports: [NgFor, RouterLink, RouterLinkActive]
+    imports: [RouterLink, RouterLinkActive]
 })
 export class ReportListComponent {
   reportList?: ReportItem[];

@@ -14,7 +14,6 @@ import { AsyncPipe } from '@angular/common';
     selector: 'app-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.css'],
-    standalone: true,
     imports: [AsyncPipe]
 })
 export class LoginComponent implements OnInit {
