@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User, UserManager} from 'oidc-client';
+import { User, UserManager } from 'oidc-client-ts';
 import { BehaviorSubject, concat, from, Observable } from 'rxjs';
 import { filter, map, mergeMap, take, tap } from 'rxjs/operators';
 import { ApplicationPaths, ApplicationName } from './api-authorization.constants';
@@ -73,7 +73,7 @@ export class AuthorizeService {
     let user: User | null = null;
     try {
       user = await this.userManager.signinSilent(this.createArguments());
-      this.userSubject.next(user.profile);
+      this.userSubject.next((user?.profile as IUser | null) ?? null);
       return this.success(state);
     } catch (silentError) {
       // User might not be authenticated, fallback to popup authentication
@@ -110,7 +110,7 @@ export class AuthorizeService {
     try {
       await this.ensureUserManagerInitialized();
       const user = await this.userManager.signinCallback(url);
-      this.userSubject.next(user && user.profile);
+      this.userSubject.next((user?.profile as IUser | null) ?? null);
       return this.success(user && user.state);
     } catch (error) {
       console.log('There was an error signing in: ', error);
