@@ -1,9 +1,9 @@
 import { fetchSetup } from "@devexpress/analytics-core/analytics-utils"
-import { Component, Inject, ViewEncapsulation, OnInit } from '@angular/core';
-import { AuthorizeService } from '../../api-authorization/authorize.service';
-import * as ko from 'knockout';
-import { ActivatedRoute } from '@angular/router';
+import { Component, ViewEncapsulation, OnInit, signal } from '@angular/core';
 import { environment } from "../../environments/environment";
+import { AuthorizeService } from '../../api-authorization/authorize.service';
+import { ActivatedRoute } from '@angular/router';
+import { DxReportDesignerModule, DxReportViewerModule } from "devexpress-reporting-angular";
 
 @Component({
     selector: 'report-designer',
@@ -19,19 +19,13 @@ import { environment } from "../../environments/environment";
         "../../../node_modules/devexpress-reporting/dist/css/dx-webdocumentviewer.css",
         "../../../node_modules/devexpress-reporting/dist/css/dx-reportdesigner.css"
     ],
-    standalone: false
+    imports: [DxReportDesignerModule, DxReportViewerModule]
 })
 
 export class ReportDesignerComponent implements OnInit {
   getDesignerModelAction = "api/ReportDesignerSetup/GetReportDesignerModel";
   hostUrl = environment.serverUri;
-  get reportUrl() {
-    return this.koReportUrl();
-  };
-  set reportUrl(newUrl) {
-    this.koReportUrl(newUrl);
-  }
-  koReportUrl = ko.observable('');
+  reportUrl = signal('');
 
   constructor(private authorize: AuthorizeService, private activateRoute: ActivatedRoute) {
     this.authorize.getAccessToken()
@@ -46,7 +40,7 @@ export class ReportDesignerComponent implements OnInit {
 
   ngOnInit() {
     if(this.activateRoute.snapshot.queryParams['reportId']) {
-      this.reportUrl = this.activateRoute.snapshot.queryParams['reportId'];
+      this.reportUrl.set(this.activateRoute.snapshot.queryParams['reportId']);
     }
   }
 }

@@ -1,8 +1,8 @@
-import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, OnInit, ViewEncapsulation, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { fetchSetup } from '@devexpress/analytics-core/analytics-utils';
-import * as ko from 'knockout';
 import { AuthorizeService } from '../../api-authorization/authorize.service';
+import { DxReportViewerModule, DxReportDesignerModule } from 'devexpress-reporting-angular';
 
 @Component({
     selector: 'report-viewer',
@@ -14,16 +14,10 @@ import { AuthorizeService } from '../../api-authorization/authorize.service';
         "../../../node_modules/@devexpress/analytics-core/dist/css/dx-analytics.material.blue.light.css",
         "../../../node_modules/devexpress-reporting/dist/css/dx-webdocumentviewer.css"
     ],
-    standalone: false
+    imports: [DxReportViewerModule, DxReportDesignerModule]
 })
 export class ReportViewerComponent implements OnInit {
-  get reportUrl() {
-    return this.koReportUrl();
-  };
-  set reportUrl(newUrl) {
-    this.koReportUrl(newUrl);
-  }
-  koReportUrl = ko.observable('');
+  reportUrl = signal('');
   invokeAction: string = '/DXXRDVAngular';
 
   useSameTabExport = true;
@@ -42,7 +36,7 @@ export class ReportViewerComponent implements OnInit {
 
   ngOnInit() {
     if(this.activateRoute.snapshot.queryParams['reportId']) {
-      this.reportUrl = this.activateRoute.snapshot.queryParams['reportId'];
+      this.reportUrl.set(this.activateRoute.snapshot.queryParams['reportId']);
     }
   }
 }
