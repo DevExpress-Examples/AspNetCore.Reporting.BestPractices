@@ -10,11 +10,13 @@
 
 This **README** file describes best practices to follow when you develop a web application with DevExpress reporting controls.
 
-This repository also contains an example application that demonstrates the described techniques. This application is split into three projects:
+This repository also contains an example application that demonstrates the described techniques. It includes:
 
 - [AspNetCore.Reporting.MVC](AspNetCore.Reporting.MVC) - An ASP.NET Core MVC application.
-- [AspNetCore.Reporting.Angular](AspNetCore.Reporting.Angular) - An application with ASP.NET Core backend and Angular frontend.
-- [AspNetCore.Reporting.Common](AspNetCore.Reporting.Common) - Implements services and business logic for the MVC and Angular projects.
+- [AspNetCore.Reporting.Angular](AspNetCore.Reporting.Angular) - A solution folder that contains:
+    - `AspNetCore.Reporting.Angular.Server` (ASP.NET Core backend)
+    - `AspNetCore.Reporting.Angular.Client` (Angular frontend)
+- [AspNetCore.Reporting.Common](AspNetCore.Reporting.Common) - Shared services and business logic used by the MVC and Angular server applications.
 
 You can use the example code in your web application and modify it for different scenarios.
 
@@ -46,6 +48,7 @@ Follow the steps below to run the example application in Microsoft Visual Studio
 
 To run the example application, install packages from nuget.org. For additional information, refer to the following topic: [Install DevExpress NuGet Products](https://docs.devexpress.com/GeneralInformation/116042/nuget/obtain-your-nuget-feed-credentials).
 
+
 ### Install NPM Dependencies
 
 - For the **ASP.NET Core MVC** project, run `npm install` in the project's root folder.
@@ -55,7 +58,17 @@ To run the example application, install packages from nuget.org. For additional 
 
 ### Start the Application
 
-Press the **Run** button or F5 to run the example application.
+This repository includes two runnable sample applications (MVC and Angular). Run one of them:
+
+- **ASP.NET Core MVC App**
+    - Open `AspNetCore.Reporting.MVC/AspNetCore.Reporting.MVC.sln`.
+    - Set `AspNetCore.Reporting.MVC` as the startup project.
+    - Press **Run** or `F5`.
+
+- **Angular App (Server + Client)**
+    - Open `AspNetCore.Reporting.Angular/AspNetCore.Reporting.Angular.sln`.
+    - Set `AspNetCore.Reporting.Angular.Server` as the startup project.
+    - Press **Run** or `F5`.
 
 ![Best Practices for Web Reporting App](Images/screenshot.png)
 
@@ -155,8 +168,7 @@ public SqlDataConnection LoadConnection(string connectionName) {
 }
 ```
 
-Register the implemented services in [Startup.cs](AspNetCore.Reporting.MVC/Startup.cs).
-
+Register the implemented services at application startup.
 ## Application Security
 
 ### Prevent Cross-Site Request Forgery
@@ -302,7 +314,7 @@ import { AuthorizeService } from '../../api-authorization/authorize.service';
   }
   // ...
 ```
-Review the report viewer's files ([report-viewer.html](AspNetCore.Reporting.Angular/AspNetCore.Reporting.Angular.Client//src/app/reportviewer/report-viewer.html) and [report-viewer.ts](AspNetCore.Reporting.Angular/AspNetCore.Reporting.Angular.Client/src/app/reportviewer/report-viewer.ts)) or the report designer's files ([report-designer.html](AspNetCore.Reporting.Angular/AspNetCore.Reporting.Angular.Client/src/app/reportdesigner/report-designer.html) and [report-designer.ts](AspNetCore.Reporting.Angular/AspNetCore.Reporting.Angular.Client/src/app/reportdesigner/report-designer.ts)) for the full code.
+Review the report viewer's files ([report-viewer.html](AspNetCore.Reporting.Angular/AspNetCore.Reporting.Angular.Client/src/app/reportviewer/report-viewer.html) and [report-viewer.ts](AspNetCore.Reporting.Angular/AspNetCore.Reporting.Angular.Client/src/app/reportviewer/report-viewer.ts)) or the report designer's files ([report-designer.html](AspNetCore.Reporting.Angular/AspNetCore.Reporting.Angular.Client/src/app/reportdesigner/report-designer.html) and [report-designer.ts](AspNetCore.Reporting.Angular/AspNetCore.Reporting.Angular.Client/src/app/reportdesigner/report-designer.ts)) for the full code.
 
 ### Implement User Authorization
 
@@ -528,7 +540,7 @@ Refer to the [Enable the Skeleton Screen](https://docs.devexpress.com/XtraReport
 
 DevExpress client reporting controls use the DevExtreme localization mechanism to localize the UI and messages.
 
-To localize DevExpress reporting controls, go to [localization.devexpress.com](https://localization.devexpress.com/), download the JSON files for the localization, and save them to the `locaization` folder within the application's `wwwroot` folder. After that, configure the view as described below:
+To localize DevExpress reporting controls, go to [localization.devexpress.com](https://localization.devexpress.com/), download the JSON files for the localization, and save them to the `localization` folder within the application's `wwwroot` folder. After that, configure the view as described below:
 
 1. In the client `CustomizeLocalization` event, load the localization JSON files:
 
