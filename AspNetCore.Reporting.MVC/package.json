@@ -4,9 +4,9 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@devexpress/analytics-core": "25.2-stable",
+    "@devexpress/analytics-core": "26.1.5",
     "bootstrap": "^4.3.1",
-    "devexpress-reporting": "25.2-stable",
-    "devextreme-dist": "25.2-stable"
+    "devexpress-reporting": "26.1.5",
+    "devextreme-dist": "26.1.5"
   }
 }
