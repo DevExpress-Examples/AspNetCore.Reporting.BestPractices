@@ -120,7 +120,7 @@ To optimize memory consumption, use the following techniques:
     }
     ```
 
-- Configure Storage and Cache cleaners on application startup. This allows you to specify how long you want to reserve resources to store document data on the server. Note that after a document's data is removed for the Storage and Cache, you cannot navigate or print this document.
+- Configure Storage and Cache cleaners at application startup. This lets you specify how long document data is stored on the server. Once a document's data is removed from Storage and Cache, you cannot navigate or print the document.
 
     [ServiceRegistrator.cs](AspNetCore.Reporting.Common/Services/ServiceRegistrator.cs#L17-L21)
 
@@ -429,7 +429,7 @@ This document section describes the best practices that you should follow when y
 
 DevExpress reporting components write log messages through the standard [Microsoft.Extensions.Logging](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/) API. Messages go to the logging providers registered in the application. To save errors to a file or database, register a logging provider that writes to that storage.
 
-Use the **DevExpress** log category to configure which messages are logged. The following *appsettings.json* configuration logs DevExpress messages with the **Information** level and higher:
+Use the **DevExpress** log category to configure which messages are logged. The following *appsettings.json* configuration logs DevExpress messages at the **Information** level and higher:
 
 ```json
 "Logging": {
