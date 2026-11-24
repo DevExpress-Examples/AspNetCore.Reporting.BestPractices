@@ -427,9 +427,9 @@ This document section describes the best practices that you should follow when y
 
 ### Log Errors that Occurred in the Code of DevExpress Reporting Components
 
-DevExpress reporting components write log messages through the standard [Microsoft.Extensions.Logging](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/) API. Messages go to the logging providers registered in the application, so no custom logger class is required. To save errors to a file or database, register a logging provider that writes to that storage.
+DevExpress reporting components write log messages through the standard [Microsoft.Extensions.Logging](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/logging/) API. Messages go to the logging providers registered in the application. To save errors to a file or database, register a logging provider that writes to that storage.
 
-Use the `DevExpress` log category to configure which messages are logged. The following *appsettings.json* configuration logs DevExpress messages with the `Information` level and higher:
+Use the **DevExpress** log category to configure which messages are logged. The following *appsettings.json* configuration logs DevExpress messages with the **Information** level and higher:
 
 ```json
 "Logging": {
